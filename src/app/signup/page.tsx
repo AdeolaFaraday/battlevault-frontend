@@ -1,8 +1,7 @@
+import SignUpScreen from "@/src/screens/Signup"
 
 const SignUp = () => {
-    return (
-        <div>SignUp</div>
-    )
+    return <SignUpScreen />
 }
 
 export default SignUp
