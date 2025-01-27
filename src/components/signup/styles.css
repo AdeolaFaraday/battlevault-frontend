@@ -7,5 +7,21 @@
 }
 
 .banner_container {
-    @apply w-1/2 h-full;
+    @apply h-full bg-[var(--primary-color)];
+}
+
+.form_container {
+    @apply flex items-center;
+}
+
+.sign_up_form {
+    @apply w-[80%] m-auto;
+}
+
+.sign_up_form>div {
+    @apply mb-[1rem];
+}
+
+.sign_up_container>div {
+    @apply flex-1;
 }
