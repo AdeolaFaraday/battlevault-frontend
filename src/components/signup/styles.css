@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.sign_up_container {
+    @apply h-screen flex;
+}
+
+.banner_container {
+    @apply w-1/2 h-full;
+}
