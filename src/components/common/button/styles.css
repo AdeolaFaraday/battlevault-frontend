@@ -1,0 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.button {
+    @apply w-full rounded-md p-2.5 text-white font-bold bg-[var(--primary-color)];
+}
