@@ -8,6 +8,10 @@
 
 .banner_container {
     @apply h-full bg-[var(--primary-color)];
+
+    @media (max-width: 768px) {
+        display: none;
+    }
 }
 
 .form_container {
@@ -24,4 +28,8 @@
 
 .sign_up_container>div {
     @apply flex-1;
+}
+
+.signin_span {
+    @apply text-[color:var(--primary-color-dark)] cursor-pointer;
 }
