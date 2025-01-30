@@ -3,8 +3,12 @@
 @tailwind utilities;
 
 .input {
-    @apply w-full relative bg-transparent text-base transition-[border-bottom-color] duration-[0.3s] p-2.5 border-b-2 border-b-[var(--primary-color)] border-[none] border-solid;
+    @apply w-full relative bg-transparent text-base transition-[border-bottom-color] duration-[0.3s] p-2 border-b-2 border-b-[var(--primary-color)] border-[none] border-solid;
     outline: none;
+}
+
+.input_cta {
+    @apply w-full flex justify-between items-center text-[12px] text-[var(--error)];
 }
 
 .input_label {
