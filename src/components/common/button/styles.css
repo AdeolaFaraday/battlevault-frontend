@@ -3,5 +3,5 @@
 @tailwind utilities;
 
 .button {
-    @apply w-full rounded-md p-2.5 text-white font-bold bg-[var(--primary-color)];
+    @apply flex justify-center w-full rounded-md p-2.5 text-white font-bold bg-[var(--primary-color)];
 }
