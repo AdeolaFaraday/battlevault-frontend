@@ -10,7 +10,9 @@
   },
   "dependencies": {
     "@apollo/client": "^3.12.8",
+    "@apollo/experimental-nextjs-app-support": "^0.11.8",
     "@hookform/resolvers": "^3.10.0",
+    "apollo-upload-client": "^18.0.1",
     "graphql": "^16.10.0",
     "next": "15.1.6",
     "react": "^19.0.0",
@@ -20,6 +22,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@types/apollo-upload-client": "^18.0.0",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

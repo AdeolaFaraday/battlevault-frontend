@@ -1,6 +1,7 @@
 import { ButtonHTMLAttributes, DetailedHTMLProps } from "react";
 
 import './styles.css';
+import Loader from "../icons/Loader";
 
 type Props = {
     title: string;
@@ -12,8 +13,8 @@ const Button = ({
     loading,
     ...rest
 }: Props) => {
-    return <div>
-        <button {...rest} className="button">{title}</button>
+    return <div className="button">
+        {loading ? <Loader /> : <button disabled={loading} {...rest}>{title}</button>}
     </div>
 }
 
