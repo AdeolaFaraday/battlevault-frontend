@@ -1,14 +1,18 @@
+import { toast } from 'sonner'
 import useUserSignup from "@/src/api/auth/useUserSignup";
 
 
 const useSignup = () => {
     const { createUser, loading } = useUserSignup(
         (data) => {
-            console.log({ data });
+            if (data?.createUser?.success) {
+                toast.success(data?.createUser?.message)
+            } else {
+                toast.error(data?.createUser?.message)
+            }
         },
     )
     const handleUserSignup = (data: TCreateUserArgs) => {
-        console.log({ data });
         createUser(data)
     }
     return {

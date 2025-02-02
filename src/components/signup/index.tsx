@@ -1,10 +1,14 @@
 "use client"
-import useSignUpForm from '@/src/hooks/form-hooks/useSignupForm';
+import useHookForm from '@/src/hooks/form-hooks/useHookForm';
 import Button from '../common/button';
 import Input from '../common/input';
 
-import './styles.css';
 import useSignup from '@/src/hooks/auth/useSignup';
+import AuthWrapperComponent from './auth-wrapper';
+import Link from 'next/link';
+import signUpSchema from '@/src/hooks/form-hooks/schemas/sign-up-schema';
+
+import './styles.css';
 
 const SignUpComponent = () => {
     const {
@@ -12,12 +16,13 @@ const SignUpComponent = () => {
         touchedFields,
         handleSubmit,
         register,
-    } = useSignUpForm()
+    } = useHookForm<TCreateUserArgs>({
+        schema: signUpSchema
+    })
 
     const { loading, handleUserSignup } = useSignup()
 
-    return <div className='sign_up_container'>
-        <div className='banner_container'>Section 1</div>
+    return <AuthWrapperComponent>
         <div className='form_container'>
             <form onSubmit={handleSubmit(handleUserSignup)} className='sign_up_form'>
                 <Input {...register("firstName")} error={errors?.firstName} label='First Name' />
@@ -27,11 +32,11 @@ const SignUpComponent = () => {
                 <Input {...register("password")} error={errors?.password} type='password' label='Password' />
                 <Button loading={loading} title='Sign Up' />
                 <div>
-                    <h3>Already have an account? <span className='signin_span'>Sign in</span></h3>
+                    <h3>Already have an account? <Link href="/signin" className='signin_span'>Sign in</Link></h3>
                 </div>
             </form>
         </div>
-    </div>
+    </AuthWrapperComponent>
 }
 
 export default SignUpComponent
