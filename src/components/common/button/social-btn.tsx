@@ -1,21 +1,21 @@
 import { ButtonHTMLAttributes, DetailedHTMLProps } from "react";
 
 import './styles.css';
-import Loader from "../icons/Loader";
 
 type Props = {
+    Icon?: React.ReactElement;
     title: string;
-    loading?: boolean;
 } & DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>
 
-const Button = ({
+const SocialButton = ({
+    Icon,
     title,
-    loading,
     ...rest
 }: Props) => {
-    return <div>
-        {loading ? <Loader /> : <button className="button" disabled={loading} {...rest}>{title}</button>}
-    </div>
+    return <button className="social_btn" {...rest}>
+            {Icon}
+            {title}
+        </button>
 }
 
-export default Button;
+export default SocialButton;

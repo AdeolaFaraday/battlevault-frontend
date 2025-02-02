@@ -5,3 +5,11 @@
 .button {
     @apply flex justify-center w-full rounded-md p-2.5 text-white font-bold bg-[var(--primary-color)];
 }
+
+.social_btn {
+    @apply flex gap-2 justify-center items-center border p-4 rounded-md border-solid border-[#80808066] text-[var(--primary-color-dark)] w-full;
+
+    @media (max-width: 768px) {
+        padding: 0.5rem;
+    }
+}

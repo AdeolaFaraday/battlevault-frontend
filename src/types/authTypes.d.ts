@@ -11,3 +11,8 @@ type TCreateUserArgs = {
     email: string
     password: string
 }
+
+type TSignInSchema = {
+    userName: string
+    password: string
+}

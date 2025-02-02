@@ -33,3 +33,7 @@
 .signin_span {
     @apply text-[color:var(--primary-color-dark)] cursor-pointer;
 }
+
+.social_btns {
+    @apply flex justify-center items-center gap-4;
+}
