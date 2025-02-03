@@ -17,7 +17,7 @@ const Input = ({
     return <div className="input_container">
         {label && <div className="input_cta">
             <span className="input_label">{label}</span>
-            {error && <span className="input_error">{error?.message}</span>}
+            {error && <span data-testid="input_error" className="input_error">{error?.message}</span>}
         </div>}
         <input className="input" {...rest} />
     </div>
