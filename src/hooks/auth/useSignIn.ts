@@ -1,11 +1,13 @@
-import { auth, googleAuthProvider } from '@/src/lib/firebase'
-import { signInWithPopup } from 'firebase/auth'
-import { toast } from 'sonner'
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
+import useUserSignIn from '@/src/api/auth/useUserSignin';
+import { auth, googleAuthProvider } from '@/src/lib/firebase';
+import { signInWithPopup } from 'firebase/auth';
 
 
-const useSignin = () => {
-
-    const handGoogleSignin = () => {
+const useSignIn = () => {
+    const router = useRouter();
+    const handGoogleSignIn = () => {
         signInWithPopup(auth, googleAuthProvider).then((data) => {
             console.log({ data });
         }).catch((error) => {
@@ -13,9 +15,25 @@ const useSignin = () => {
         })
     }
 
+    const { login, loading } = useUserSignIn(
+        (data) => {
+            if (data?.login?.success) {
+                toast.success(data?.login?.message)
+                router.push("/")
+            } else {
+                toast.error(data?.login?.message)
+            }
+        },
+    )
+    const handleUserSignIn = (data: TSignInSchema) => {
+        login(data)
+    }
+
     return {
-        handGoogleSignin
+        loading,
+        handGoogleSignIn,
+        handleUserSignIn
     }
 }
 
-export default useSignin;
+export default useSignIn;
