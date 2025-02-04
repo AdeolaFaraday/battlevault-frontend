@@ -1,4 +1,5 @@
 type TCreateUserResponse = TAPIResponse<TCommonResponseData, 'createUser'>;
+type TLoginUserResponse = TAPIResponse<TCommonResponseData, 'login'>;
 
 type TCommonResponseData = {
     _id: string;
@@ -13,6 +14,6 @@ type TCreateUserArgs = {
 }
 
 type TSignInSchema = {
-    userName: string
+    email: string
     password: string
 }

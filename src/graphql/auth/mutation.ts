@@ -10,4 +10,16 @@ const CREATE_USER_MUTATION = gql`
 	}
 `;
 
-export { CREATE_USER_MUTATION }
+const LOGIN_USER_MUTATION = gql`
+	${USER_RESPONSE_FRAGMENT}
+	mutation login($email: String! $password: String!) {
+		login(email: $email password: $password) {
+			...UserResponseFragment
+		}
+	}
+`;
+
+export { 
+    CREATE_USER_MUTATION,
+    LOGIN_USER_MUTATION
+ }

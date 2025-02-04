@@ -10,7 +10,7 @@ const useHookForm = <T extends object>({ schema }: Props<T>) => {
     const {
         register,
         handleSubmit,
-        formState: { errors, touchedFields },
+        formState: { errors, touchedFields, isValid },
     } = useForm({
         resolver: yupResolver(schema),
     })
@@ -18,6 +18,7 @@ const useHookForm = <T extends object>({ schema }: Props<T>) => {
     return {
         errors,
         touchedFields,
+        isValid,
         register,
         handleSubmit,
     }
