@@ -6,6 +6,10 @@
     @apply h-screen flex;
 }
 
+.logo_container {
+    @apply absolute right-[10%] top-[5%];
+}
+
 .banner_container {
     @apply h-full bg-[var(--primary-color)];
 
@@ -15,7 +19,7 @@
 }
 
 .form_container {
-    @apply flex items-center;
+    @apply flex items-center relative;
 }
 
 .sign_up_form {
@@ -36,4 +40,13 @@
 
 .social_btns {
     @apply flex justify-center items-center gap-4;
+}
+
+.or_separator {
+    @apply flex items-center w-full relative text-center text-sm text-[#666] mx-0 my-2.5;
+}
+
+.or_separator::before,
+.or_separator::after {
+    @apply content-[""] flex-1 mx-0.5 my-0 border-b-[#ccc] border-b border-solid;
 }

@@ -19,7 +19,17 @@ const LOGIN_USER_MUTATION = gql`
 	}
 `;
 
+const SOCIAL_LOGIN_USER_MUTATION = gql`
+	${USER_RESPONSE_FRAGMENT}
+	mutation socialAuth($token: String!) {
+		socialAuth(token: $token) {
+			...UserResponseFragment
+		}
+	}
+`;
+
 export { 
     CREATE_USER_MUTATION,
-    LOGIN_USER_MUTATION
+    LOGIN_USER_MUTATION,
+	SOCIAL_LOGIN_USER_MUTATION
  }
