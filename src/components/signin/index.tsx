@@ -11,6 +11,7 @@ import GoogleIcon from '../common/icons/GoogleIcon';
 import FacebookIcon from '../common/icons/FacebookIcon';
 
 import '../signup/styles.css';
+import LogoIcon from '../common/icons/Logo';
 
 const SignInComponent = () => {
     const {
@@ -31,11 +32,15 @@ const SignInComponent = () => {
 
     return <AuthWrapperComponent>
         <div className='form_container'>
+            <div className='logo_container'>
+                <LogoIcon />
+            </div>
             <form onSubmit={handleSubmit(handleUserSignIn)} className='sign_up_form'>
                 <div className='social_btns'>
                     <SocialButton type='button' onClick={handGoogleSignIn} Icon={<GoogleIcon />} title='Google' />
                     <SocialButton type='button' onClick={handGoogleSignIn} Icon={<FacebookIcon />} title='Facebook' />
                 </div>
+                <h3 className='or_separator'>OR</h3>
                 <Input {...register("email")} error={errors?.email} label='Username' />
                 <Input {...register("password")} error={errors?.password} type='password' label='Password' />
                 <Button loading={loading} disabled={(loading || !isValid)} variant={(loading || !isValid) ? "disabled" : "primary"} title='Sign In' />

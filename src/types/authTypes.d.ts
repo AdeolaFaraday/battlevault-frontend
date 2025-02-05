@@ -1,5 +1,6 @@
 type TCreateUserResponse = TAPIResponse<TCommonResponseData, 'createUser'>;
 type TLoginUserResponse = TAPIResponse<TCommonResponseData, 'login'>;
+type TSocialLoginUserResponse = TAPIResponse<TCommonResponseData, 'socialAuth'>;
 
 type TCommonResponseData = {
     _id: string;
