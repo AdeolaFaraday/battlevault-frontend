@@ -1,4 +1,4 @@
-import SignInComponent from "@/src/components/signin"
+import SignInComponent from "@/src/screens/SignInScreen"
 
 
 const SignInScreen = () => {
