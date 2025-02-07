@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.container {
+    @apply flex;
+}
+
+.left-container,
+.right-container {
+    @apply flex-[1];
+    @media (max-width: 768px) {
+        display: none;
+    }
+}
+
+.main-container {
+    @apply flex-[1.5] border border-solid border-[red];
+}
