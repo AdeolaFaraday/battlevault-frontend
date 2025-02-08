@@ -4,16 +4,34 @@
 
 .container {
     @apply flex;
+    font-family: "Bricolage Grotesque", serif;
 }
 
 .left-container,
 .right-container {
     @apply flex-[1];
+
     @media (max-width: 768px) {
         display: none;
     }
 }
 
+.home-text>h2 {
+    @apply text-[1.5rem];
+}
+
+.home-text>h3>span {
+    @apply font-bold;
+}
+
+.home-cta__container {
+    @apply flex gap-4 w-[70%] m-auto mb-4;
+}
+
+.home-cta__container>div {
+    @apply flex-1;
+}
+
 .main-container {
-    @apply flex-[1.5] border border-solid border-[red];
+    @apply flex-[1.5] border border-solid border-[var(--primary-color)] px-4;
 }
