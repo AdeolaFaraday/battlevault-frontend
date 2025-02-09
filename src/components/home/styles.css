@@ -17,15 +17,15 @@
 }
 
 .home-text>h2 {
-    @apply text-[1.5rem];
+    @apply text-[1.5rem] mb-2;
 }
 
-.home-text>h3>span {
+.main-container>h3>span {
     @apply font-bold;
 }
 
 .home-cta__container {
-    @apply flex gap-4 w-[70%] m-auto mb-4;
+    @apply flex gap-[3rem] m-auto mb-4;
 }
 
 .home-cta__container>div {
@@ -33,5 +33,5 @@
 }
 
 .main-container {
-    @apply flex-[1.5] border border-solid border-[var(--primary-color)] px-4;
+    @apply flex-[1] border border-solid border-[var(--primary-color)] px-4 w-full;
 }

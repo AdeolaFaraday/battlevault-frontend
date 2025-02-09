@@ -1,0 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.feature-games__card {
+    @apply h-[7rem] shadow-[0px_4px_10px_rgba(0,0,0,0.1)] border rounded-2xl border-solid border-[rgba(0,0,0,0.05)];
+}
