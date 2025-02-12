@@ -4,6 +4,7 @@ import "keen-slider/keen-slider.min.css";
 
 import FeaturedGamesCard from './card';
 import './styles.css';
+import { FeatureGame } from "@/src/constants/game";
 
 const FeaturedGamesCardContainer = () => {
     const [sliderRef] = useKeenSlider({
@@ -14,8 +15,7 @@ const FeaturedGamesCardContainer = () => {
     });
     return (
         <div ref={sliderRef} className="keen-slider">
-            <FeaturedGamesCard />
-            <FeaturedGamesCard />
+            {FeatureGame.map((data) =>  <FeaturedGamesCard key={data?.title} {...data} />)}
         </div>
     )
 }

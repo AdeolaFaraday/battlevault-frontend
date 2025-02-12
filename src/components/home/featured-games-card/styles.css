@@ -3,5 +3,21 @@
 @tailwind utilities;
 
 .feature-games__card {
-    @apply h-[7rem] shadow-[0px_4px_10px_rgba(0,0,0,0.1)] border rounded-2xl border-solid border-[rgba(0,0,0,0.05)];
+    @apply flex justify-between p-2.5 h-[8.5rem] text-[white] border rounded-2xl border-solid bg-[var(--primary-color-dark)];
+}
+
+.feature-games__text>h2 {
+    @apply text-[1.2rem];
+}
+
+.feature-games__text>h5 {
+    @apply opacity-50;
+}
+
+.feature-games__cta {
+    @apply flex flex-col items-start justify-between h-full;
+}
+
+.feature-games__lottie {
+    @apply h-full;
 }
