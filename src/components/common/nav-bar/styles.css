@@ -2,6 +2,33 @@
 @tailwind components;
 @tailwind utilities;
 
-.nav-container {
-    @apply h-16;
+/* Navbar Styles */
+.navbar {
+    @apply bg-white shadow-md py-2.5 px-2.5 flex justify-between items-center mb-5;
+}
+
+/* Left Side: Profile Picture */
+.profile {
+    @apply flex items-center gap-3;
+}
+
+.profile-img {
+    @apply w-10 h-10 rounded-full border-2 border-gray-200 hover:ring-2 hover:ring-blue-500 transition-all duration-200;
+}
+
+.profile-text {
+    @apply font-semibold text-lg;
+}
+
+/* Right Side: Wallet Balance */
+.wallet {
+    @apply flex items-center gap-2 bg-green-100 border border-green-300 rounded-lg px-2.5 py-1.5;
+}
+
+.wallet-icon {
+    @apply text-green-500;
+}
+
+.wallet-balance {
+    @apply font-semibold text-gray-800;
 }

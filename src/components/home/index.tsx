@@ -2,13 +2,16 @@ import HomeCtaCard from './home-cta-card';
 import PaymentLottie from '../common/lottie/payment.json';
 import PLayLottie from '../common/lottie/play.json';
 import FeaturedGamesCardContainer from './featured-games-card';
+import NavBar from '../common/nav-bar';
+import UpcomingTournamentCardContainer from './upcoming-tournament-card';
 
 import './styles.css';
-import NavBar from '../common/nav-bar';
+
+const profilePhoto = "https://lh3.googleusercontent.com/a/ACg8ocIn_wSdYaOBH1NyPXP1BRVzJ2Ulzr-jQyia3Ev-4wzGILTDaIs=s96-c"
 
 const HomeComponent = () => {
     return <div>
-        <NavBar />
+        <NavBar profilePicture={profilePhoto} walletBalance={100000} />
         <div className='container'>
             <div className='left-container'>Left Side Bar</div>
             <div className='main-container'>
@@ -20,6 +23,10 @@ const HomeComponent = () => {
                 <div className='home-text'>
                     <h2>Play Our Featured Games</h2>
                     <FeaturedGamesCardContainer />
+                </div>
+                <div className='home-text'>
+                    <h2>Upcoming Tournaments</h2>
+                    <UpcomingTournamentCardContainer />
                 </div>
             </div>
             <div className='right-container'>Right Side Bar</div>
