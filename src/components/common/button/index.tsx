@@ -1,4 +1,5 @@
 import { ButtonHTMLAttributes, DetailedHTMLProps } from "react";
+import clsx from "clsx";
 
 import './styles.css';
 import Loader from "../icons/Loader";
@@ -8,6 +9,7 @@ type Props = {
     title: string;
     loading?: boolean;
     variant?: "primary" | "disabled";
+    customClassName?: string
 } & DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>
 
 const btnVariant = {
@@ -19,6 +21,7 @@ const Button = ({
     title,
     loading,
     variant,
+    customClassName,
     ...rest
 }: Props) => {
     return <div>
@@ -26,7 +29,7 @@ const Button = ({
             style={{
                 backgroundColor: btnVariant[variant || "primary"]
             }}
-            className="button"
+            className={clsx("button", customClassName)}
             {...rest}>
             {loading ? <Loader /> : title}
         </button>

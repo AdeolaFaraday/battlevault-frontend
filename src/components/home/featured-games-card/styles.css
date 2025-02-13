@@ -21,3 +21,8 @@
 .feature-games__lottie {
     @apply h-full;
 }
+
+.feature-games__play {
+    @apply rounded-lg;
+    border: 1px solid var(--grey);
+}

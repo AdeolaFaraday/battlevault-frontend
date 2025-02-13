@@ -21,7 +21,7 @@ const FeaturedGamesCard = ({
                     <h2>{title}</h2>
                     <h5>{subTitle}</h5>
                 </div>
-                <Button title="Let's Play" style={{ borderRadius: "50px", border: "1px solid var(--grey)", background: buttonBgColor }} />
+                <Button title="Let's Play" customClassName="feature-games__play" style={{ background: buttonBgColor }} />
             </div>
             <div className="feature-games__lottie">
                 <Lottie
