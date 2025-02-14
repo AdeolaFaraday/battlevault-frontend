@@ -15,7 +15,7 @@ const HomeComponent = () => {
         <div className='container'>
             <div className='left-container'>Left Side Bar</div>
             <div className='main-container'>
-                <h3>Hi, <span>Adeola</span></h3>
+                <h3>Hi, <span>Adeola</span>{" "}👋</h3>
                 <div className='home-cta__container'>
                     <HomeCtaCard lottieJson={PaymentLottie} title='Deposit' />
                     <HomeCtaCard lottieJson={PLayLottie} title='Play' />
