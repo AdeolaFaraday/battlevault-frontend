@@ -22,6 +22,10 @@
     @apply h-full;
 }
 
+.feature-games__lottie>div {
+    transform: scale(1.3);
+}
+
 .feature-games__play {
     @apply rounded-lg;
     border: 1px solid var(--grey);
