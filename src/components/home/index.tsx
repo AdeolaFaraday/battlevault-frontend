@@ -4,8 +4,10 @@ import PLayLottie from '../common/lottie/play.json';
 import FeaturedGamesCardContainer from './featured-games-card';
 import NavBar from '../common/nav-bar';
 import UpcomingTournamentCardContainer from './upcoming-tournament-card';
+import HeadingSectionWrapper from '../common/heading-section-wrapper';
 
 import './styles.css';
+import LeaderBoardCardContainer from '../common/leaderboardcard';
 
 const profilePhoto = "https://lh3.googleusercontent.com/a/ACg8ocIn_wSdYaOBH1NyPXP1BRVzJ2Ulzr-jQyia3Ev-4wzGILTDaIs=s96-c"
 
@@ -20,14 +22,15 @@ const HomeComponent = () => {
                     <HomeCtaCard lottieJson={PaymentLottie} title='Deposit' />
                     <HomeCtaCard lottieJson={PLayLottie} title='Play' />
                 </div>
-                <div className='home-text'>
-                    <h2>Play Our Featured Games</h2>
+                <HeadingSectionWrapper title='Play Our Featured Games'>
                     <FeaturedGamesCardContainer />
-                </div>
-                <div className='home-text'>
-                    <h2>Upcoming Tournaments</h2>
+                </HeadingSectionWrapper>
+                <HeadingSectionWrapper title='Upcoming Tournaments'>
                     <UpcomingTournamentCardContainer />
-                </div>
+                </HeadingSectionWrapper>
+                <HeadingSectionWrapper title='Leaderboard'>
+                    <LeaderBoardCardContainer />
+                </HeadingSectionWrapper>
             </div>
             <div className='right-container'>Right Side Bar</div>
         </div>

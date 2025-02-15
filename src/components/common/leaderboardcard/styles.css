@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.leaderboard-card {
+  @apply flex justify-between items-center bg-white shadow-lg p-3 rounded-lg border border-gray-200 mb-2;
+}
+
+.leaderboard-profile {
+  @apply flex items-center gap-3;
+}
+
+.leaderboard-image {
+  @apply w-12 h-12 rounded-full border-2;
+}
+
+.leaderboard-info {
+  @apply flex flex-col;
+}
+
+.leaderboard-name {
+  @apply text-lg font-semibold text-gray-800;
+}
+
+.leaderboard-subtitle {
+  @apply text-sm text-gray-500;
+}
+
+.leaderboard-points {
+  @apply flex items-center gap-2;
+}
+
+.leaderboard-icon {
+  @apply text-yellow-500 w-6 h-6;
+}
+
+.leaderboard-score {
+  @apply text-lg font-bold text-gray-700;
+}

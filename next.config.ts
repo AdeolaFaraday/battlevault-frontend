@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
   //   appIsrStatus: false,
   // },
   images: {
-    domains: ['lh3.googleusercontent.com'],
+    domains: ['lh3.googleusercontent.com', 'randomuser.me'],
   },
 };
 
