@@ -9,6 +9,14 @@ export type FeatureGameType = {
     animation: any;
 };
 
+export type LeaderboardCardType = {
+    profileImage: string;
+    subTitle: string;
+    name: string;
+    points: number;
+    ringColor: string;
+};
+
 export type Tournament = {
     id: number;
     title: string;
@@ -38,6 +46,45 @@ export const FeatureGame: FeatureGameType[] = [
         animation: ChessLottie
     }
 ];
+
+export const LeaderboardData: LeaderboardCardType[] = [
+    {
+        profileImage: "https://randomuser.me/api/portraits/men/10.jpg",
+        subTitle: "9 Streak",
+        name: "John Doe",
+        points: 1500,
+        ringColor: "#3b82f6",
+    },
+    {
+        profileImage: "https://randomuser.me/api/portraits/women/15.jpg",
+        subTitle: "8 Streak",
+        name: "Jane Smith",
+        points: 1800,
+        ringColor: "#FACC15",
+    },
+    {
+        profileImage: "https://randomuser.me/api/portraits/men/22.jpg",
+        subTitle: "7 Streak",
+        name: "Alex Johnson",
+        points: 2000,
+        ringColor: "#10b981",
+    },
+    {
+        profileImage: "https://randomuser.me/api/portraits/women/30.jpg",
+        subTitle: "10 Streak",
+        name: "Emily Davis",
+        points: 2200,
+        ringColor: "#8b5cf6",
+    },
+    {
+        profileImage: "https://randomuser.me/api/portraits/men/33.jpg",
+        subTitle: "6 Streak",
+        name: "Michael Brown",
+        points: 1400,
+        ringColor: "#f97316",
+    },
+];
+
 
 export const UpcomingTournaments: Tournament[] = [
     {
