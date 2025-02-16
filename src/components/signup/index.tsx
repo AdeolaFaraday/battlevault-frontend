@@ -2,9 +2,9 @@
 import useHookForm from '@/src/hooks/form-hooks/useHookForm';
 import Button from '../common/button';
 import Input from '../common/input';
+import AuthWrapperComponent from '../common/wrapper/auth-wrapper';
 
 import useSignup from '@/src/hooks/auth/useSignup';
-import AuthWrapperComponent from './auth-wrapper';
 import Link from 'next/link';
 import signUpSchema from '@/src/hooks/form-hooks/schemas/sign-up-schema';
 
