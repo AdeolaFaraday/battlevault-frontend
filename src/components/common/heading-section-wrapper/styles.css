@@ -1,7 +1,0 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-.heading-section__wrapper>h2 {
-    @apply text-[1.5rem] mb-2 mt-4;
-}
