@@ -30,10 +30,6 @@
     @apply mb-[1rem];
 }
 
-/* .sign_up_container>div {
-    @apply flex-1;
-} */
-
 .signin_span {
     @apply text-[color:var(--primary-color-dark)] cursor-pointer;
 }
