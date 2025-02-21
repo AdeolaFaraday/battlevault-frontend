@@ -3,7 +3,10 @@ type TLoginUserResponse = TAPIResponse<TCommonResponseData, 'login'>;
 type TSocialLoginUserResponse = TAPIResponse<TCommonResponseData, 'socialAuth'>;
 
 type TCommonResponseData = {
-    _id: string;
+    _id: string
+    firstName: string
+    lastName: string
+    email: string
 }
 
 type TCreateUserArgs = {
