@@ -3,6 +3,9 @@ import { NextRequest, NextResponse } from "next/server";
 export function middleware(req: NextRequest) {
     const token = req.cookies.get("user_token")?.value;
 
+    // console.log({ token });
+
+
     const { pathname } = req.nextUrl;
 
     // Define pages accessible only when NOT logged in

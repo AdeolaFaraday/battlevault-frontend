@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.success-container {
+    @apply flex min-h-screen items-center justify-center;
+}
+
+.success-card {
+    @apply text-center flex flex-col items-center;
+}
+
+.success-title {
+    @apply text-lg font-semibold text-gray-600;
+}
+
+.success-text {
+    @apply text-gray-600;
+}
