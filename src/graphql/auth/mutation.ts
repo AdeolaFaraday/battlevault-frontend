@@ -19,6 +19,15 @@ const LOGIN_USER_MUTATION = gql`
 	}
 `;
 
+const VERIFY_EMAIL_MUTATION = gql`
+	${USER_RESPONSE_FRAGMENT}
+	mutation verifyEmail($token: String!) {
+		verifyEmail(token: $token) {
+			...UserResponseFragment
+		}
+	}
+`;
+
 const SOCIAL_LOGIN_USER_MUTATION = gql`
 	${USER_RESPONSE_FRAGMENT}
 	mutation socialAuth($token: String!) {
@@ -31,5 +40,6 @@ const SOCIAL_LOGIN_USER_MUTATION = gql`
 export { 
     CREATE_USER_MUTATION,
     LOGIN_USER_MUTATION,
-	SOCIAL_LOGIN_USER_MUTATION
+	SOCIAL_LOGIN_USER_MUTATION,
+	VERIFY_EMAIL_MUTATION
  }
