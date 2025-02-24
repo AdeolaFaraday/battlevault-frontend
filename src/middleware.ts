@@ -3,13 +3,14 @@ import { NextRequest, NextResponse } from "next/server";
 export function middleware(req: NextRequest) {
     const token = req.cookies.get("user_token")?.value;
 
-    // console.log({ token });
-
-
     const { pathname } = req.nextUrl;
 
     // Define pages accessible only when NOT logged in
     const authPages = ["/signin", "/signup"];
+
+    if (pathname === "/verify-email") {
+        return NextResponse.redirect(new URL("/verify-email", req.url));
+    }
 
     if (!token && !authPages.includes(pathname)) {
         // Redirect unauthenticated users to Sign In
@@ -26,5 +27,7 @@ export function middleware(req: NextRequest) {
 
 // Apply middleware to ALL routes
 export const config = {
-    matcher: "/:path*", // Apply middleware globally
+    // matcher: "/:path*", // Apply middleware globally
+    // matcher: "/((?!sign).*)"
+    matcher: ["/", "/verify-email"]
 };

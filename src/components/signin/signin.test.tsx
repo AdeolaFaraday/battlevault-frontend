@@ -1,8 +1,9 @@
 import '@testing-library/jest-dom'
 import { render, screen } from '@testing-library/react'
+import { useRouter } from 'next/navigation'
 import userEvent from '@testing-library/user-event'
 import SignInComponent from './index'
-import { useRouter } from 'next/navigation'
+import { renderWithRedux } from '@/src/utils/test-utils';
 
 // Mock Next.js Router
 jest.mock('next/navigation', () => ({
@@ -30,13 +31,13 @@ describe('Sigin', () => {
         });
     });
     it('it renders sign component', () => {
-        render(<SignInComponent />)
+        renderWithRedux(<SignInComponent />)
         const getOrText = screen.getByText('OR')
         expect(getOrText).toBeInTheDocument()
     })
 
     it('checks if the button is disabled when fields are empty', async () => {
-        render(<SignInComponent />)
+        renderWithRedux(<SignInComponent />)
         userEvent.setup()
         const userNameField = screen.getByPlaceholderText('Enter Username')
         const passwordField = screen.getByPlaceholderText('Enter Password')
