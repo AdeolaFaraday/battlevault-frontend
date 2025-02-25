@@ -1,0 +1,91 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.ludo-container {
+    @apply flex flex-col justify-center items-center h-screen;
+}
+
+.ludo-board {
+    @apply flex flex-col w-[360px] h-[360px] border border-[color:var(--primary-color)] border-solid rounded-2xl;
+}
+
+.ludo-board>div {
+    @apply flex-1 flex;
+}
+
+.ludo-home__column {
+    @apply flex justify-center items-center w-1/2 border border-[color:var(--primary-color)] border-solid;
+}
+
+div.column-1 {
+    background-color: var(--primary-color-red);
+    color: white;
+    border-top-left-radius: 1rem;
+}
+
+div.column-2 {
+    background-color: var(--primary-color-green);
+    color: black;
+    border-top-right-radius: 1rem;
+}
+
+div.column-3 {
+    background-color: var(--primary-color-blue);
+    color: white;
+    border-bottom-left-radius: 1rem;
+}
+
+div.column-4 {
+    background-color: var(--primary-color-yellow);
+    color: white;
+    border-bottom-right-radius: 1rem;
+}
+
+.ludo-token__container {
+    @apply h-[75%] w-[75%] rounded-[100%] bg-white;
+}
+
+.ludo-cell__container {
+    @apply flex;
+}
+
+.ludo-cell {
+    @apply h-[1.5rem] w-[1.5rem] border border-[color:var(--primary-color)] border-solid;
+}
+
+.ludo-column__center {
+    @apply flex justify-between;
+}
+
+.ludo-row {
+    @apply flex;
+}
+
+.ludo-cell__vertial {
+    @apply flex-col;
+}
+
+.ludo-center {
+    @apply relative w-full h-full;
+}
+
+.clip-triangle-tl {
+    @apply absolute top-0 left-0 w-full h-1/2 bg-[color:var(--primary-color-green)];
+    clip-path: polygon(100% 0, 50% 100%, 0 0);
+}
+
+.clip-triangle-tr {
+    @apply absolute top-0 right-0 w-1/2 h-full bg-[color:var(--primary-color-yellow)];
+    clip-path: polygon(100% 0, 0 50%, 100% 100%);
+}
+
+.clip-triangle-bl {
+    @apply absolute bottom-0 left-0 w-1/2 h-full bg-[color:var(--primary-color-red)];
+    clip-path: polygon(0 0, 100% 50%, 0 100%);
+}
+
+.clip-triangle-br {
+    @apply absolute bottom-0 right-0 w-full h-1/2 bg-[color:var(--primary-color-blue)];
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+}

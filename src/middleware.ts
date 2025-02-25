@@ -29,5 +29,9 @@ export function middleware(req: NextRequest) {
 export const config = {
     // matcher: "/:path*", // Apply middleware globally
     // matcher: "/((?!sign).*)"
-    matcher: ["/", "/verify-email"]
+    matcher: [
+        "/",
+        "/verify-email",
+        "/ludo"
+    ]
 };
