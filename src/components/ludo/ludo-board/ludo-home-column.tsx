@@ -1,12 +1,27 @@
+"use client"
 import clsx from "clsx";
+import LudoToken from "./ludo-token";
+import { Token } from "@/src/hooks/ludo/useLudoAction";
 
 const LudoHomeColumn = ({
-    customClassName
+    customClassName,
+    color,
+    token,
+    handleTokenClick
 }: {
     customClassName?: string
+    color: string
+    token: Token[]
+    handleTokenClick: (e?: any) => void
 }) => {
+    console.log({ token, color });
+
     return <div className={clsx("ludo-home__column", customClassName)}>
-        <div className="ludo-token__container"></div>
+        <div className="ludo-token__container">
+            <div className="ludo-token__grid">
+                {token?.sort((a, b) => a.sn - b.sn).map((data, key) => <LudoToken isInHomeColumn active={!data?.position} key={key} color={color} onClick={() => handleTokenClick(data)} />)}
+            </div>
+        </div>
     </div>
 }
 
