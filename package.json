@@ -18,6 +18,7 @@
     "apollo-upload-client": "^18.0.1",
     "clsx": "^2.1.1",
     "firebase": "^11.2.0",
+    "framer-motion": "^12.4.7",
     "graphql": "^16.10.0",
     "keen-slider": "^6.8.6",
     "lucide-react": "^0.475.0",

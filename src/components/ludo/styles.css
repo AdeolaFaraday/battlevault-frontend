@@ -43,7 +43,11 @@ div.column-4 {
 }
 
 .ludo-token__container {
-    @apply h-[75%] w-[75%] rounded-[100%] bg-white;
+    @apply h-[75%] w-[75%] rounded-[100%] bg-white flex justify-center items-center flex-col;
+}
+
+.ludo-token__grid {
+    @apply grid grid-cols-[repeat(2,1fr)] grid-rows-[repeat(2,1fr)] gap-1 h-[60%] w-[60%];
 }
 
 .ludo-cell__container {
@@ -89,3 +93,11 @@ div.column-4 {
     @apply absolute bottom-0 right-0 w-full h-1/2 bg-[color:var(--primary-color-blue)];
     clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
 }
+
+.ludo-token {
+    @apply w-full h-full cursor-pointer relative flex items-center justify-center rounded-full shadow-lg border-4 border-white;
+}
+
+/* .ludo-token {
+    @apply w-3 h-3 bg-white rounded-full shadow-inner;
+} */
