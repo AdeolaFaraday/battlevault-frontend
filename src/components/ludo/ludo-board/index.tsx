@@ -28,6 +28,7 @@ const LudoBoard = () => {
                 middlePathNumbers={generatePathNumberArray(13)}
                 endPathNumbers={generatePathNumberArray(14)}
                 startPathNumber={15}
+                handleTokenDrop={handleTokenClick}
                 color="green"
                 findActiveTokens={findActiveTokens}
             />
@@ -43,6 +44,7 @@ const LudoBoard = () => {
                 startPathNumbers={generatePathNumberArray(1)}
                 middlePathNumbers={generatePathNumberArray(52)}
                 endPathNumbers={generatePathNumberArray(46).reverse()}
+                handleTokenDrop={handleTokenClick}
                 startPathNumber={2}
                 color="red"
                 customClassName="ludo-cell__vertial"
@@ -60,6 +62,7 @@ const LudoBoard = () => {
                 middlePathNumbers={generatePathNumberArray(26).reverse()}
                 endPathNumbers={generatePathNumberArray(27).reverse()}
                 startPathNumber={28}
+                handleTokenDrop={handleTokenClick}
                 color="yellow"
                 customClassName="ludo-cell__vertial"
                 customRowClassName="ludo-row"
@@ -77,6 +80,7 @@ const LudoBoard = () => {
                 startPathNumbers={generatePathNumberArray(40).reverse()}
                 middlePathNumbers={generatePathNumberArray(39).reverse()}
                 endPathNumbers={generatePathNumberArray(33)}
+                handleTokenDrop={handleTokenClick}
                 startPathNumber={41}
                 color="blue"
                 findActiveTokens={findActiveTokens}
