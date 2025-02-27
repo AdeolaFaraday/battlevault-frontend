@@ -61,13 +61,13 @@ const useLudoAction = ({ color }: { color?: string }) => {
         }
     ]
 
-    const handleTokenClick = (token: Token) => {
+    const handleTokenClick = (token: Token, position?: number) => {
         const findSetter = tokenMapper?.find((data) => data?.color == token?.color)
 
         findSetter?.setter((prev: Token[]) => {
             const newItem = {
                 ...token,
-                position: findSetter?.startPath,
+                position,
                 active: true,
             }
             const exists = prev.some((item) => item.sn === token.sn);
