@@ -1,8 +1,8 @@
 "use client"
 import clsx from "clsx";
-import LudoToken from "../ludo-board/ludo-token";
-import useLudoAction, { Token } from "@/src/hooks/ludo/useLudoAction";
+import { Token } from "@/src/hooks/ludo/useLudoAction";
 import LudoCell from "./ludo-cell";
+import { cellColors } from "@/src/constants";
 
 type LudoPathProp = {
     customClassName?: string
@@ -17,6 +17,9 @@ type LudoPathProp = {
     handleTokenDrop: (token: Token, position?: number) => void
 }
 
+// TODO: create context provider to expose the findActiveTokens and handleTokenClick to the components 
+// instead of passing down as props
+
 const LudoPath = ({
     customClassName,
     customRowClassName,
@@ -29,11 +32,7 @@ const LudoPath = ({
     findActiveTokens,
     handleTokenDrop
 }: LudoPathProp) => {
-    //TODO
-    const {
-        findBgColor,
-    } = useLudoAction({ color })
-
+    const findBgColor = cellColors?.find((data) => data?.color === color)
 
     return <div className={clsx("ludo-cell__container", customClassName)}>
         <div className={clsx("", customRowClassName)}>
@@ -42,23 +41,22 @@ const LudoPath = ({
                     key={number}
                     findActiveTokens={findActiveTokens}
                     customCellClassName={customCellClassName}
-                    startPathNumber={startPathNumber}
                     number={number}
-                    color={color}
+                    style={{ backgroundColor: number === startPathNumber ? findBgColor?.style : "transparent" }}
                     handleTokenDrop={handleTokenDrop}
                 />
             ))}
         </div>
-        {/* TODO */}
         <div className={clsx("", customRowClassName)}>
             {middlePathNumbers.map((number, i) => (
-                <div key={number} style={{ backgroundColor: number !== Math.min(...middlePathNumbers) ? findBgColor?.style : "transparent" }} className={clsx("ludo-cell", customCellClassName)}>
-                    {findActiveTokens?.map((data, key) => (
-                        <span key={data?.position}>
-                            {number === data?.position ? <LudoToken {...data} /> : <></>}
-                        </span>
-                    ))}
-                </div>
+                <LudoCell
+                    key={number}
+                    findActiveTokens={findActiveTokens}
+                    customCellClassName={customCellClassName}
+                    number={number}
+                    style={{ backgroundColor: number !== Math.min(...middlePathNumbers) ? findBgColor?.style : "transparent" }}
+                    handleTokenDrop={handleTokenDrop}
+                />
             ))}
         </div>
         <div className={clsx("", customRowClassName)}>
@@ -67,9 +65,8 @@ const LudoPath = ({
                     key={number}
                     findActiveTokens={findActiveTokens}
                     customCellClassName={customCellClassName}
-                    startPathNumber={startPathNumber}
                     number={number}
-                    color={color}
+                    style={{ backgroundColor: number === startPathNumber ? findBgColor?.style : "transparent" }}
                     handleTokenDrop={handleTokenDrop}
                 />
             ))}

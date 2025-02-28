@@ -1,6 +1,6 @@
 "use client"
 import { generatePathNumberArray } from "@/src/utils/ludo-board";
-import LudoPath from "../ludo-path";
+import LudoPath from "./ludo-path";
 import LudoHomeColumn from "./ludo-home-column";
 import useLudoAction from "@/src/hooks/ludo/useLudoAction";
 
@@ -15,6 +15,11 @@ const LudoBoard = () => {
     } = useLudoAction({})
     console.log({ findActiveTokens });
 
+    /* 
+    Component built with flex box
+    Ludo path is inserted in the middle of each flex box
+    THe middle horizontal Ludo path span around the center so it contains two path space betweened each other
+    */
     return <div className='ludo-board'>
         <div>
             <LudoHomeColumn
@@ -23,6 +28,11 @@ const LudoBoard = () => {
                 token={redTokens}
                 handleTokenClick={handleTokenClick}
             />
+            {/* 
+            Path are dictated and reversed for some to match 
+            a continued sequence, in order to make it possible
+            to perfoem logic and ui update base on a predictive path number
+            */}
             <LudoPath
                 startPathNumbers={generatePathNumberArray(7).reverse()}
                 middlePathNumbers={generatePathNumberArray(13)}

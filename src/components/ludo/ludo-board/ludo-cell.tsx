@@ -1,30 +1,24 @@
+import { CSSProperties } from "react"
 import { useDrop } from "react-dnd"
-import LudoToken from "../ludo-board/ludo-token"
+import LudoToken from "./ludo-token"
 import clsx from "clsx"
-import useLudoAction, { Token } from "@/src/hooks/ludo/useLudoAction"
+import { Token } from "@/src/hooks/ludo/useLudoAction"
 
 type LudoPathProp = {
-    customCellClassName?: string
     number: number
-    color: string
     findActiveTokens: any[]
-    startPathNumber: number
+    style?: CSSProperties
+    customCellClassName?: string
     handleTokenDrop: (token: Token, position?: number) => void
 }
 
 const LudoCell = ({
     customCellClassName,
-    startPathNumber,
     findActiveTokens,
     number,
-    color,
+    style,
     handleTokenDrop
 }: LudoPathProp) => {
-    //TODO
-    const {
-        findBgColor
-    } = useLudoAction({ color })
-
     const [_, dropRef] = useDrop(() => ({
         accept: "ITEM",
         drop: (item: Token) => {
@@ -35,9 +29,9 @@ const LudoCell = ({
             isOver: monitor.isOver(),
         }),
     }));
-    return <div ref={dropRef as any} style={{ backgroundColor: number === startPathNumber ? findBgColor?.style : "transparent" }} className={clsx("ludo-cell", customCellClassName)}>
-        {findActiveTokens?.map((data, key) => (
-            <span key={data?.position}>
+    return <div ref={dropRef as any} style={style} className={clsx("ludo-cell", customCellClassName)}>
+        {findActiveTokens?.map((data, _) => (
+            <span key={`${data?.color}${data?.position}`}>
                 {number === data?.position ? <LudoToken {...data} /> : <></>}
             </span>
         ))}
