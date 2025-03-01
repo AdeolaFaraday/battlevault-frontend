@@ -100,7 +100,11 @@ div.column-4 {
 }
 
 .dice-wrapper {
-    @apply absolute z-10 flex justify-center items-center p-4 rounded-2xl inset-0;
+    @apply absolute flex justify-center items-center p-4 rounded-2xl inset-0;
+}
+
+.roll-button {
+    @apply absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2;
 }
 
 /* .ludo-token {

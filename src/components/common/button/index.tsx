@@ -1,6 +1,6 @@
 import { ButtonHTMLAttributes, DetailedHTMLProps } from "react";
 import clsx from "clsx";
-
+import { motion } from "framer-motion";
 import './styles.css';
 import Loader from "../icons/Loader";
 import { COLORS } from "@/src/constants";
@@ -24,7 +24,12 @@ const Button = ({
     customClassName,
     ...rest
 }: Props) => {
-    return <div>
+    return <motion.div
+        whileInView={{ opacity: 1, y: 0 }}
+        whileHover={{ opacity: 0.8, y: -3 }}
+        transition={{ duration: 0.3 }}
+        whileTap={{ scale: 0.95 }}
+    >
         <button
             style={{
                 backgroundColor: btnVariant[variant || "primary"]
@@ -33,7 +38,7 @@ const Button = ({
             {...rest}>
             {loading ? <Loader /> : title}
         </button>
-    </div>
+    </motion.div>
 }
 
 export default Button;
