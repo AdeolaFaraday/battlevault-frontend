@@ -3,7 +3,7 @@ import { generatePathNumberArray } from "@/src/utils/ludo-board";
 import LudoPath from "./ludo-path";
 import LudoHomeColumn from "./ludo-home-column";
 import useLudoAction from "@/src/hooks/ludo/useLudoAction";
-import DiceComponent from "./dice-component";
+import DiceComponent from "../dice-component";
 
 const LudoBoard = () => {
     const {
