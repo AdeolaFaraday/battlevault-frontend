@@ -5,6 +5,12 @@ import LudoHomeColumn from "./ludo-home-column";
 import useLudoAction from "@/src/hooks/ludo/useLudoAction";
 import DiceComponent from "../dice-component";
 
+/* 
+ Component built with flex box
+ Ludo path is inserted in the middle of each flex box
+ THe middle horizontal Ludo path span around the center so it contains two path space betweened each other
+ */
+
 const LudoBoard = () => {
     const {
         findActiveTokens,
@@ -20,12 +26,6 @@ const LudoBoard = () => {
         // You can use these results to update game state
         console.log('Dice roll results:', results);
     };
-
-    /* 
-    Component built with flex box
-    Ludo path is inserted in the middle of each flex box
-    THe middle horizontal Ludo path span around the center so it contains two path space betweened each other
-    */
     return (
         <>
             <div className='ludo-board'>
