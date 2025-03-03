@@ -2,7 +2,7 @@
 import { generatePathNumberArray } from "@/src/utils/ludo-board";
 import LudoPath from "./ludo-path";
 import LudoHomeColumn from "./ludo-home-column";
-import useLudoAction from "@/src/hooks/ludo/useLudoAction";
+import useLudoValues from "@/src/hooks/ludo/useLudoValues";
 import DiceComponent from "../dice-component";
 
 /* 
@@ -19,7 +19,7 @@ const LudoBoard = () => {
         greenTokens,
         yellowTokens,
         handleTokenClick
-    } = useLudoAction({})
+    } = useLudoValues({})
     console.log({ findActiveTokens });
 
     const handleDiceRoll = (results: number[]) => {

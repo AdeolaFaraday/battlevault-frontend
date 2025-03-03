@@ -1,7 +1,7 @@
 "use client"
 import clsx from "clsx";
 import LudoToken from "./ludo-token";
-import { Token } from "@/src/hooks/ludo/useLudoAction";
+import { Token } from "@/src/hooks/ludo/useLudoValues";
 
 const LudoHomeColumn = ({
     customClassName,

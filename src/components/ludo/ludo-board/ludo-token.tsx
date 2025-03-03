@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { cellColors } from "@/src/constants";
 import { useDrag } from "react-dnd";
 import { Preview } from 'react-dnd-preview';
-import { Token } from "@/src/hooks/ludo/useLudoAction";
+import { Token } from "@/src/hooks/ludo/useLudoValues";
 
 type LudoToken = {
     isInHomeColumn?: boolean
