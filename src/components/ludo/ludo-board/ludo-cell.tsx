@@ -2,7 +2,6 @@ import { CSSProperties } from "react"
 import { useDrop } from "react-dnd"
 import LudoToken from "./ludo-token"
 import clsx from "clsx"
-import { Token } from "@/src/hooks/ludo/useLudoAction"
 
 type LudoPathProp = {
     number: number

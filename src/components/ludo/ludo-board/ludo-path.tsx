@@ -1,6 +1,5 @@
 "use client"
 import clsx from "clsx";
-import { Token } from "@/src/hooks/ludo/useLudoAction";
 import LudoCell from "./ludo-cell";
 import { cellColors } from "@/src/constants";
 
