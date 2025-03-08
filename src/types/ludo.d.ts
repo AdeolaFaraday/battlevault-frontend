@@ -20,5 +20,5 @@ type LudoGameState = {
     currentTurn: string; // Player ID
     diceValue: number;
     isRolling: boolean;
-    status: "waiting" | "playing" | "finished";
+    status: "waiting" | "playingDice" | "playingToken" | "finished";
 };

@@ -17,7 +17,7 @@ const useLudoAction = ({ color }: { color?: string }) => {
         currentTurn: "",
         diceValue: 0,
         isRolling: false,
-        status: "waiting",
+        status: "playingDice",
     });
     const [blueTokens, setBlueTokens] = useState<Token[]>(generateDefaultTokenStates("blue") as any)
     const [yellowTokens, setYellowTokens] = useState<Token[]>(generateDefaultTokenStates("yellow") as any)
@@ -28,7 +28,6 @@ const useLudoAction = ({ color }: { color?: string }) => {
         ...yellowTokens,
         ...redTokens,
         ...greenTokens
-
     ]?.filter((token) => token.active)
     const findBgColor = cellColors?.find((data) => data?.color === color)
 
@@ -60,6 +59,17 @@ const useLudoAction = ({ color }: { color?: string }) => {
         }
     ]
 
+    const handleDiceRoll = (results: number[]) => {
+        // You can use these results to update game state
+        console.log('Dice roll results:', results);
+        setGameState(prev => {
+            return {
+                ...prev,
+                status: "playingToken"
+            }
+        })
+    };
+
     const handleTokenClick = (token: Token, position?: number) => {
         const findSetter = tokenMapper?.find((data) => data?.color == token?.color)
 
@@ -75,6 +85,12 @@ const useLudoAction = ({ color }: { color?: string }) => {
             }
             return prev
         })
+        setGameState(prev => {
+            return {
+                ...prev,
+                status: "playingDice"
+            }
+        })
     }
 
     return {
@@ -84,7 +100,9 @@ const useLudoAction = ({ color }: { color?: string }) => {
         greenTokens,
         redTokens,
         findBgColor,
-        handleTokenClick
+        gameState,
+        handleTokenClick,
+        handleDiceRoll
     }
 }
 
