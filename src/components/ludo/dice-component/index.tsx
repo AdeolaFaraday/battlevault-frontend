@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react';
 import DiceBox from '@3d-dice/dice-box';
 
 interface DiceComponentProps {
-    onRollComplete?: (results: number[]) => void;
+    onRollComplete?: (results: DiceValue[]) => void;
 }
 
 const DiceComponent = ({ onRollComplete }: DiceComponentProps) => {
@@ -46,7 +46,7 @@ const DiceComponent = ({ onRollComplete }: DiceComponentProps) => {
         if (!diceBoxRef.current) return;
 
         try {
-            const results = await diceBoxRef.current.roll('2dpip');
+            const results = await diceBoxRef.current.roll('2dpip') as unknown as DiceValue[];
             onRollComplete?.(results);
         } catch (error) {
             console.error('Error rolling dice:', error);

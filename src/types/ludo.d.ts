@@ -5,20 +5,27 @@ type Token = {
     position?: number
 }
 
+type DiceValue = {
+    sides: string;
+    dieType: string;
+    groupId: number;
+    rollId: number;
+    theme: string;
+    themeColor: string;
+    value: number;
+}
+
 type LudoPlayer = {
     id: string;
     name: string;
     color: "red" | "blue" | "green" | "yellow";
-    tokens: {
-        tokenName: string,
-        token: Token[]
-    };
+    tokens: string[]
 };
 
 type LudoGameState = {
     players: LudoPlayer[];
     currentTurn: string; // Player ID
-    diceValue: number;
+    diceValue: DiceValue[];
     isRolling: boolean;
     status: "waiting" | "playingDice" | "playingToken" | "finished";
 };
