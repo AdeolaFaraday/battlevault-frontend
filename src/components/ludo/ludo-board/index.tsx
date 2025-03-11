@@ -24,7 +24,7 @@ const LudoBoard = () => {
     } = useLudoAction({})
     console.log({ findActiveTokens });
 
-   
+
     return (
         <>
             <div className='ludo-board'>
@@ -109,9 +109,9 @@ const LudoBoard = () => {
                         customClassName="column-4"
                     />
                 </div>
-                {/* {gameState?.status === "playingDice" && <div className="dice-wrapper">
+                {gameState?.status === "playingDice" && <div className="dice-wrapper">
                     <DiceComponent onRollComplete={handleDiceRoll} />
-                </div>} */}
+                </div>}
             </div>
         </>
     );
