@@ -7,6 +7,7 @@ export type FeatureGameType = {
     backgroundColor: string;
     buttonBgColor: string;
     animation: any;
+    link: string;
 };
 
 export type LeaderboardCardType = {
@@ -37,13 +38,15 @@ export const FeatureGame: FeatureGameType[] = [
         backgroundColor: "#FF5733",
         buttonBgColor: "#C70039",
         animation: LudoLottie,
+        link: "/ludo"
     },
     {
         title: "Chess Master",
         subTitle: "Think and win.",
         backgroundColor: "#2C3E50",
         buttonBgColor: "#1A5276",
-        animation: ChessLottie
+        animation: ChessLottie,
+        link: "/chess"
     }
 ];
 

@@ -24,6 +24,13 @@ const LudoBoard = () => {
     } = useLudoAction({})
     console.log({ findActiveTokens });
 
+    const handleCustomDiceRoll = (results: number[]) => {
+        console.log('Dice roll results:', results);
+        // Convert to the format expected by the existing handler if needed
+        if (handleDiceRoll) {
+            handleDiceRoll(results as any);
+        }
+    };
 
     return (
         <>
@@ -109,9 +116,11 @@ const LudoBoard = () => {
                         customClassName="column-4"
                     />
                 </div>
-                {gameState?.status === "playingDice" && <div className="dice-wrapper">
-                    <DiceComponent onRollComplete={handleDiceRoll} />
-                </div>}
+                <div className="dice-wrapper">
+                    <DiceComponent 
+                        onRollComplete={handleCustomDiceRoll} 
+                    />
+                </div>
             </div>
         </>
     );
