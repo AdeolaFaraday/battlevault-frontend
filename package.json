@@ -11,7 +11,6 @@
     "test:watch": "jest --watch"
   },
   "dependencies": {
-    "@3d-dice/dice-box": "^1.1.4",
     "@apollo/client": "^3.12.8",
     "@apollo/experimental-nextjs-app-support": "^0.11.8",
     "@hookform/resolvers": "^3.10.0",

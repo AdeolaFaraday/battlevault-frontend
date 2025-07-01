@@ -5,15 +5,17 @@ const Lottie = dynamic(() => import("react-lottie-player"), { ssr: false });
 import Button from '../../common/button';
 import './styles.css';
 import { FeatureGameType } from "@/src/constants/game";
-
+import { useRouter } from "next/navigation";
 
 const FeaturedGamesCard = ({
     title,
     subTitle,
     buttonBgColor,
     backgroundColor,
-    animation
+    animation,
+    link
 }: FeatureGameType) => {
+    const router = useRouter();
     return (
         <div className="feature-games__card keen-slider__slide" style={{ background: backgroundColor }}>
             <div className='feature-games__cta'>
@@ -21,7 +23,9 @@ const FeaturedGamesCard = ({
                     <h2>{title}</h2>
                     <h5>{subTitle}</h5>
                 </div>
-                <Button title="Let's Play" customClassName="feature-games__play" style={{ background: buttonBgColor }} />
+                <Button onClick={() => {
+                    router.push(link)
+                }} title="Let's Play" customClassName="feature-games__play" style={{ background: buttonBgColor }} />
             </div>
             <div className="feature-games__lottie">
                 <Lottie

@@ -1,66 +1,66 @@
 "use client"
-import { useEffect, useRef } from 'react';
-import DiceBox from '@3d-dice/dice-box';
+import { useState } from 'react';
 
 interface DiceComponentProps {
-    onRollComplete?: (results: DiceValue[]) => void;
+    onRollComplete?: (results: number[]) => void;
 }
 
 const DiceComponent = ({ onRollComplete }: DiceComponentProps) => {
-    const containerRef = useRef<HTMLDivElement>(null);
-    const diceBoxRef = useRef<DiceBox | null>(null);
+    const [currentValues, setCurrentValues] = useState<[number, number]>([6, 6]);
+    const [isRolling, setIsRolling] = useState(false);
 
-    useEffect(() => {
-        if (!containerRef.current || diceBoxRef.current) return;
-
-        const initDice = async () => {
-            const diceBox = new DiceBox("#dice-box", {
-                theme: 'smooth-pip',
-                assetPath: '/assets/dice-box/',
-                dimensions: {
-                    w: 400,
-                    h: 400
-                },
-                scale: 10,
-                lightIntensity: 1.2,
-                themeColor: '#ffffff',
-                throwForce: 10,
-                spinForce: 5,
-            });
-
-            await diceBox.init();
-            diceBoxRef.current = diceBox;
+    // Generate dot pattern for each dice face
+    const getDiceDots = (value: number) => {
+        const dotPositions: { [key: number]: string[] } = {
+            1: ['center'],
+            2: ['top-left', 'bottom-right'],
+            3: ['top-left', 'center', 'bottom-right'],
+            4: ['top-left', 'top-right', 'bottom-left', 'bottom-right'],
+            5: ['top-left', 'top-right', 'center', 'bottom-left', 'bottom-right'],
+            6: ['top-left', 'top-right', 'middle-left', 'middle-right', 'bottom-left', 'bottom-right']
         };
+        return dotPositions[value] || [];
+    };
 
-        initDice();
+    const handleRollClick = () => {
+        setIsRolling(true);
 
-        return () => {
-            if (diceBoxRef.current) {
-                // Cleanup if needed
-                diceBoxRef.current = null;
-            }
-        };
-    }, []);
+        // Simulate rolling animation
+        setTimeout(() => {
+            const firstDiceValue = Math.floor(Math.random() * 6) + 1;
+            const secondDiceValue = Math.floor(Math.random() * 6) + 1;
+            setCurrentValues([firstDiceValue, secondDiceValue]);
+            setIsRolling(false);
+            onRollComplete?.(Array.from([firstDiceValue, secondDiceValue]));
+        }, 500);
+    };
 
-    const handleRollClick = async () => {
-        if (!diceBoxRef.current) return;
+    const renderDice = (value: number, index: number) => {
+        const dots = getDiceDots(value);
 
-        try {
-            const results = await diceBoxRef.current.roll('2dpip') as unknown as DiceValue[];
-            onRollComplete?.(results);
-        } catch (error) {
-            console.error('Error rolling dice:', error);
-        }
+        return (
+            <div
+                key={index}
+                className={`dice ${isRolling ? 'rolling' : ''}`}
+            >
+                {dots.map((position, dotIndex) => (
+                    <div key={dotIndex} className={`dot ${position}`} />
+                ))}
+            </div>
+        );
     };
 
     return (
-        <div className="dice-component">
-            <div id="dice-box" ref={containerRef} className="dice-container"></div>
+        <div className="">
+            <div className="dice-container">
+                {currentValues.map((value, index) => renderDice(value, index))}
+            </div>
             <button
                 onClick={handleRollClick}
                 className="roll-button"
+                disabled={isRolling}
             >
-                Roll Dice
+                {isRolling ? 'Rolling...' : 'Roll Dice'}
             </button>
         </div>
     );
