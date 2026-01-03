@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { cellColors } from "@/src/constants";
 
@@ -29,26 +29,7 @@ const useLudoAction = ({ color }: { color?: string }) => {
             }
         ],
         currentTurn: "1",
-        diceValue: [
-            {
-                sides: "pip",
-                dieType: "pip",
-                groupId: 0,
-                rollId: 0,
-                theme: "smooth-pip",
-                themeColor: "#ffffff",
-                value: 1
-            },
-            {
-                sides: "pip",
-                dieType: "pip",
-                groupId: 0,
-                rollId: 1,
-                theme: "smooth-pip",
-                themeColor: "#ffffff",
-                value: 4
-            }
-        ],
+        diceValue: [],
         isRolling: false,
         status: "playingDice",
     });
@@ -62,6 +43,15 @@ const useLudoAction = ({ color }: { color?: string }) => {
     const [yellowTokens, setYellowTokens] = useState<Token[]>(generateDefaultTokenStates("yellow") as any)
     const [greenTokens, setGreenTokens] = useState<Token[]>(generateDefaultTokenStates("green") as any)
     const [redTokens, setRedTokens] = useState<Token[]>(generateDefaultTokenStates("red") as any)
+    const [moveData, setMoveData] = useState<{
+        token: Token
+        position: number
+        playerId: string
+    }>({
+        token: {} as Token,
+        position: 0,
+        playerId: ""
+    })
     const findActiveTokens = [
         ...blueTokens,
         ...yellowTokens,
@@ -98,36 +88,73 @@ const useLudoAction = ({ color }: { color?: string }) => {
         }
     ]
 
-    const handleDiceRoll = (results: DiceValue[], playerId?: string) => {
+    const handleDiceRoll = (results: number[], playerId?: string) => {
         // You can use these results to update game state
         console.log('Dice roll results:', results);
         setGameState(prev => {
             return {
                 ...prev,
                 diceValue: results,
-                currentTurn: playerId || ""
+                status: "playingToken",
+                currentTurn: playerId || "1"
             }
         })
     };
 
-    const handleTokenClick = (token: Token, position?: number, playerId?: string) => {
-        const findPlayer = gameState?.players?.find((player) => player?.id === playerId)
-        const findToken = findPlayer?.tokens?.includes(token?.color)
+    useEffect(() => {
+        if (moveData?.token?.sn) {
+            handleTokenMove()
+        }
+    }, [moveData])
+
+    const handleTokenMove = () => {
+        const diceValue = gameState?.diceValue
+        const findPlayer = gameState?.players?.find((player) => player?.id === "1")
+        const findToken = findPlayer?.tokens?.includes(moveData?.token?.color)
+        // console.log({ findToken, playerId, token });
         if (!findToken) {
             toast.error("Can't move this token!")
             return
         }
-        const findSetter = tokenMapper?.find((data) => data?.color == token?.color)
+        const findSetter = tokenMapper?.find((data) => data?.color == moveData?.token?.color)
+
+        console.log({ isDiceValue: diceValue.includes(6), diceValue });
+
+        if (diceValue.includes(6) && !moveData?.token?.active) {
+            findSetter?.setter((prev: Token[]) => {
+                const newItem = {
+                    ...moveData?.token,
+                    position: moveData?.position,
+                    active: true,
+                }
+                return [...prev.filter((item) => item.sn !== moveData?.token?.sn), newItem];
+            })
+            setGameState(prev => {
+                return {
+                    ...prev,
+                    status: "playingDice",
+                    diceValue: prev?.diceValue?.filter((item) => item !== 6)
+                }
+            })
+            return
+        }
+
+        const sumOfDiceValue = diceValue?.reduce((acc, curr) => acc + curr, 0)
+        console.log({ moveData, gameState, sumOfDiceValue });
+        if (gameState?.status === "playingToken" && ((moveData?.position as number) - (moveData?.token?.position as number)) > sumOfDiceValue) {
+            toast.error("Can't move this token!")
+            return
+        }
 
         findSetter?.setter((prev: Token[]) => {
             const newItem = {
-                ...token,
-                position,
+                ...moveData?.token,
+                position: moveData?.position,
                 active: true,
             }
-            const exists = prev.some((item) => item.sn === token.sn);
+            const exists = prev.some((item) => item.sn === moveData?.token?.sn);
             if (exists) {
-                return [...prev.filter((item) => item.sn !== token.sn), newItem];
+                return [...prev.filter((item) => item.sn !== moveData?.token?.sn), newItem];
             }
             return prev
         })
@@ -136,6 +163,14 @@ const useLudoAction = ({ color }: { color?: string }) => {
                 ...prev,
                 status: "playingDice",
             }
+        })
+    }
+
+    const handleTokenClick = (token: Token, position?: number, playerId?: string) => {
+        setMoveData({
+            token,
+            position: position || 0,
+            playerId: playerId || ""
         })
     }
 

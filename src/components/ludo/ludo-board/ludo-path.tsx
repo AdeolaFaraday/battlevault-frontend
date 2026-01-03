@@ -52,6 +52,7 @@ const LudoPath = ({
                     key={number}
                     findActiveTokens={findActiveTokens}
                     customCellClassName={customCellClassName}
+                    isSafePath
                     number={number}
                     style={{ backgroundColor: number !== Math.min(...middlePathNumbers) ? findBgColor?.style : "transparent" }}
                     handleTokenDrop={handleTokenDrop}
