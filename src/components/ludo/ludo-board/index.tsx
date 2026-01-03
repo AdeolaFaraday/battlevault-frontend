@@ -117,8 +117,8 @@ const LudoBoard = () => {
                     />
                 </div>
                 <div className="dice-wrapper">
-                    <DiceComponent 
-                        onRollComplete={handleCustomDiceRoll} 
+                    <DiceComponent
+                        onRollComplete={handleCustomDiceRoll}
                     />
                 </div>
             </div>

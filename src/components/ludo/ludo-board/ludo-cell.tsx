@@ -5,6 +5,7 @@ import clsx from "clsx"
 
 type LudoPathProp = {
     number: number
+    isSafePath?: boolean
     findActiveTokens: any[]
     style?: CSSProperties
     customCellClassName?: string
@@ -16,7 +17,8 @@ const LudoCell = ({
     findActiveTokens,
     number,
     style,
-    handleTokenDrop
+    handleTokenDrop,
+    isSafePath
 }: LudoPathProp) => {
     const [_, dropRef] = useDrop(() => ({
         accept: "ITEM",
@@ -31,7 +33,7 @@ const LudoCell = ({
     return <div ref={dropRef as any} style={style} className={clsx("ludo-cell", customCellClassName)}>
         {findActiveTokens?.map((data, _) => (
             <span key={`${data?.color}${data?.position}`}>
-                {number === data?.position ? <LudoToken {...data} /> : <></>}
+                {isSafePath && data.isSafePath ? <LudoToken {...data} /> : (number === data?.position && !data.isSafePath && !isSafePath) ? <LudoToken {...data} /> : <></>}
             </span>
         ))}
     </div>
