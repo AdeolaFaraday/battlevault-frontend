@@ -33,6 +33,9 @@ const useLudoAction = ({ color }: { color?: string }) => {
         isRolling: false,
         status: "playingDice",
     });
+    const [usedDiceValues, setUsedDiceValues] = useState<number[]>([]);
+    const [lastMoveWasActivation, setLastMoveWasActivation] = useState<boolean>(false);
+    const [lastMovedToken, setLastMovedToken] = useState<{ color: string, sn: number } | null>(null);
     // const [tokenState, setTokenState] = useState({
     //     blueTokens: generateDefaultTokenStates("blue") as any,
     //     yellowTokens: generateDefaultTokenStates("yellow") as any,
@@ -91,6 +94,8 @@ const useLudoAction = ({ color }: { color?: string }) => {
     const handleDiceRoll = (results: number[], playerId?: string) => {
         // You can use these results to update game state
         console.log('Dice roll results:', results);
+        // Reset used dice values for new roll
+        setUsedDiceValues([]);
         setGameState(prev => {
             return {
                 ...prev,
@@ -111,37 +116,135 @@ const useLudoAction = ({ color }: { color?: string }) => {
         const diceValue = gameState?.diceValue
         const findPlayer = gameState?.players?.find((player) => player?.id === "1")
         const findToken = findPlayer?.tokens?.includes(moveData?.token?.color)
-        // console.log({ findToken, playerId, token });
+
         if (!findToken) {
             toast.error("Can't move this token!")
             return
         }
         const findSetter = tokenMapper?.find((data) => data?.color == moveData?.token?.color)
 
-        console.log({ isDiceValue: diceValue.includes(6), diceValue });
+        // Get available dice values (correctly handling duplicates)
+        let availableDiceValues = [...diceValue];
+        usedDiceValues.forEach(usedVal => {
+            const index = availableDiceValues.indexOf(usedVal);
+            if (index !== -1) {
+                availableDiceValues.splice(index, 1);
+            }
+        });
 
-        if (diceValue.includes(6) && !moveData?.token?.active) {
-            findSetter?.setter((prev: Token[]) => {
-                const newItem = {
-                    ...moveData?.token,
-                    position: moveData?.position,
-                    active: true,
+        // Handle activating token (Inactive Token Logic)
+        console.log({ moveData, findActiveTokens })
+        if (!moveData?.token?.active) {
+            const startPath = findSetter?.startPath;
+            const targetPosition = moveData?.position as number;
+
+            // Case 1: Drag/Click to Start Position
+            if (targetPosition === startPath) {
+                if (availableDiceValues.includes(6)) {
+                    findSetter?.setter((prev: Token[]) => {
+                        const newItem = {
+                            ...moveData?.token,
+                            position: startPath,
+                            active: true,
+                        }
+                        return [...prev.filter((item) => item.sn !== moveData?.token?.sn), newItem];
+                    })
+
+                    // Mark one 6 as used
+                    setUsedDiceValues(prev => [...prev, 6]);
+                    setLastMovedToken({ color: moveData?.token?.color, sn: moveData?.token?.sn });
+                    setLastMoveWasActivation(true);
+
+                    const remainingCount = availableDiceValues.length - 1;
+                    setGameState(prev => {
+                        return {
+                            ...prev,
+                            status: remainingCount > 0 ? "playingToken" : "playingDice",
+                        }
+                    })
+                    return;
+                } else {
+                    toast.error("You need a 6 to move out!");
+                    return;
                 }
-                return [...prev.filter((item) => item.sn !== moveData?.token?.sn), newItem];
-            })
-            setGameState(prev => {
-                return {
-                    ...prev,
-                    status: "playingDice",
-                    diceValue: prev?.diceValue?.filter((item) => item !== 6)
+            }
+
+            // Case 2: Drag to Start + X (Combined Activation)
+            // User drags from Home to (Start + X)
+            else if (targetPosition > startPath!) {
+                const moveDiff = targetPosition - startPath!;
+
+                // We need a 6 AND the difference value
+                // Check if we have a 6
+                const hasSix = availableDiceValues.includes(6);
+
+                if (!hasSix) {
+                    toast.error("You need a 6 to start!");
+                    return;
                 }
-            })
+
+                // Check if we have the difference value (handling separate dice instances)
+                // We temporarily remove one 6 to see if the other value exists
+                let tempDice = [...availableDiceValues];
+                const sixIndex = tempDice.indexOf(6);
+                if (sixIndex !== -1) tempDice.splice(sixIndex, 1);
+
+                const hasDiff = tempDice.includes(moveDiff);
+
+                if (hasDiff) {
+                    findSetter?.setter((prev: Token[]) => {
+                        const newItem = {
+                            ...moveData?.token,
+                            position: targetPosition,
+                            active: true,
+                        }
+                        return [...prev.filter((item) => item.sn !== moveData?.token?.sn), newItem];
+                    })
+
+                    // Mark BOTH 6 and diff as used
+                    setUsedDiceValues(prev => [...prev, 6, moveDiff]);
+                    setLastMovedToken({ color: moveData?.token?.color, sn: moveData?.token?.sn });
+                    setLastMoveWasActivation(false); // Combined move complete, no "activation" state needed as turn ends or consumes dice
+
+                    // Calculate remaining dice count (removed 2 dice)
+                    const remainingCount = availableDiceValues.length - 2;
+
+                    // Force End of Turn logic if we want to be strict, or just let natural dice depletion work
+                    // The requirement was "there should be no more moves"
+                    // If we used 2 dice and had 2, remaining is 0 -> playingDice
+                    setGameState(prev => {
+                        return {
+                            ...prev,
+                            // If we strictly want to end turn even if 3 dice exists (unlikely in standard Ludo but good for safety):
+                            status: "playingDice",
+                        }
+                    })
+                    return;
+                } else {
+                    toast.error(`You need a 6 and a ${moveDiff} to move there!`);
+                    return;
+                }
+            } else {
+                toast.error("Invalid move for starting token!");
+                return;
+            }
+        }
+
+        // Calculate the move distance
+        const moveDistance = (moveData?.position as number) - (moveData?.token?.position as number);
+
+        // Check if the move distance matches any available dice value
+        const matchingDiceValue = availableDiceValues.find(val => val === moveDistance);
+
+        if (!matchingDiceValue) {
+            toast.error(`Invalid move! You can only move ${availableDiceValues.join(' or ')} steps.`)
             return
         }
 
-        const sumOfDiceValue = diceValue?.reduce((acc, curr) => acc + curr, 0)
-        console.log({ moveData, gameState, sumOfDiceValue });
-        if (gameState?.status === "playingToken" && ((moveData?.position as number) - (moveData?.token?.position as number)) > sumOfDiceValue) {
+        // Validate move doesn't exceed sum of available dice (general safety check)
+        const sumOfAvailableDice = availableDiceValues?.reduce((acc, curr) => acc + curr, 0)
+
+        if (gameState?.status === "playingToken" && moveDistance > sumOfAvailableDice) {
             toast.error("Can't move this token!")
             return
         }
@@ -158,15 +261,23 @@ const useLudoAction = ({ color }: { color?: string }) => {
             }
             return prev
         })
+
+        // Mark this dice value as used
+        setUsedDiceValues(prev => [...prev, matchingDiceValue]);
+
+        // Calculate remaining details for status update
+        const remainingDiceValuesCount = availableDiceValues.length - 1;
+
         setGameState(prev => {
             return {
                 ...prev,
-                status: "playingDice",
+                status: remainingDiceValuesCount > 0 ? "playingToken" : "playingDice",
             }
         })
     }
 
     const handleTokenClick = (token: Token, position?: number, playerId?: string) => {
+        console.log({ token, position, playerId })
         setMoveData({
             token,
             position: position || 0,

@@ -16,7 +16,7 @@ const LudoHomeColumn = ({
     return <div className={clsx("ludo-home__column", customClassName)}>
         <div className="ludo-token__container">
             <div className="ludo-token__grid">
-                {token?.sort((a, b) => a.sn - b.sn).map((data, key) => <LudoToken {...data} isInHomeColumn homeActive={!data?.position} key={key} color={color} onClick={() => handleTokenClick(data)} />)}
+                {token?.sort((a, b) => a.sn - b.sn).map((data, key) => <LudoToken {...data} isInHomeColumn homeActive={!data?.position} active={data?.active} key={key} color={color} onClick={() => handleTokenClick(data)} />)}
             </div>
         </div>
     </div>

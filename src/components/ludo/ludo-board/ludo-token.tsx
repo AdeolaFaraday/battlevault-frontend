@@ -25,7 +25,7 @@ const LudoToken = ({
         item: {
             sn,
             color,
-            active: null,
+            active,
             position
         },
         collect: (monitor) => ({
