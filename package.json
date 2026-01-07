@@ -23,7 +23,7 @@
     "graphql": "^16.10.0",
     "keen-slider": "^6.8.6",
     "lucide-react": "^0.475.0",
-    "next": "15.1.6",
+    "next": "15.1.11",
     "react": "^19.0.0",
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
