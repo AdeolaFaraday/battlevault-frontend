@@ -1,9 +1,13 @@
 import LobbyScreen from '../../../../src/components/ludo/lobby/LobbyScreen';
 
-export default function LudoLobbyPage({
+interface PageProps {
+    params: Promise<{ gameId: string }>; // Note: params is a Promise here
+}
+
+
+export default async function LudoLobbyPage({
     params,
-}: {
-    params: { gameId: string };
-}) {
-    return <LobbyScreen gameId={params.gameId} />;
+}: PageProps) {
+    const gameId = (await params).gameId;
+    return <LobbyScreen gameId={gameId} />;
 }
