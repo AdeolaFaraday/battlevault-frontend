@@ -16,7 +16,6 @@ import LogoIcon from '../common/icons/Logo';
 const SignInComponent = () => {
     const {
         errors,
-        touchedFields,
         isValid,
         handleSubmit,
         register,
@@ -45,7 +44,7 @@ const SignInComponent = () => {
                 <Input {...register("password")} error={errors?.password} aria-label="password" type='password' placeholder='Enter Password' label='Password' />
                 <Button loading={loading} disabled={(loading || !isValid)} variant={(loading || !isValid) ? "disabled" : "primary"} title='Sign In' />
                 <div>
-                    <h3>Don't have account yet? <Link href="/signup" className='signin_span'>Sign up</Link></h3>
+                    <h3>Don&apos;t have account yet? <Link href="/signup" className='signin_span'>Sign up</Link></h3>
                 </div>
             </form>
         </div>

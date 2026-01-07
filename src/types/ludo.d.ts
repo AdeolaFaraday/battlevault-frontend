@@ -3,6 +3,7 @@ type Token = {
     color: string
     active?: boolean
     position?: number
+    isSafePath?: boolean
 }
 
 type DiceValue = {

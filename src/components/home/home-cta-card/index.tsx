@@ -5,7 +5,7 @@ const Lottie = dynamic(() => import("react-lottie-player"), { ssr: false });
 
 import './styles.css';
 
-const HomeCtaCard = ({ lottieJson, title }: { lottieJson: any, title: string }) => {
+const HomeCtaCard = ({ lottieJson, title }: { lottieJson: Record<string, unknown>, title: string }) => {
     return (
         <div className="home-cta">
             <Lottie

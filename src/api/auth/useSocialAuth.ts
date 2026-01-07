@@ -5,16 +5,19 @@ const useSocialAuth = (
     onCompleted: (data: TSocialLoginUserResponse) => void | undefined,
     _onError?: (error: ApolloError) => void | undefined
 ) => {
-    const onError = (error: ApolloError) => {
-        if (error) {
-        }
+    const onError = () => {
+        // Handle error if needed
     };
 
     const [_socialAuth, states] =
         useMutation<TSocialLoginUserResponse>(SOCIAL_LOGIN_USER_MUTATION, {
             onCompleted,
             onError: error => {
-                _onError === undefined ? onError(error) : _onError(error);
+                if (_onError === undefined) {
+                    onError();
+                } else {
+                    _onError(error);
+                }
             },
         });
     const socialAuth = ({ token }: { token: string }) => {

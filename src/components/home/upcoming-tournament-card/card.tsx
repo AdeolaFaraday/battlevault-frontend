@@ -15,6 +15,8 @@ const UpcomingTournamentCard = ({
     time,
     title,
 }: Tournament) => {
+    console.log(entryFee, game);
+
     return (
         <div className="tournament-card keen-slider__slide">
             {/* Tournament Header */}

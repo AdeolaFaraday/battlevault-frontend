@@ -18,7 +18,6 @@ const LudoBoard = () => {
         blueTokens,
         greenTokens,
         yellowTokens,
-        gameState,
         handleTokenClick,
         handleDiceRoll
     } = useLudoAction({})
@@ -28,7 +27,7 @@ const LudoBoard = () => {
         console.log('Dice roll results:', results);
         // Convert to the format expected by the existing handler if needed
         if (handleDiceRoll) {
-            handleDiceRoll(results as any);
+            handleDiceRoll(results);
         }
     };
 

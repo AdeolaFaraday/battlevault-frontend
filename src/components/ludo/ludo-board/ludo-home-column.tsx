@@ -11,7 +11,7 @@ const LudoHomeColumn = ({
     customClassName?: string
     color: string
     token: Token[]
-    handleTokenClick: (e?: any) => void
+    handleTokenClick: (token: Token) => void
 }) => {
     return <div className={clsx("ludo-home__column", customClassName)}>
         <div className="ludo-token__container">

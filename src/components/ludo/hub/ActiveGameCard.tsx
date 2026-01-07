@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import { Play, Users, Clock } from 'lucide-react';
+import { Play, Clock } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const ActiveGameCard = () => {
@@ -56,7 +56,7 @@ const ActiveGameCard = () => {
                         <h2 className="text-2xl md:text-3xl font-black text-white leading-tight">
                             vs. Player2
                         </h2>
-                        <p className="text-indigo-200 font-medium">It's your turn!</p>
+                        <p className="text-indigo-200 font-medium">It&apos;s your turn!</p>
                     </div>
 
                     {/* Avatars tiny row */}

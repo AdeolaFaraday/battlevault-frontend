@@ -10,7 +10,7 @@ import useVerifyEmail from "@/src/hooks/auth/useVerifyEmail";
 
 const VerifyEmailComponent = () => {
     const { token } = useParams();
-    const { loading, data } = useVerifyEmail({ token })
+    const { data } = useVerifyEmail({ token: token as string })
 
     return (
         <div className="success-container">

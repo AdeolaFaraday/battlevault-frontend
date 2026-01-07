@@ -5,16 +5,19 @@ const useUserSignup = (
     onCompleted: (data: TCreateUserResponse) => void | undefined,
     _onError?: (error: ApolloError) => void | undefined
 ) => {
-    const onError = (error: ApolloError) => {
-        if (error) {
-        }
+    const onError = () => {
+        // Handle error if needed
     };
 
     const [_createUser, states] =
         useMutation<TCreateUserResponse>(CREATE_USER_MUTATION, {
             onCompleted,
             onError: error => {
-                _onError === undefined ? onError(error) : _onError(error);
+                if (_onError === undefined) {
+                    onError();
+                } else {
+                    _onError(error);
+                }
             },
         });
     const createUser = (args: TCreateUserArgs) => {

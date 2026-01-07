@@ -16,19 +16,19 @@ const LobbyScreen = () => {
     });
 
     // Player 2 (Opponent) - simulates joining after delay or waiting
-    const [opponent, setOpponent] = useState<{ name: string; isReady: boolean; avatarUrl: '' } | undefined>(
+    const [opponent] = useState<{ name: string; isReady: boolean; avatarUrl: '' } | undefined>(
         undefined // Start as undefined to show empty state
     );
 
     // Game Mode State: 'tournament' | 'free'
     const [gameMode] = useState<'tournament' | 'free'>('tournament');
 
-    // Simulate opponent joining
-    const handleSimulateJoin = () => {
-        setOpponent({ name: 'Alex_Gamer', isReady: false, avatarUrl: '' });
-    };
+    // Simulate opponent joining (commented out)
+    // const handleSimulateJoin = () => {
+    //     setOpponent({ name: 'Alex_Gamer', isReady: false, avatarUrl: '' });
+    // };
 
-    const roomCode = "LUDO-8829";
+    // const roomCode = "LUDO-8829";
     const isHost = true;
     const canStart = !!opponent && opponent.isReady; // Just for demo logic, can add ready check later
 

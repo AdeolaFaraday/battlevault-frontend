@@ -1,4 +1,4 @@
-import React from "react";
+import React, { RefObject } from "react";
 import { motion } from "framer-motion";
 import { cellColors } from "@/src/constants";
 import { useDrag } from "react-dnd";
@@ -7,7 +7,7 @@ import { Preview } from 'react-dnd-preview';
 type LudoToken = {
     isInHomeColumn?: boolean
     homeActive?: boolean
-    onClick?: (e?: any) => void
+    onClick?: (e?: object) => void
 } & Token
 
 const LudoToken = ({
@@ -19,6 +19,8 @@ const LudoToken = ({
     isInHomeColumn,
     onClick
 }: LudoToken) => {
+    console.log({ onClick });
+    // onClick is passed but not currently used in this component
     const findBgColor = cellColors?.find((data) => data?.color === color)
     const [{ isDragging }, dragRef] = useDrag(() => ({
         type: "ITEM",
@@ -33,7 +35,7 @@ const LudoToken = ({
         }),
     }));
 
-    const generatePreview = ({ itemType, item, style }: any) => {
+    const generatePreview = ({ style }: { style: object }) => {
         return <div style={{
             ...style,
             width: "1.5rem",
@@ -57,7 +59,7 @@ const LudoToken = ({
             <Preview>{generatePreview}</Preview>
 
             <motion.div
-                ref={dragRef as any}
+                ref={dragRef as unknown as RefObject<HTMLDivElement>}
                 className="ludo-token"
                 draggable
                 style={{

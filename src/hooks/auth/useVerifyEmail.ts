@@ -3,7 +3,7 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import useVerifyEmailApi from '@/src/api/auth/useVerifyEmail';
 
-const useVerifyEmail = ({ token }: { token: any }) => {
+const useVerifyEmail = ({ token }: { token: string }) => {
     const router = useRouter();
     const hasRun = useRef(false);
 

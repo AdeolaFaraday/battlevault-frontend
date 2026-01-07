@@ -6,7 +6,7 @@ export type FeatureGameType = {
     subTitle: string;
     backgroundColor: string;
     buttonBgColor: string;
-    animation: any;
+    animation: object;
     link: string;
 };
 

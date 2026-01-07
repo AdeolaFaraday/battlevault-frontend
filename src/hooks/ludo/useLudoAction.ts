@@ -34,18 +34,18 @@ const useLudoAction = ({ color }: { color?: string }) => {
         status: "playingDice",
     });
     const [usedDiceValues, setUsedDiceValues] = useState<number[]>([]);
-    const [lastMoveWasActivation, setLastMoveWasActivation] = useState<boolean>(false);
-    const [lastMovedToken, setLastMovedToken] = useState<{ color: string, sn: number } | null>(null);
+    const [, setLastMoveWasActivation] = useState<boolean>(false);
+    const [, setLastMovedToken] = useState<{ color: string, sn: number } | null>(null);
     // const [tokenState, setTokenState] = useState({
     //     blueTokens: generateDefaultTokenStates("blue") as any,
     //     yellowTokens: generateDefaultTokenStates("yellow") as any,
     //     greenTokens: generateDefaultTokenStates("green") as any,
     //     redTokens: generateDefaultTokenStates("red") as any
     // })
-    const [blueTokens, setBlueTokens] = useState<Token[]>(generateDefaultTokenStates("blue") as any)
-    const [yellowTokens, setYellowTokens] = useState<Token[]>(generateDefaultTokenStates("yellow") as any)
-    const [greenTokens, setGreenTokens] = useState<Token[]>(generateDefaultTokenStates("green") as any)
-    const [redTokens, setRedTokens] = useState<Token[]>(generateDefaultTokenStates("red") as any)
+    const [blueTokens, setBlueTokens] = useState<Token[]>(generateDefaultTokenStates("blue") as unknown as Token[])
+    const [yellowTokens, setYellowTokens] = useState<Token[]>(generateDefaultTokenStates("yellow") as unknown as Token[])
+    const [greenTokens, setGreenTokens] = useState<Token[]>(generateDefaultTokenStates("green") as unknown as Token[])
+    const [redTokens, setRedTokens] = useState<Token[]>(generateDefaultTokenStates("red") as unknown as Token[])
     const [moveData, setMoveData] = useState<{
         token: Token
         position: number
@@ -124,7 +124,7 @@ const useLudoAction = ({ color }: { color?: string }) => {
         const findSetter = tokenMapper?.find((data) => data?.color == moveData?.token?.color)
 
         // Get available dice values (correctly handling duplicates)
-        let availableDiceValues = [...diceValue];
+        const availableDiceValues = [...diceValue];
         usedDiceValues.forEach(usedVal => {
             const index = availableDiceValues.indexOf(usedVal);
             if (index !== -1) {
@@ -185,7 +185,7 @@ const useLudoAction = ({ color }: { color?: string }) => {
 
                 // Check if we have the difference value (handling separate dice instances)
                 // We temporarily remove one 6 to see if the other value exists
-                let tempDice = [...availableDiceValues];
+                const tempDice = [...availableDiceValues];
                 const sixIndex = tempDice.indexOf(6);
                 if (sixIndex !== -1) tempDice.splice(sixIndex, 1);
 
@@ -207,7 +207,7 @@ const useLudoAction = ({ color }: { color?: string }) => {
                     setLastMoveWasActivation(false); // Combined move complete, no "activation" state needed as turn ends or consumes dice
 
                     // Calculate remaining dice count (removed 2 dice)
-                    const remainingCount = availableDiceValues.length - 2;
+                    // const remainingCount = availableDiceValues.length - 2;
 
                     // Force End of Turn logic if we want to be strict, or just let natural dice depletion work
                     // The requirement was "there should be no more moves"

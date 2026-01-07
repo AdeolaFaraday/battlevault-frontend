@@ -1,4 +1,4 @@
-import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import { combineReducers, configureStore, AnyAction } from '@reduxjs/toolkit';
 import expireReducer from 'redux-persist-expire';
 import {
   persistStore,
@@ -17,7 +17,7 @@ const appReducer = combineReducers({
   auth: authReducer,
 })
 
-const rootReducer = (state: any, action: any) => {
+const rootReducer = (state: ReturnType<typeof appReducer> | undefined, action: AnyAction) => {
   if (action.type === 'ui/resetState') {
     return appReducer(undefined, action);
   }
@@ -51,7 +51,7 @@ export const makeStore = () => {
   if (isServer) {
     return makeConfiguredStore()
   } else {
-    let store: any = configureStore({
+    const store = configureStore({
       reducer: persistedReducer,
       middleware: getDefaultMiddleware =>
         getDefaultMiddleware({
@@ -68,6 +68,7 @@ export const makeStore = () => {
         }),
       devTools: process.env.NODE_ENV !== 'production',
     })
+    // @ts-expect-error -- redux-persist mutates the store with a non-standard field
     store.__persistor = persistStore(store)
     return store
   }

@@ -6,14 +6,14 @@ import {
 } from "@apollo/experimental-nextjs-app-support";
 // import { createUploadLink } from 'apollo-upload-client';
 
-const LINK = {
-  credentials: 'include',
-  uri: process.env.NEXT_PUBLIC_SERVER_URL,
-};
+// const LINK = {
+//   credentials: 'include',
+//   uri: process.env.NEXT_PUBLIC_SERVER_URL,
+// };
 
-const httpLink = new HttpLink({
-  uri: process.env.NEXT_PUBLIC_SERVER_URL,
-});
+// const httpLink = new HttpLink({
+//   uri: process.env.NEXT_PUBLIC_SERVER_URL,
+// });
 
 // const uploadLink = createUploadLink(LINK);
 
