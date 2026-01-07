@@ -5,20 +5,50 @@ import VersusAvatar from './VersusAvatar';
 import ActionButtons from './ActionButtons';
 import { cn } from '../../../lib/utils';
 import { Swords, Trophy, Dices } from 'lucide-react';
+import { useGameSession } from '@/src/hooks/useGameSession';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/src/lib/redux/store';
 
-const LobbyScreen = () => {
+interface LobbyScreenProps {
+    gameId?: string;
+}
+
+const LobbyScreen = ({ gameId }: LobbyScreenProps) => {
     // Placeholder State for 1v1
     // Player 1 is current user (always present)
-    const [currentUser] = useState({
-        name: 'You',
-        isReady: true,
-        avatarUrl: ''
+    // Player 1 is current user (always present)
+    const { loggedInUserDetails } = useSelector((state: RootState) => state.auth);
+
+    // Construct player object if user exists
+    const player = loggedInUserDetails ? {
+        id: loggedInUserDetails._id || "guest",
+        name: `${loggedInUserDetails.firstName} ${loggedInUserDetails.lastName}`,
+        color: "red", // Defaulting to red for now, can be dynamic later
+        tokens: []
+    } : undefined;
+
+    const { gameState, loading, error } = useGameSession({
+        gameId: gameId || "",
+        player: player || { id: "", name: "", color: "", tokens: [] }
     });
 
-    // Player 2 (Opponent) - simulates joining after delay or waiting
-    const [opponent] = useState<{ name: string; isReady: boolean; avatarUrl: '' } | undefined>(
-        undefined // Start as undefined to show empty state
-    );
+    console.log("Lobby Session:", { gameState, loading, error });
+
+    // Derived State from Game Session
+    const sessionCurrentUser = gameState?.players.find(p => p.id === player?.id);
+    const sessionOpponent = gameState?.players.find(p => p.id !== player?.id);
+
+    const currentUserDisplay = {
+        name: sessionCurrentUser?.name || player?.name || 'You',
+        isReady: true, // If they are in the game, they are ready? Or add logic.
+        avatarUrl: ''
+    };
+
+    const opponentDisplay = sessionOpponent ? {
+        name: sessionOpponent.name,
+        isReady: true,
+        avatarUrl: ''
+    } : undefined;
 
     // Game Mode State: 'tournament' | 'free'
     const [gameMode] = useState<'tournament' | 'free'>('tournament');
@@ -29,8 +59,8 @@ const LobbyScreen = () => {
     // };
 
     // const roomCode = "LUDO-8829";
-    const isHost = true;
-    const canStart = !!opponent && opponent.isReady; // Just for demo logic, can add ready check later
+    const isHost = true; // TODO: Determine based on who created it?
+    const canStart = !!opponentDisplay && opponentDisplay.isReady;
 
     const handleStartGame = () => {
         console.log("Starting game...");
@@ -81,7 +111,7 @@ const LobbyScreen = () => {
 
                     {/* Player 1 (You) */}
                     <div className="flex-1 flex justify-center md:justify-end md:pr-16 w-full md:w-auto">
-                        <VersusAvatar player={currentUser} />
+                        <VersusAvatar player={currentUserDisplay} />
                     </div>
 
                     {/* VS Badge - Center */}
@@ -103,7 +133,7 @@ const LobbyScreen = () => {
 
                     {/* Player 2 (Opponent) */}
                     <div className="flex-1 flex justify-center md:justify-start md:pl-16 w-full md:w-auto">
-                        <VersusAvatar player={opponent} isOpponent={true} />
+                        <VersusAvatar player={opponentDisplay} isOpponent={true} />
                     </div>
 
                 </div>
@@ -131,7 +161,12 @@ const LobbyScreen = () => {
                         [Simulate Opponent]
                     </button>
                 </div> */}
-
+            {/* Debug Info */}
+            <div className="absolute top-4 left-4 text-white/50 text-xs">
+                {loading && <p>Joining game...</p>}
+                {error && <p className="text-red-400">Error: {error.message}</p>}
+                {gameState && <p>Game ID: {gameState.id} | Status: {gameState.status}</p>}
+            </div>
         </div>
     );
 };
