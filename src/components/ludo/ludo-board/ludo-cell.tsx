@@ -2,11 +2,12 @@ import { CSSProperties } from "react"
 import { useDrop } from "react-dnd"
 import LudoToken from "./ludo-token"
 import clsx from "clsx"
+import { RefObject } from "react"
 
 type LudoPathProp = {
     number: number
     isSafePath?: boolean
-    findActiveTokens: any[]
+    findActiveTokens: Token[]
     style?: CSSProperties
     customCellClassName?: string
     handleTokenDrop: (token: Token, position?: number) => void
@@ -20,7 +21,7 @@ const LudoCell = ({
     handleTokenDrop,
     isSafePath
 }: LudoPathProp) => {
-    const [_, dropRef] = useDrop(() => ({
+    const [, dropRef] = useDrop(() => ({
         accept: "ITEM",
         drop: (item: Token) => {
             console.log({ item, number });
@@ -30,8 +31,8 @@ const LudoCell = ({
             isOver: monitor.isOver(),
         }),
     }));
-    return <div ref={dropRef as any} style={style} className={clsx("ludo-cell", customCellClassName)}>
-        {findActiveTokens?.map((data, _) => (
+    return <div ref={dropRef as unknown as RefObject<HTMLDivElement>} style={style} className={clsx("ludo-cell", customCellClassName)}>
+        {findActiveTokens?.map((data) => (
             <span key={`${data?.color}${data?.position}`}>
                 {isSafePath && data.isSafePath ? <LudoToken {...data} /> : (number === data?.position && !data.isSafePath && !isSafePath) ? <LudoToken {...data} /> : <></>}
             </span>

@@ -8,7 +8,7 @@ type LudoPathProp = {
     customRowClassName?: string
     customCellClassName?: string
     color: string
-    findActiveTokens: any[]
+    findActiveTokens: Token[]
     startPathNumbers: number[]
     endPathNumbers: number[]
     middlePathNumbers: number[]
@@ -35,7 +35,7 @@ const LudoPath = ({
 
     return <div className={clsx("ludo-cell__container", customClassName)}>
         <div className={clsx("", customRowClassName)}>
-            {startPathNumbers.map((number, i) => (
+            {startPathNumbers.map((number) => (
                 <LudoCell
                     key={number}
                     findActiveTokens={findActiveTokens}
@@ -47,7 +47,7 @@ const LudoPath = ({
             ))}
         </div>
         <div className={clsx("", customRowClassName)}>
-            {middlePathNumbers.map((number, i) => (
+            {middlePathNumbers.map((number) => (
                 <LudoCell
                     key={number}
                     findActiveTokens={findActiveTokens}
@@ -60,7 +60,7 @@ const LudoPath = ({
             ))}
         </div>
         <div className={clsx("", customRowClassName)}>
-            {endPathNumbers.map((number, i) => (
+            {endPathNumbers.map((number) => (
                 <LudoCell
                     key={number}
                     findActiveTokens={findActiveTokens}

@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom'
-import { render, screen } from '@testing-library/react'
+import { screen } from '@testing-library/react'
 import { useRouter } from 'next/navigation'
 import userEvent from '@testing-library/user-event'
 import SignInComponent from './index'

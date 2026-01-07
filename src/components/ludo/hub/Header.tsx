@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { Bell, Trophy, Wallet } from 'lucide-react';
-import Image from 'next/image';
 
 const Header = () => {
     return (

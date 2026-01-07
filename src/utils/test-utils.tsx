@@ -16,7 +16,7 @@ export function renderWithRedux(
         ...renderOptions
     } = {}
 ) {
-    function Wrapper({ children }: { children: any }) {
+    function Wrapper({ children }: { children: React.ReactNode }) {
         return <Provider store={store}> {children} </Provider>;
     }
 

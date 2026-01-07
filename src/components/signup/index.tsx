@@ -13,7 +13,6 @@ import './styles.css';
 const SignUpComponent = () => {
     const {
         errors,
-        touchedFields,
         handleSubmit,
         register,
     } = useHookForm<TCreateUserArgs>({
