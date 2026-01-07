@@ -1,0 +1,46 @@
+"use client";
+
+import React from 'react';
+import Header from './Header';
+import ActiveGameCard from './ActiveGameCard';
+import UpcomingGamesSection from './UpcomingGamesSection';
+import TournamentsSection from './TournamentsSection';
+import QuickActions from './QuickActions';
+
+const GameHubScreen = () => {
+    return (
+        <div className="min-h-screen bg-[#1a1d2e] font-sans pb-24 md:pb-12">
+            <Header />
+
+            <main className="max-w-7xl mx-auto px-4 md:px-8 py-6 md:py-8 space-y-8 md:space-y-12">
+
+                {/* Top Section: Active Game - Full Width */}
+                <section>
+                    <ActiveGameCard />
+                </section>
+
+                {/* Two Column Layout for Desktop */}
+                <div className="flex flex-col md:flex-row gap-8 md:gap-12">
+
+                    {/* Left Column: Tournaments & Upcoming */}
+                    <div className="flex-1 space-y-8 md:space-y-10 order-2 md:order-1">
+                        <section>
+                            <TournamentsSection />
+                        </section>
+                        <section>
+                            <UpcomingGamesSection />
+                        </section>
+                    </div>
+
+                    {/* Right Column: Quick Actions (Sticky on Desktop) */}
+                    <div className="w-full md:w-[380px] shrink-0 order-1 md:order-2">
+                        <QuickActions />
+                    </div>
+                </div>
+
+            </main>
+        </div>
+    );
+};
+
+export default GameHubScreen;
