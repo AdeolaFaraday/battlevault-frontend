@@ -10,10 +10,10 @@ type LudoToken = {
 
 const LudoToken = ({
     color = "red",
-    active,
+    // active,
     homeActive,
     sn,
-    position,
+    // position,
     isInHomeColumn,
     onClick
 }: LudoToken) => {
@@ -40,7 +40,7 @@ const LudoToken = ({
             }}
             onClick={(e) => {
                 e.stopPropagation();
-                onClick && onClick();
+                onClick?.();
             }}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}

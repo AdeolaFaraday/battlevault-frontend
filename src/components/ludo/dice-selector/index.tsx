@@ -12,8 +12,8 @@ interface DiceSelectorProps {
 const DiceSelector = ({ availableDice, onSelect, activeDiceConfig }: DiceSelectorProps) => {
     if (availableDice.length === 0) return null;
 
-    const isCombined = (dice: number[]) => dice.length > 1;
-    const sumSelected = activeDiceConfig?.reduce((a, b) => a + b, 0) || 0;
+    // const isCombined = (dice: number[]) => dice.length > 1;
+    // const sumSelected = activeDiceConfig?.reduce((a, b) => a + b, 0) || 0;
 
     return (
         <AnimatePresence>
