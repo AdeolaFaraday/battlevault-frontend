@@ -14,10 +14,7 @@ import DiceComponent from "../dice-component";
 const LudoBoard = () => {
     const {
         findActiveTokens,
-        redTokens,
-        blueTokens,
-        greenTokens,
-        yellowTokens,
+        tokens,
         handleTokenClick,
         handleDiceRoll
     } = useLudoAction({})
@@ -38,7 +35,7 @@ const LudoBoard = () => {
                     <LudoHomeColumn
                         color="red"
                         customClassName="column-1"
-                        token={redTokens}
+                        token={tokens.red}
                         handleTokenClick={handleTokenClick}
                     />
                     {/* 
@@ -58,7 +55,7 @@ const LudoBoard = () => {
                     <LudoHomeColumn
                         color="green"
                         customClassName="column-2"
-                        token={greenTokens}
+                        token={tokens.green}
                         handleTokenClick={handleTokenClick}
                     />
                 </div>
@@ -96,7 +93,7 @@ const LudoBoard = () => {
                     <LudoHomeColumn
                         color="blue"
                         customClassName="column-3"
-                        token={blueTokens}
+                        token={tokens.blue}
                         handleTokenClick={handleTokenClick}
                     />
                     <LudoPath
@@ -110,7 +107,7 @@ const LudoBoard = () => {
                     />
                     <LudoHomeColumn
                         handleTokenClick={handleTokenClick}
-                        token={yellowTokens}
+                        token={tokens.yellow}
                         color="yellow"
                         customClassName="column-4"
                     />
