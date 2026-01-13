@@ -56,7 +56,34 @@ div.column-4 {
 }
 
 .ludo-cell {
-    @apply h-[1.5rem] w-[1.5rem] border border-[color:var(--primary-color)] border-solid;
+    @apply h-[1.5rem] w-[1.5rem] border border-[color:var(--primary-color)] border-solid relative flex items-center justify-center;
+}
+
+.ludo-cell.stacked .ludo-token {
+    width: 70% !important;
+    height: 70% !important;
+    position: absolute;
+    border-width: 2px;
+}
+
+.ludo-cell.stacked .ludo-token:nth-child(1) {
+    transform: translate(-30%, -30%) !important;
+    z-index: 10;
+}
+
+.ludo-cell.stacked .ludo-token:nth-child(2) {
+    transform: translate(30%, 30%) !important;
+    z-index: 20;
+}
+
+.ludo-cell.stacked .ludo-token:nth-child(3) {
+    transform: translate(-30%, 30%) !important;
+    z-index: 30;
+}
+
+.ludo-cell.stacked .ludo-token:nth-child(4) {
+    transform: translate(30%, -30%) !important;
+    z-index: 40;
 }
 
 .ludo-column__center {
@@ -247,7 +274,7 @@ div.column-4 {
     @apply flex flex-col items-center gap-4 p-5 rounded-[2.5rem] bg-slate-950/80 backdrop-blur-3xl border border-white/10;
     box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
     position: fixed;
-    bottom: 40px;
+    top: 40px;
     transform: translateX(-50%);
     z-index: 100;
     min-width: 340px;
@@ -320,7 +347,8 @@ div.column-4 {
 @media (max-width: 768px) {
     .dice-selector__wrapper {
         width: calc(100% - 32px);
-        bottom: 32px;
+        top: 32px;
+        bottom: auto;
         padding: 1.5rem 1rem;
         min-width: unset;
     }

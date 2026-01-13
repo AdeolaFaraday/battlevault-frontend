@@ -31,16 +31,23 @@ const LudoCell = ({
             isOver: monitor.isOver(),
         }),
     }));
-    return <div ref={dropRef as unknown as RefObject<HTMLDivElement>} style={style} className={clsx("ludo-cell", customCellClassName)}>
-        {findActiveTokens?.map((data) => (
-            <span key={`${data?.color}-${data?.sn}`}>
-                {isSafePath && data.isSafePath ? (
-                    <LudoToken {...data} onClick={() => handleTokenDrop(data, number)} />
-                ) : (number === data?.position && !data.isSafePath && !isSafePath) ? (
-                    <LudoToken {...data} onClick={() => handleTokenDrop(data, number)} />
-                ) : <></>}
-            </span>
-        ))}
+    const cellTokens = findActiveTokens?.filter((token) => {
+        if (isSafePath) {
+            return token.isSafePath && token.position === number;
+        }
+        return !token.isSafePath && token.position === number;
+    }) || [];
+
+    const isStacked = cellTokens.length > 1;
+
+    return <div ref={dropRef as unknown as RefObject<HTMLDivElement>} style={style} className={clsx("ludo-cell", customCellClassName, isStacked && "stacked")}>
+        {cellTokens.length > 0 ? (
+            cellTokens.map((data) => (
+                <LudoToken key={`${data?.color}-${data?.sn}`} {...data} onClick={() => handleTokenDrop(data, number)} />
+            ))
+        ) : (
+            <></>
+        )}
     </div>
 }
 

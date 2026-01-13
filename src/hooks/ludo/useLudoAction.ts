@@ -10,7 +10,8 @@ const useLudoAction = ({ color }: { color?: string }) => {
                 sn: i + 1,
                 color,
                 active: null,
-                position: null
+                position: null,
+                isSafePath: false,
             }
         })
     }

@@ -18,9 +18,9 @@ const DiceSelector = ({ availableDice, onSelect, activeDiceConfig }: DiceSelecto
     return (
         <AnimatePresence>
             <motion.div
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 20 }}
+                exit={{ opacity: 0, y: -20 }}
                 className="dice-selector__wrapper"
             >
                 <div className="dice-selector__label">Select Move:</div>
