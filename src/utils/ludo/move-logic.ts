@@ -17,6 +17,7 @@ interface ProcessMoveParams {
     moveData: MoveData;
     gameState: LudoGameState;
     usedDiceValues: number[];
+    activeDiceConfig: number[] | null;
     findActiveTokens: Token[];
     tokens: { [key: string]: Token[] };
     setTokens: (val: { [key: string]: Token[] } | ((prev: { [key: string]: Token[] }) => { [key: string]: Token[] })) => void;
@@ -24,23 +25,28 @@ interface ProcessMoveParams {
     setGameState: (val: LudoGameState | ((prev: LudoGameState) => LudoGameState)) => void;
     setLastMovedToken: (val: { color: string, sn: number } | null) => void;
     setLastMoveWasActivation: (val: boolean) => void;
+    setActiveDiceConfig: (val: number[] | null) => void;
 }
 
 export const processTokenMove = ({
     moveData,
     gameState,
     usedDiceValues,
+    activeDiceConfig,
     findActiveTokens,
     tokens,
     setTokens,
     setUsedDiceValues,
     setGameState,
     setLastMovedToken,
-    setLastMoveWasActivation
+    setLastMoveWasActivation,
+    setActiveDiceConfig
 }: ProcessMoveParams) => {
     const diceValue = gameState?.diceValue;
     const findPlayer = gameState?.players?.find((player) => player?.id === "1"); // TODO: use actual current player
     const findToken = findPlayer?.tokens?.includes(moveData?.token?.color);
+
+    console.log({ moveData, activeDiceConfig, findToken });
 
     if (!findToken) {
         toast.error("Can't move this token!");
@@ -68,18 +74,39 @@ export const processTokenMove = ({
 
     // Determine target position for click-based moves
     let targetPosition = moveData?.position;
-    if (!targetPosition) {
+    console.log({ activeDiceConfigHere: activeDiceConfig, moveData, targetPosition, availableDiceValues })
+
+    // If no position provided OR position is same as current (click event), calculate target
+    if (!targetPosition || targetPosition === moveData.token.position) {
         if (availableDiceValues.length === 0) {
             toast.error("Roll dice first!");
             return;
         }
-
         if (moveData.token.active) {
-            // Default to first available dice value for clicks
-            targetPosition = (moveData.token.position || 0) + availableDiceValues[0];
+            // Priority 1: Use active selection from UI
+            if (activeDiceConfig && activeDiceConfig.length > 0) {
+                const totalMove = activeDiceConfig.reduce((a, b) => a + b, 0);
+                targetPosition = (moveData.token.position || 0) + totalMove;
+            }
+            // Priority 2: Auto-select if only one dice exists
+            else if (availableDiceValues.length === 1) {
+                targetPosition = (moveData.token.position || 0) + availableDiceValues[0];
+            } else {
+                toast.error("Please select a dice value!");
+                return;
+            }
         } else {
-            // For inactive tokens, click means "move to start"
-            targetPosition = startPath;
+            // For inactive tokens, click with 6 means "move to start"
+            // If combined selection exists (e.g. 6 + 3), move to start + 3
+            if (activeDiceConfig && activeDiceConfig.includes(6)) {
+                const totalMove = activeDiceConfig.reduce((a, b) => a + b, 0);
+                targetPosition = startPath + (totalMove - 6);
+            } else if (availableDiceValues.includes(6)) {
+                targetPosition = startPath;
+            } else {
+                toast.error("You need a 6 to start!");
+                return;
+            }
         }
     }
 
@@ -89,26 +116,30 @@ export const processTokenMove = ({
 
         // Case 1: Drag/Click to Start Position
         if (targetPosition === startPath) {
+            const diceToUse = activeDiceConfig?.includes(6) ? activeDiceConfig : [6];
+
             if (availableDiceValues.includes(6)) {
                 setTokens((prev) => {
                     const currentTokens = prev[tokenColor] || [];
+                    const existingToken = currentTokens.find((item) => item.sn === moveData?.token?.sn);
                     const newItem = {
-                        ...moveData?.token,
+                        ...(existingToken || moveData?.token),
                         position: startPath,
                         active: true,
                     };
+                    console.log('Activating token:', { sn: moveData.token.sn, from: existingToken?.position, to: startPath });
                     return {
                         ...prev,
                         [tokenColor]: [...currentTokens.filter((item) => item.sn !== moveData?.token?.sn), newItem]
                     };
                 });
 
-                // Mark one 6 as used
-                setUsedDiceValues(prev => [...prev, 6]);
+                setUsedDiceValues(prev => [...prev, ...diceToUse!]);
                 setLastMovedToken({ color: moveData?.token?.color, sn: moveData?.token?.sn });
                 setLastMoveWasActivation(true);
+                setActiveDiceConfig(null);
 
-                const remainingCount = availableDiceValues.length - 1;
+                const remainingCount = availableDiceValues.length - diceToUse!.length;
                 setGameState(prev => {
                     return {
                         ...prev,
@@ -125,36 +156,28 @@ export const processTokenMove = ({
         // Case 2: Drag to Start + X (Combined Activation)
         else if (targetPosition > startPath!) {
             const moveDiff = targetPosition - startPath!;
-            const hasSix = availableDiceValues.includes(6);
+            const diceToUse = activeDiceConfig?.length === 2 ? activeDiceConfig : [6, moveDiff];
 
-            if (!hasSix) {
-                toast.error("You need a 6 to start!");
-                return;
-            }
-
-            const tempDice = [...availableDiceValues];
-            const sixIndex = tempDice.indexOf(6);
-            if (sixIndex !== -1) tempDice.splice(sixIndex, 1);
-
-            const hasDiff = tempDice.includes(moveDiff);
-
-            if (hasDiff) {
+            if (diceToUse.includes(6) && diceToUse.includes(moveDiff)) {
                 setTokens((prev) => {
                     const currentTokens = prev[tokenColor] || [];
+                    const existingToken = currentTokens.find((item) => item.sn === moveData?.token?.sn);
                     const newItem = {
-                        ...moveData?.token,
+                        ...(existingToken || moveData?.token),
                         position: targetPosition,
                         active: true,
                     };
+                    console.log('Activating and moving token:', { sn: moveData.token.sn, from: existingToken?.position, to: targetPosition });
                     return {
                         ...prev,
                         [tokenColor]: [...currentTokens.filter((item) => item.sn !== moveData?.token?.sn), newItem]
                     };
                 });
 
-                setUsedDiceValues(prev => [...prev, 6, moveDiff]);
+                setUsedDiceValues(prev => [...prev, ...diceToUse]);
                 setLastMovedToken({ color: moveData?.token?.color, sn: moveData?.token?.sn });
                 setLastMoveWasActivation(false);
+                setActiveDiceConfig(null);
 
                 setGameState(prev => {
                     return {
@@ -175,40 +198,34 @@ export const processTokenMove = ({
 
     // Calculate the move distance
     const moveDistance = targetPosition - (moveData?.token?.position as number);
-    const matchingDiceValue = availableDiceValues.find(val => val === moveDistance);
+    const diceToConsume = activeDiceConfig || [moveDistance];
 
-    if (!matchingDiceValue) {
-        toast.error(`Invalid move! You can only move ${availableDiceValues.join(' or ')} steps.`);
-        return;
-    }
-
-    const sumOfAvailableDice = availableDiceValues?.reduce((acc, curr) => acc + curr, 0);
-
-    if (gameState?.status === "playingToken" && moveDistance > sumOfAvailableDice) {
-        toast.error("Can't move this token!");
-        return;
-    }
-
+    // CRITICAL: Update the token position
     setTokens((prev) => {
         const currentTokens = prev[tokenColor] || [];
+        const existingToken = currentTokens.find((item) => item.sn === moveData?.token?.sn);
+
+        if (!existingToken && !moveData?.token) return prev;
+
         const newItem = {
-            ...moveData?.token,
+            ...(existingToken || moveData?.token),
             position: targetPosition,
             active: true,
         };
-        const exists = currentTokens.some((item) => item.sn === moveData?.token?.sn);
-        if (exists) {
-            return {
-                ...prev,
-                [tokenColor]: [...currentTokens.filter((item) => item.sn !== moveData?.token?.sn), newItem]
-            };
-        }
-        return prev;
+
+        console.log('Moving active token:', { sn: moveData.token.sn, from: existingToken?.position, to: targetPosition });
+
+        return {
+            ...prev,
+            [tokenColor]: [...currentTokens.filter((item) => item.sn !== moveData?.token?.sn), newItem]
+        };
     });
 
-    setUsedDiceValues(prev => [...prev, matchingDiceValue]);
+    // Mark these as used
+    setUsedDiceValues(prev => [...prev, ...diceToConsume]);
+    setActiveDiceConfig(null);
 
-    const remainingDiceValuesCount = availableDiceValues.length - 1;
+    const remainingDiceValuesCount = availableDiceValues.length - diceToConsume.length;
 
     setGameState(prev => {
         return {

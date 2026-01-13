@@ -17,7 +17,6 @@ const LudoToken = ({
     isInHomeColumn,
     onClick
 }: LudoToken) => {
-    console.log({ onClick });
     // onClick is passed but not currently used in this component
     const findBgColor = cellColors?.find((data) => data?.color === color)
     const isDragging = false; // Mocking isDragging since hook is removed
