@@ -33,8 +33,12 @@ const LudoCell = ({
     }));
     return <div ref={dropRef as unknown as RefObject<HTMLDivElement>} style={style} className={clsx("ludo-cell", customCellClassName)}>
         {findActiveTokens?.map((data) => (
-            <span key={`${data?.color}${data?.position}`}>
-                {isSafePath && data.isSafePath ? <LudoToken {...data} /> : (number === data?.position && !data.isSafePath && !isSafePath) ? <LudoToken {...data} /> : <></>}
+            <span key={`${data?.color}-${data?.sn}`}>
+                {isSafePath && data.isSafePath ? (
+                    <LudoToken {...data} onClick={() => handleTokenDrop(data, number)} />
+                ) : (number === data?.position && !data.isSafePath && !isSafePath) ? (
+                    <LudoToken {...data} onClick={() => handleTokenDrop(data, number)} />
+                ) : <></>}
             </span>
         ))}
     </div>

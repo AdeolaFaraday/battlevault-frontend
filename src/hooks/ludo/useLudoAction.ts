@@ -132,11 +132,27 @@ const useLudoAction = ({ color }: { color?: string }) => {
             }
         });
 
+        // Determine target position for click-based moves
+        let targetPosition = moveData?.position;
+        if (!targetPosition) {
+            if (availableDiceValues.length === 0) {
+                toast.error("Roll dice first!");
+                return;
+            }
+
+            if (moveData.token.active) {
+                // Default to first available dice value for clicks
+                targetPosition = (moveData.token.position || 0) + availableDiceValues[0];
+            } else {
+                // For inactive tokens, click means "move to start"
+                targetPosition = findSetter?.startPath as number;
+            }
+        }
+
         // Handle activating token (Inactive Token Logic)
         console.log({ moveData, findActiveTokens })
         if (!moveData?.token?.active) {
             const startPath = findSetter?.startPath;
-            const targetPosition = moveData?.position as number;
 
             // Case 1: Drag/Click to Start Position
             if (targetPosition === startPath) {
@@ -206,16 +222,10 @@ const useLudoAction = ({ color }: { color?: string }) => {
                     setLastMovedToken({ color: moveData?.token?.color, sn: moveData?.token?.sn });
                     setLastMoveWasActivation(false); // Combined move complete, no "activation" state needed as turn ends or consumes dice
 
-                    // Calculate remaining dice count (removed 2 dice)
-                    // const remainingCount = availableDiceValues.length - 2;
-
-                    // Force End of Turn logic if we want to be strict, or just let natural dice depletion work
-                    // The requirement was "there should be no more moves"
-                    // If we used 2 dice and had 2, remaining is 0 -> playingDice
+                    // Force End of Turn logic
                     setGameState(prev => {
                         return {
                             ...prev,
-                            // If we strictly want to end turn even if 3 dice exists (unlikely in standard Ludo but good for safety):
                             status: "playingDice",
                         }
                     })
@@ -231,7 +241,7 @@ const useLudoAction = ({ color }: { color?: string }) => {
         }
 
         // Calculate the move distance
-        const moveDistance = (moveData?.position as number) - (moveData?.token?.position as number);
+        const moveDistance = targetPosition - (moveData?.token?.position as number);
 
         // Check if the move distance matches any available dice value
         const matchingDiceValue = availableDiceValues.find(val => val === moveDistance);
@@ -252,7 +262,7 @@ const useLudoAction = ({ color }: { color?: string }) => {
         findSetter?.setter((prev: Token[]) => {
             const newItem = {
                 ...moveData?.token,
-                position: moveData?.position,
+                position: targetPosition,
                 active: true,
             }
             const exists = prev.some((item) => item.sn === moveData?.token?.sn);
