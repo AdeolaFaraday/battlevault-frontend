@@ -248,7 +248,6 @@ div.column-4 {
     box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
     position: fixed;
     bottom: 40px;
-    left: 50%;
     transform: translateX(-50%);
     z-index: 100;
     min-width: 340px;
