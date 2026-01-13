@@ -86,11 +86,22 @@ export const processTokenMove = ({
             // Priority 1: Use active selection from UI
             if (activeDiceConfig && activeDiceConfig.length > 0) {
                 const totalMove = activeDiceConfig.reduce((a, b) => a + b, 0);
-                targetPosition = (moveData.token.position || 0) + totalMove;
+                const nextPos = (moveData.token.position || 0) + totalMove;
+
+                if (tokenColor === 'red') {
+                    targetPosition = nextPos;
+                } else {
+                    targetPosition = nextPos > 52 ? nextPos - 52 : nextPos;
+                }
             }
             // Priority 2: Auto-select if only one dice exists
             else if (availableDiceValues.length === 1) {
-                targetPosition = (moveData.token.position || 0) + availableDiceValues[0];
+                const nextPos = (moveData.token.position || 0) + availableDiceValues[0];
+                if (tokenColor === 'red') {
+                    targetPosition = nextPos;
+                } else {
+                    targetPosition = nextPos > 52 ? nextPos - 52 : nextPos;
+                }
             } else {
                 toast.error("Please select a dice value!");
                 return;
@@ -126,6 +137,7 @@ export const processTokenMove = ({
                         ...(existingToken || moveData?.token),
                         position: startPath,
                         active: true,
+                        isSafePath: false,
                     };
                     console.log('Activating token:', { sn: moveData.token.sn, from: existingToken?.position, to: startPath });
                     return {
@@ -166,6 +178,7 @@ export const processTokenMove = ({
                         ...(existingToken || moveData?.token),
                         position: targetPosition,
                         active: true,
+                        isSafePath: tokenColor === 'red' ? targetPosition > 52 : false,
                     };
                     console.log('Activating and moving token:', { sn: moveData.token.sn, from: existingToken?.position, to: targetPosition });
                     return {
@@ -196,8 +209,11 @@ export const processTokenMove = ({
         }
     }
 
-    // Calculate the move distance
-    const moveDistance = targetPosition - (moveData?.token?.position as number);
+    let moveDistance = targetPosition - (moveData?.token?.position as number);
+    if (tokenColor !== 'red' && moveDistance < 0) {
+        moveDistance += 52;
+    }
+
     const diceToConsume = activeDiceConfig || [moveDistance];
 
     // CRITICAL: Update the token position
@@ -211,9 +227,10 @@ export const processTokenMove = ({
             ...(existingToken || moveData?.token),
             position: targetPosition,
             active: true,
+            isSafePath: tokenColor === 'red' ? targetPosition > 52 : (existingToken?.isSafePath || false),
         };
 
-        console.log('Moving active token:', { sn: moveData.token.sn, from: existingToken?.position, to: targetPosition });
+        console.log('Moving active token:', { sn: moveData.token.sn, from: existingToken?.position, to: targetPosition, isSafePath: newItem.isSafePath });
 
         return {
             ...prev,
