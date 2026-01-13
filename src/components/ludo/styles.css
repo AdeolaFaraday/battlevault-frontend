@@ -241,3 +241,93 @@ div.column-4 {
     opacity: 0.6;
     cursor: not-allowed;
 }
+
+/* Dice Selector Styles */
+.dice-selector__wrapper {
+    @apply flex flex-col items-center gap-4 p-5 rounded-[2.5rem] bg-slate-950/80 backdrop-blur-3xl border border-white/10;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
+    position: fixed;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    min-width: 340px;
+}
+
+.dice-selector__label {
+    @apply text-indigo-400 text-[9px] font-black uppercase tracking-[0.3em] mb-1;
+}
+
+.dice-selector__options {
+    @apply flex gap-4;
+}
+
+.dice-option {
+    @apply flex flex-col items-center justify-center p-4 rounded-3xl transition-all duration-300 active:scale-90;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    min-width: 75px;
+    cursor: pointer;
+}
+
+.dice-option:hover {
+    background: rgba(79, 70, 229, 0.15);
+    border-color: rgba(79, 70, 229, 0.4);
+    transform: translateY(-4px);
+}
+
+.dice-option.active {
+    background: linear-gradient(135deg, #4f46e5 0%, #312e81 100%);
+    border-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 10px 30px rgba(79, 70, 229, 0.5), inset 0 0 15px rgba(255, 255, 255, 0.2);
+    transform: translateY(-10px);
+}
+
+.dice-sum-wrapper {
+    @apply flex flex-col items-center relative;
+}
+
+.dice-sum-tag {
+    @apply absolute -top-1 -right-4 px-1.5 py-0.5 rounded-md bg-indigo-500/20 border border-indigo-500/30;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dice-sum-values {
+    @apply text-[8px] font-bold text-indigo-300 whitespace-nowrap;
+}
+
+.dice-option.active .dice-sum-tag {
+    @apply bg-white/20 border-white/30;
+}
+
+.dice-option.active .dice-sum-values {
+    @apply text-white;
+}
+
+.dice-value {
+    @apply text-3xl font-black text-white tracking-tighter;
+}
+
+.dice-sublabel {
+    @apply text-[10px] text-white/40 font-bold mt-2 uppercase tracking-wide;
+}
+
+.dice-option.active .dice-sublabel {
+    @apply text-white/70;
+}
+
+@media (max-width: 768px) {
+    .dice-selector__wrapper {
+        width: calc(100% - 32px);
+        bottom: 32px;
+        padding: 1.5rem 1rem;
+        min-width: unset;
+    }
+
+    .dice-option {
+        min-width: 70px;
+        @apply p-3;
+    }
+}

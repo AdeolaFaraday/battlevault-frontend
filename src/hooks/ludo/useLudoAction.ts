@@ -35,6 +35,7 @@ const useLudoAction = ({ color }: { color?: string }) => {
         status: "playingDice",
     });
     const [usedDiceValues, setUsedDiceValues] = useState<number[]>([]);
+    const [activeDiceConfig, setActiveDiceConfig] = useState<number[] | null>(null);
     const [, setLastMoveWasActivation] = useState<boolean>(false);
     const [, setLastMovedToken] = useState<{ color: string, sn: number } | null>(null);
     const [tokens, setTokens] = useState<{ [key: string]: Token[] }>({
@@ -47,34 +48,12 @@ const useLudoAction = ({ color }: { color?: string }) => {
     const findActiveTokens = Object.values(tokens).flat().filter((token) => token.active)
     const findBgColor = cellColors?.find((data) => data?.color === color)
 
-    const tokenMapper = [
-        {
-            color: "blue",
-            value: tokens.blue,
-            startPath: 41,
-        },
-        {
-            color: "green",
-            value: tokens.green,
-            startPath: 15,
-        },
-        {
-            color: "yellow",
-            value: tokens.yellow,
-            startPath: 28,
-        },
-        {
-            color: "red",
-            value: tokens.red,
-            startPath: 2,
-        }
-    ]
-
     const handleDiceRoll = (results: number[], playerId?: string) => {
         // You can use these results to update game state
         console.log('Dice roll results:', results);
         // Reset used dice values for new roll
         setUsedDiceValues([]);
+        setActiveDiceConfig(null);
         setGameState(prev => {
             return {
                 ...prev,
@@ -90,18 +69,32 @@ const useLudoAction = ({ color }: { color?: string }) => {
             moveData,
             gameState,
             usedDiceValues,
+            activeDiceConfig,
             findActiveTokens,
             tokens,
             setTokens,
             setUsedDiceValues,
             setGameState,
             setLastMovedToken,
-            setLastMoveWasActivation
+            setLastMoveWasActivation,
+            setActiveDiceConfig
         });
     }
 
     const handleTokenClick = (token: Token, position?: number, playerId?: string) => {
-        console.log({ token, position, playerId })
+        // Get available dice
+        const availableDice = [...gameState.diceValue];
+        usedDiceValues.forEach(val => {
+            const index = availableDice.indexOf(val);
+            if (index !== -1) availableDice.splice(index, 1);
+        });
+
+        // If multiple dice available but none selected, alert user
+        if (availableDice.length > 1 && !activeDiceConfig) {
+            toast.info("Please select a dice value first!");
+            return;
+        }
+
         handleTokenMove({
             token,
             position: position || 0,
@@ -109,7 +102,7 @@ const useLudoAction = ({ color }: { color?: string }) => {
         })
     }
 
-    console.log({ gameState });
+    console.log({ gameState, tokens });
 
 
     return {
@@ -117,6 +110,9 @@ const useLudoAction = ({ color }: { color?: string }) => {
         tokens,
         findBgColor,
         gameState,
+        activeDiceConfig,
+        setActiveDiceConfig,
+        usedDiceValues,
         handleTokenClick,
         handleDiceRoll
     }

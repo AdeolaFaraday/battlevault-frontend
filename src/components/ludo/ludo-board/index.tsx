@@ -4,6 +4,7 @@ import LudoPath from "./ludo-path";
 import LudoHomeColumn from "./ludo-home-column";
 import useLudoAction from "@/src/hooks/ludo/useLudoAction";
 import DiceComponent from "../dice-component";
+import DiceSelector from "../dice-selector";
 
 /* 
  Component built with flex box
@@ -15,18 +16,30 @@ const LudoBoard = () => {
     const {
         findActiveTokens,
         tokens,
+        gameState,
+        activeDiceConfig,
+        setActiveDiceConfig,
+        usedDiceValues,
         handleTokenClick,
         handleDiceRoll
     } = useLudoAction({})
     console.log({ findActiveTokens });
 
     const handleCustomDiceRoll = (results: number[]) => {
-        console.log('Dice roll results:', results);
-        // Convert to the format expected by the existing handler if needed
         if (handleDiceRoll) {
             handleDiceRoll(results);
         }
     };
+
+    const availableDice = [...(gameState?.diceValue || [])];
+    usedDiceValues.forEach(val => {
+        const index = availableDice.indexOf(val);
+        if (index !== -1) availableDice.splice(index, 1);
+    });
+
+    const showDiceSelector = gameState.status === "playingToken" && availableDice.length > 0;
+
+    console.log({ blueValues: tokens.blue });
 
     return (
         <>
@@ -116,6 +129,14 @@ const LudoBoard = () => {
                     <DiceComponent
                         onRollComplete={handleCustomDiceRoll}
                     />
+
+                    {showDiceSelector && (
+                        <DiceSelector
+                            availableDice={availableDice}
+                            activeDiceConfig={activeDiceConfig}
+                            onSelect={setActiveDiceConfig}
+                        />
+                    )}
                 </div>
             </div>
         </>
