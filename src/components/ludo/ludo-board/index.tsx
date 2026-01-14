@@ -49,7 +49,7 @@ const LudoBoard = ({ id }: { id: string }) => {
     const showDiceSelector = gameState.status === "playingToken" && availableDice.length > 0;
 
     // Helper to get player data safely
-    const getPlayer = (color: string) => gameState.players?.find(p => p.color === color);
+    const getPlayer = (color: string) => gameState.players?.find(p => p.tokens?.includes(color));
     const currentTurnId = gameState.currentTurn;
 
     return (
@@ -65,12 +65,12 @@ const LudoBoard = ({ id }: { id: string }) => {
             <div className="flex-1 flex flex-col items-center justify-center relative z-10 w-full max-w-[500px] mx-auto pb-4">
                 <GameStats />
 
-                {/* Top Opponent Card */}
+                {/* Top Opponent Card (Green or Red) */}
                 <div className="w-full flex justify-center mb-4 px-4">
                     <PlayerCard
-                        player={getPlayer("yellow") || getPlayer("green")}
-                        color={getPlayer("yellow") ? "yellow" : "green"}
-                        isCurrentTurn={(getPlayer("yellow") || getPlayer("green"))?.id === currentTurnId}
+                        player={getPlayer("green") || getPlayer("red")}
+                        color={getPlayer("green") ? "green" : "red"}
+                        isCurrentTurn={(getPlayer("green") || getPlayer("red"))?.id === currentTurnId}
                         position="top-right"
                     />
                 </div>
@@ -175,12 +175,12 @@ const LudoBoard = ({ id }: { id: string }) => {
                     )}
                 </div>
 
-                {/* Bottom User Card */}
+                {/* Bottom User Card (Blue or Yellow) */}
                 <div className="w-full flex justify-center mt-2 px-4">
                     <PlayerCard
-                        player={getPlayer("red") || getPlayer("blue")}
-                        color={getPlayer("red") ? "red" : "blue"}
-                        isCurrentTurn={(getPlayer("red") || getPlayer("blue"))?.id === currentTurnId}
+                        player={getPlayer("blue") || getPlayer("yellow")}
+                        color={getPlayer("blue") ? "blue" : "yellow"}
+                        isCurrentTurn={(getPlayer("blue") || getPlayer("yellow"))?.id === currentTurnId}
                         position="bottom-left"
                     />
                 </div>
