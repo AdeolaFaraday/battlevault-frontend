@@ -51,17 +51,22 @@ const DiceComponent = ({ onRollComplete }: DiceComponentProps) => {
     };
 
     return (
-        <div className="">
-            <div className="dice-container">
-                {currentValues.map((value, index) => renderDice(value, index))}
+        <div className="flex items-center justify-center gap-6">
+            <div className="transform rotate-[-10deg] hover:rotate-0 transition-transform duration-300">
+                {renderDice(currentValues[0], 0)}
             </div>
+
             <button
                 onClick={handleRollClick}
-                className="roll-button"
+                className="px-8 py-4 bg-gradient-to-br from-indigo-500 to-indigo-700 text-white font-black text-lg tracking-wider rounded-2xl shadow-[0_10px_20px_rgba(79,70,229,0.4)] hover:shadow-[0_15px_30px_rgba(79,70,229,0.5)] border-t border-white/20 hover:-translate-y-1 active:translate-y-0 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                 disabled={isRolling}
             >
-                {isRolling ? 'Rolling...' : 'Roll Dice'}
+                {isRolling ? '...' : 'ROLL'}
             </button>
+
+            <div className="transform rotate-[10deg] hover:rotate-0 transition-transform duration-300">
+                {renderDice(currentValues[1], 1)}
+            </div>
         </div>
     );
 };
