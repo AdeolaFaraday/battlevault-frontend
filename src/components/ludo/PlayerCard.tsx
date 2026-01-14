@@ -1,7 +1,6 @@
 import React from 'react';
 import { User } from 'lucide-react';
 import { cn } from '../../lib/utils';
-import { GameSessionData } from '@/src/services/ludo/game.service';
 
 interface PlayerCardProps {
     player?: LudoPlayer;
@@ -13,12 +12,12 @@ interface PlayerCardProps {
 
 const PlayerCard: React.FC<PlayerCardProps> = ({ player, isCurrentTurn, color, position }) => {
     // Map Ludo colors to Tailwind classes
-    const colorStyles = {
-        red: "bg-red-500/10 border-red-500/50 text-red-100",
-        blue: "bg-blue-500/10 border-blue-500/50 text-blue-100",
-        green: "bg-green-500/10 border-green-500/50 text-green-100",
-        yellow: "bg-yellow-500/10 border-yellow-500/50 text-yellow-100",
-    };
+    // const colorStyles = {
+    //     red: "bg-red-500/10 border-red-500/50 text-red-100",
+    //     blue: "bg-blue-500/10 border-blue-500/50 text-blue-100",
+    //     green: "bg-green-500/10 border-green-500/50 text-green-100",
+    //     yellow: "bg-yellow-500/10 border-yellow-500/50 text-yellow-100",
+    // };
 
     const gradientStyles = {
         red: "from-red-900/80 to-slate-900/80",
