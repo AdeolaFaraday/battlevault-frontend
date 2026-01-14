@@ -8,10 +8,10 @@ import './styles.css';
 const isTouchDevice = typeof window !== "undefined" &&
     ("ontouchstart" in window || navigator.maxTouchPoints > 0);
 
-const LudoComponent = () => {
+const LudoComponent = ({ id }: { id: string }) => {
     return <div className='ludo-container'>
         <DndProvider backend={isTouchDevice ? TouchBackend : HTML5Backend} >
-            <LudoBoard />
+            <LudoBoard id={id} />
         </DndProvider>
     </div>
 }
