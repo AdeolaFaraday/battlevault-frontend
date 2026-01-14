@@ -30,21 +30,19 @@ const useLudoAction = ({ color }: { color?: string }) => {
         usedDiceValues: [],
         activeDiceConfig: null,
         lastUpdated: null,
-        tokens: {},
-    });
-    const [usedDiceValues, setUsedDiceValues] = useState<number[]>([]);
-    const [activeDiceConfig, setActiveDiceConfig] = useState<number[] | null>(null);
-    const [, setLastMoveWasActivation] = useState<boolean>(false);
-    const [, setLastMovedToken] = useState<{ color: string, sn: number } | null>(null);
-    const [tokens, setTokens] = useState<{ [key: string]: Token[] }>({
-        blue: generateDefaultTokenStates("blue") as unknown as Token[],
-        yellow: generateDefaultTokenStates("yellow") as unknown as Token[],
-        green: generateDefaultTokenStates("green") as unknown as Token[],
-        red: generateDefaultTokenStates("red") as unknown as Token[]
+        tokens: {
+            blue: generateDefaultTokenStates("blue") as unknown as Token[],
+            yellow: generateDefaultTokenStates("yellow") as unknown as Token[],
+            green: generateDefaultTokenStates("green") as unknown as Token[],
+            red: generateDefaultTokenStates("red") as unknown as Token[]
+        },
     });
 
+    const [, setLastMoveWasActivation] = useState<boolean>(false);
+    const [, setLastMovedToken] = useState<{ color: string, sn: number } | null>(null);
+
     const isInternalUpdate = useRef(false);
-    const findActiveTokens = Object.values(tokens).flat().filter(t => t.active);
+    const findActiveTokens = Object.values(gameState.tokens).flat().filter(t => t.active);
 
     // 1. Subscribe to Firestore (SOURCE OF TRUTH)
     useEffect(() => {
@@ -59,9 +57,6 @@ const useLudoAction = ({ color }: { color?: string }) => {
             console.log({ firestoreData: data });
 
             if (data) setGameState(data);
-            if (data.tokens) setTokens(data.tokens);
-            if (data.usedDiceValues !== undefined) setUsedDiceValues(data.usedDiceValues);
-            if (data.activeDiceConfig !== undefined) setActiveDiceConfig(data.activeDiceConfig);
         });
 
         return () => unsubscribe();
@@ -130,29 +125,13 @@ const useLudoAction = ({ color }: { color?: string }) => {
         processTokenMove({
             moveData,
             gameState,
-            tokens,
-            usedDiceValues,
-            activeDiceConfig,
             findActiveTokens,
-            setTokens: (val: object) => {
-                const updated = typeof val === 'function' ? val(tokens) : val;
-                syncToFirestore({ tokens: updated });
-            },
-            setUsedDiceValues: (val: object) => {
-                const updated = typeof val === 'function' ? val(usedDiceValues) : val;
-                syncToFirestore({ usedDiceValues: updated });
-            },
-            setGameState: (val: object) => {
+            setGameState: (val: GameSessionData | ((prev: GameSessionData) => GameSessionData)) => {
                 const updated = typeof val === 'function' ? val(gameState) : val;
-                console.log({ updated });
-                // syncToFirestore({ gameState: updated });
+                syncToFirestore(updated);
             },
             setLastMovedToken,
             setLastMoveWasActivation,
-            setActiveDiceConfig: (val: number[] | null | ((prev: number[] | null) => number[] | null)) => {
-                const updated = typeof val === 'function' ? val(activeDiceConfig) : val;
-                syncToFirestore({ activeDiceConfig: updated });
-            }
         });
     };
 
@@ -160,7 +139,7 @@ const useLudoAction = ({ color }: { color?: string }) => {
 
     return {
         gameState,
-        tokens,
+        tokens: gameState.tokens,
         status: gameState.status,
         handleDiceRoll,
         handleTokenClick: (token: Token, pos?: number) => handleTokenMove({
@@ -168,9 +147,12 @@ const useLudoAction = ({ color }: { color?: string }) => {
             position: pos || 0,
             playerId: currentUser?._id || ""
         }),
-        usedDiceValues,
-        activeDiceConfig,
-        setActiveDiceConfig,
+        usedDiceValues: gameState.usedDiceValues,
+        activeDiceConfig: gameState.activeDiceConfig,
+        setActiveDiceConfig: (val: number[] | null | ((prev: number[] | null) => number[] | null)) => {
+            const updated = typeof val === 'function' ? val(gameState.activeDiceConfig) : val;
+            syncToFirestore({ activeDiceConfig: updated });
+        },
         syncToFirestore,
         findActiveTokens,
         findBgColor: cellColors.find(c => c.color === color)
