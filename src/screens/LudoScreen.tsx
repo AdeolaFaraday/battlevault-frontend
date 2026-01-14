@@ -1,7 +1,7 @@
 import LudoComponent from "../components/ludo";
 
-const LudoScreenScreen = () => {
-    return <LudoComponent />
+const LudoScreenScreen = ({ id }: { id: string }) => {
+    return <LudoComponent id={id} />
 }
 
 export default LudoScreenScreen;

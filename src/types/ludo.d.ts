@@ -29,4 +29,5 @@ type LudoGameState = {
     diceValue: number[];
     isRolling: boolean;
     status: "waiting" | "playingDice" | "playingToken" | "finished";
+    winner?: string;
 };

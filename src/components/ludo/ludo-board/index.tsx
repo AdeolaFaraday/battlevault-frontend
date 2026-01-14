@@ -12,7 +12,8 @@ import DiceSelector from "../dice-selector";
  THe middle horizontal Ludo path span around the center so it contains two path space betweened each other
  */
 
-const LudoBoard = () => {
+const LudoBoard = ({ id }: { id: string }) => {
+    console.log({ id });
     const {
         findActiveTokens,
         tokens,
@@ -23,7 +24,6 @@ const LudoBoard = () => {
         handleTokenClick,
         handleDiceRoll
     } = useLudoAction({})
-    console.log({ findActiveTokens });
 
     const handleCustomDiceRoll = (results: number[]) => {
         if (handleDiceRoll) {
@@ -38,8 +38,6 @@ const LudoBoard = () => {
     });
 
     const showDiceSelector = gameState.status === "playingToken" && availableDice.length > 0;
-
-    console.log({ blueValues: tokens.blue });
 
     return (
         <>
