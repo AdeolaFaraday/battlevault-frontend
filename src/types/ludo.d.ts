@@ -19,6 +19,7 @@ type DiceValue = {
 type LudoPlayer = {
     id: string;
     name: string;
+    avatarUrl?: string;
     color: "red" | "blue" | "green" | "yellow";
     tokens: string[]
 };

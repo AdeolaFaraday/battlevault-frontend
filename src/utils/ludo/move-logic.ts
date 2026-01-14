@@ -38,7 +38,7 @@ export const processTokenMove = ({
     setLastMovedToken,
     setLastMoveWasActivation,
 }: ProcessMoveParams) => {
-    const { diceValue, tokens, usedDiceValues, activeDiceConfig, players, currentTurn } = gameState;
+    const { diceValue, usedDiceValues, activeDiceConfig, players } = gameState;
     const findPlayer = players?.find((player) => player?.id === moveData?.playerId); // TODO: use actual current player
     const findToken = findPlayer?.tokens?.includes(moveData?.token?.color);
 
