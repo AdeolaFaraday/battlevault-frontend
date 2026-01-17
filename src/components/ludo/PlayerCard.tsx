@@ -1,5 +1,5 @@
 import React from 'react';
-import { User } from 'lucide-react';
+import { User, Swords } from 'lucide-react';
 import { cn } from '../../lib/utils';
 
 interface PlayerCardProps {
@@ -54,9 +54,29 @@ const PlayerCard: React.FC<PlayerCardProps> = ({ player, isCurrentTurn, color, p
                 <span className="text-xs md:text-sm font-bold text-white truncate max-w-full">
                     {player?.name || "Waiting..."}
                 </span>
-                <span className="text-[10px] uppercase font-bold tracking-wider opacity-60 text-white">
-                    Rank - 1204 {/* Placeholder for now */}
-                </span>
+                {/* Stats: Kills & Finished */}
+                <div className="flex items-center gap-3 mt-0.5">
+                    {/* Kills */}
+                    <div className="flex items-center gap-1" title="Tokens Captured">
+                        <Swords size={10} className="text-rose-400" />
+                        <span className="text-[10px] font-bold text-rose-100">{player?.capturedCount || 0}</span>
+                    </div>
+
+                    {/* Finished Tokens */}
+                    <div className="flex gap-0.5" title="Tokens Finished">
+                        {[...Array(4)].map((_, i) => (
+                            <div
+                                key={i}
+                                className={cn(
+                                    "w-1.5 h-1.5 rounded-full border border-white/30",
+                                    i < (player?.finishedCount || 0)
+                                        ? "bg-amber-400 border-amber-400 shadow-[0_0_4px_rgba(251,191,36,0.8)]"
+                                        : "bg-transparent"
+                                )}
+                            />
+                        ))}
+                    </div>
+                </div>
             </div>
 
             {/* Active Turn Indicator (Optional Glow or Icon) */}

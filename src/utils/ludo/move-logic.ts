@@ -117,7 +117,7 @@ export const processTokenMove = ({
                 finalDiceToConsme,
                 availableDiceValues,
                 setGameState,
-                // true // isActivation
+                false // isActivation default safe status
             );
 
             setLastMovedToken({ color: tokenColor, sn: moveData.token.sn });
@@ -138,14 +138,49 @@ export const processTokenMove = ({
     }
 
     const moveAmount = diceToUse.reduce((sum, val) => sum + val, 0);
-    const nextLinearPos = currentTokenPosition + moveAmount;
 
-    // Handle wrapping around the board (Max 52 cells)
-    // Logic: If Red, it just goes up. Others wrap around 52 -> 1.
-    // NOTE: This wrap logic might need specific tuning based on your board config
-    let finalPosition = nextLinearPos;
-    if (tokenColor !== 'red') {
-        if (finalPosition > 52) finalPosition -= 52;
+    // Calculate Next Position Logic
+    const isAlreadySafe = moveData?.token?.isSafePath || false;
+
+    // HOME POSITIONS (Safe Path Entry + 5)
+    // Green: 14+5=19, Yellow: 27+5=32, Blue: 40+5=45, Red: 53+5=58
+    const HOME_POSITIONS: { [key: string]: number } = { green: 19, yellow: 32, blue: 45, red: 58 };
+    const homePos = HOME_POSITIONS[tokenColor];
+
+    if (isAlreadySafe) {
+        if (currentTokenPosition + moveAmount > homePos) {
+            toast.error(`You need exactly ${homePos - currentTokenPosition} to finish!`);
+            return;
+        }
+    }
+
+    let finalPosition = currentTokenPosition + moveAmount;
+    let willBeSafe = isAlreadySafe;
+
+    if (isAlreadySafe) {
+        // Just moving within safe path
+        // (Optional: Add logic to prevent moving beyond home end)
+        finalPosition = currentTokenPosition + moveAmount;
+    } else {
+        // Safe Path Entry Check
+        // Green(14), Yellow(27), Blue(40), Red(53)
+        // Logic: specific "gate" check based on color and current position
+        if (tokenColor === 'red' && finalPosition >= 53) {
+            willBeSafe = true;
+        } else if (tokenColor === 'green' && currentTokenPosition <= 13 && finalPosition >= 14) {
+            willBeSafe = true;
+        } else if (tokenColor === 'yellow' && currentTokenPosition <= 26 && finalPosition >= 27) {
+            willBeSafe = true;
+        } else if (tokenColor === 'blue' && currentTokenPosition <= 39 && finalPosition >= 40) {
+            willBeSafe = true;
+        }
+
+        // Apply Main Path Wrapping (1-52) if NOT entering safe path
+        // Since Red doesn't wrap 52->1 (enters safe at 53), this logic works for Red too 
+        // (Red main path is linear 1..52 then Safe 53)
+        if (!willBeSafe) {
+            if (finalPosition > 52) finalPosition -= 52;
+        }
     }
 
     // Perform the State Update
@@ -157,7 +192,8 @@ export const processTokenMove = ({
         diceToUse,
         availableDiceValues,
         setGameState,
-        // false // Not activation
+        willBeSafe, // Pass calculations
+        gameState.tokens // Pass all tokens for collision check
     );
 };
 
@@ -175,41 +211,119 @@ const updateGameState = (
     diceConsumed: number[],
     allAvailableDice: number[],
     setGameState: ProcessMoveParams['setGameState'],
-    // isActivation: boolean
+    isSafePath: boolean,
+    allTokens: { [key: string]: Token[] } = {}
 ) => {
     setGameState(prev => {
         const currentTokens = prev.tokens[color] || [];
         const existingToken = currentTokens.find((t: Token) => t.sn === tokenSn);
+        const players = prev.players || [];
+        const currentPlayerIndex = players.findIndex(p => p.tokens.includes(color));
+
+        // HOME POSITIONS (Safe Path Entry + 5)
+        // Green: 14+5=19, Yellow: 27+5=32, Blue: 40+5=45, Red: 53+5=58
+        const HOME_POSITIONS: { [key: string]: number } = { green: 19, yellow: 32, blue: 45, red: 58 };
+        const isFinished = isSafePath && newPos === HOME_POSITIONS[color];
 
         // Create the updated token object
         const updatedToken = {
-            ...(existingToken!), // Asserting existence as we checked earlier
+            ...(existingToken!), // Asserting existence
             position: newPos,
             active: true,
-            // Calculate safety (example logic)
-            isSafePath: color === 'red' ? newPos > 52 : false,
+            isSafePath: isSafePath,
+            isFinished: isFinished,
         };
+
+        // COLLISION CHECK
+        let killedOpponent: { color: string, sn: number } | null = null;
+        let updatedTokensMap = { ...prev.tokens };
+
+        // We track if the current token gets promoted due to a kill
+        let killerPromoted = false;
+
+        if (!isSafePath) {
+            // Check for opponents at newPos (Main Path only)
+            // Note: Safe Spots (Stars) logic can be added here (e.g. if newPos is not a safe spot)
+            Object.keys(updatedTokensMap).forEach(key => {
+                if (key !== color) {
+                    const opponentTokens = updatedTokensMap[key];
+                    const victimIndex = opponentTokens.findIndex(t => t.active && !t.isSafePath && t.position === newPos);
+                    if (victimIndex !== -1) {
+                        const victim = opponentTokens[victimIndex];
+                        killedOpponent = { color: key, sn: victim.sn };
+
+                        // Reset Victim
+                        const resetVictim = { ...victim, active: false, position: -1, isSafePath: false };
+                        const newOpponentTokens = [...opponentTokens];
+                        newOpponentTokens[victimIndex] = resetVictim;
+                        updatedTokensMap[key] = newOpponentTokens;
+
+                        // KILL = FINISH RULE
+                        // Promote the current token (killer) to Home directly
+                        killerPromoted = true;
+
+                        toast.success(`Captured ${key} token! Promoted to Home!`);
+                    }
+                }
+            });
+        }
+
+        // Apply Promotion if Kill Happened
+        if (killerPromoted) {
+            updatedToken.position = HOME_POSITIONS[color];
+            updatedToken.isSafePath = true;
+            updatedToken.isFinished = true;
+        }
+
+        // UPDATE CURRENT PLAYER STATS
+        let updatedPlayers = [...players];
+        if (currentPlayerIndex !== -1) {
+            const player = { ...updatedPlayers[currentPlayerIndex] };
+            let statsChanged = false;
+
+            if (killedOpponent) {
+                player.capturedCount = (player.capturedCount || 0) + 1;
+                // If we promoted due to kill, we also increment finished count
+                if (killerPromoted) {
+                    player.finishedCount = (player.finishedCount || 0) + 1;
+                }
+                statsChanged = true;
+            }
+
+            // If it wasn't a kill promotion, but we normally finished
+            if (!killerPromoted && isFinished) {
+                player.finishedCount = (player.finishedCount || 0) + 1;
+                statsChanged = true;
+                toast.success("Token Finished!");
+            }
+
+            if (statsChanged) {
+                updatedPlayers[currentPlayerIndex] = player;
+            }
+        }
+
+        // Update Current Player Tokens in Map
+        updatedTokensMap[color] = [
+            ...currentTokens.filter((t: Token) => t.sn !== tokenSn),
+            updatedToken
+        ];
+
 
         // Determine if Turn is Over
         // Turn is over if we have consumed ALL available dice
+        // UNLESS we rolled a 6 (bonus functionality often in Ludo, but maybe not here yet)
+        // OR we killed someone (bonus turn?) 
+        // OR we finished (bonus turn?)
+        // For now, sticking to dice consumption logic
         const remainingDiceCount = allAvailableDice.length - diceConsumed.length;
         const isTurnOver = remainingDiceCount === 0;
 
         return {
             ...prev,
-            // 1. Update Token Array
-            tokens: {
-                ...prev.tokens,
-                [color]: [
-                    ...currentTokens.filter((t: Token) => t.sn !== tokenSn),
-                    updatedToken
-                ]
-            },
-            // 2. Mark Dice as Used
+            players: updatedPlayers,
+            tokens: updatedTokensMap,
             usedDiceValues: [...(prev.usedDiceValues || []), ...diceConsumed],
-            // 3. Clear Active Selection
             activeDiceConfig: null,
-            // 4. Update Status & Turn
             status: isTurnOver ? "playingDice" : "playingToken",
             currentTurn: isTurnOver ? getNextPlayerId(prev.players, prev.currentTurn) : prev.currentTurn,
         };
