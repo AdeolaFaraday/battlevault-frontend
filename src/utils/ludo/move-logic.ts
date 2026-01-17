@@ -14,7 +14,7 @@ interface MoveData {
     playerId: string;
 }
 
-const getNextPlayerId = (players: LudoPlayer[], currentTurnId: string) => {
+export const getNextPlayerId = (players: LudoPlayer[], currentTurnId: string) => {
     const currentIndex = players.findIndex(p => p.id === currentTurnId);
     if (currentIndex === -1) return currentTurnId;
     const nextIndex = (currentIndex + 1) % players.length;

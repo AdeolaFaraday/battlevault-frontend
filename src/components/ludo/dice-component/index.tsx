@@ -3,10 +3,16 @@ import { useState } from 'react';
 
 interface DiceComponentProps {
     onRollComplete?: (results: number[]) => void;
+    diceValues?: number[];
+    showRollButton?: boolean;
 }
 
-const DiceComponent = ({ onRollComplete }: DiceComponentProps) => {
-    const [currentValues, setCurrentValues] = useState<[number, number]>([6, 6]);
+const DiceComponent = ({ onRollComplete, diceValues, showRollButton = true }: DiceComponentProps) => {
+    const defaultValues: [number, number] = [0, 0];
+    const displayValues = (diceValues && diceValues.length >= 2)
+        ? [diceValues[0], diceValues[1]] as [number, number]
+        : defaultValues;
+
     const [isRolling, setIsRolling] = useState(false);
 
     // Generate dot pattern for each dice face
@@ -29,9 +35,8 @@ const DiceComponent = ({ onRollComplete }: DiceComponentProps) => {
         setTimeout(() => {
             const firstDiceValue = Math.floor(Math.random() * 6) + 1;
             const secondDiceValue = Math.floor(Math.random() * 6) + 1;
-            setCurrentValues([firstDiceValue, secondDiceValue]);
             setIsRolling(false);
-            onRollComplete?.(Array.from([firstDiceValue, secondDiceValue]));
+            onRollComplete?.([firstDiceValue, secondDiceValue]);
         }, 500);
     };
 
@@ -53,19 +58,21 @@ const DiceComponent = ({ onRollComplete }: DiceComponentProps) => {
     return (
         <div className="flex items-center justify-center gap-6">
             <div className="transform rotate-[-10deg] hover:rotate-0 transition-transform duration-300">
-                {renderDice(currentValues[0], 0)}
+                {renderDice(displayValues[0], 0)}
             </div>
 
-            <button
-                onClick={handleRollClick}
-                className="px-8 py-4 bg-gradient-to-br from-indigo-500 to-indigo-700 text-white font-black text-lg tracking-wider rounded-2xl shadow-[0_10px_20px_rgba(79,70,229,0.4)] hover:shadow-[0_15px_30px_rgba(79,70,229,0.5)] border-t border-white/20 hover:-translate-y-1 active:translate-y-0 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-                disabled={isRolling}
-            >
-                {isRolling ? '...' : 'ROLL'}
-            </button>
+            {showRollButton && (
+                <button
+                    onClick={handleRollClick}
+                    className="px-8 py-4 bg-gradient-to-br from-indigo-500 to-indigo-700 text-white font-black text-lg tracking-wider rounded-2xl shadow-[0_10px_20px_rgba(79,70,229,0.4)] hover:shadow-[0_15px_30px_rgba(79,70,229,0.5)] border-t border-white/20 hover:-translate-y-1 active:translate-y-0 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                    disabled={isRolling}
+                >
+                    {isRolling ? '...' : 'ROLL'}
+                </button>
+            )}
 
             <div className="transform rotate-[10deg] hover:rotate-0 transition-transform duration-300">
-                {renderDice(currentValues[1], 1)}
+                {renderDice(displayValues[1], 1)}
             </div>
         </div>
     );

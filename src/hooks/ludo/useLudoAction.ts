@@ -3,7 +3,7 @@ import { useParams } from "next/navigation";
 import { toast } from "sonner";
 import { useAppSelector } from "@/src/lib/redux/hooks";
 import { cellColors } from "@/src/constants";
-import { processTokenMove } from "@/src/utils/ludo/move-logic";
+import { processTokenMove, getNextPlayerId } from "@/src/utils/ludo/move-logic";
 import { GameService, GameSessionData } from "@/src/services/ludo/game.service";
 import { RootState } from "@/src/lib/redux/store";
 
@@ -108,10 +108,39 @@ const useLudoAction = ({ color }: { color?: string }) => {
             return;
         }
 
+        // AUTO-SKIP CHECK
+        const hasSix = results.includes(6);
+
+        const player = gameState.players.find(p => p.id === currentUser._id);
+        const playerColors = player?.tokens || []; // Array of colors like ['red'] or ['red', 'green']
+
+        // Aggregate all tokens controlled by this player
+        const myTokens = playerColors.flatMap(color => gameState.tokens[color] || []);
+
+        const hasMovableTokens = myTokens.some(t => t.active && !t.isFinished);
+        if (!hasSix && !hasMovableTokens) {
+            toast.error("No valid moves! Skipping turn...");
+
+            // Immediate Pass
+            const nextPlayerId = getNextPlayerId(gameState.players, gameState.currentTurn);
+
+            syncToFirestore({
+                ...gameState,
+                diceValue: [], // Clear dice so selector doesn't show
+                status: "playingDice",
+                currentTurn: nextPlayerId,
+                usedDiceValues: [],
+                activeDiceConfig: null,
+                lastMoverId: currentUser._id
+            });
+            return;
+        }
+
         const newGameState = {
             ...gameState,
             diceValue: results,
             status: "playingToken" as const,
+            lastMoverId: currentUser._id
         };
 
         syncToFirestore({
@@ -127,7 +156,8 @@ const useLudoAction = ({ color }: { color?: string }) => {
             gameState,
             findActiveTokens,
             setGameState: (val: GameSessionData | ((prev: GameSessionData) => GameSessionData)) => {
-                const updated = typeof val === 'function' ? val(gameState) : val;
+                let updated = typeof val === 'function' ? val(gameState) : val;
+                updated = { ...updated, lastMoverId: currentUser?._id };
                 syncToFirestore(updated);
             },
             setLastMovedToken,
@@ -141,6 +171,7 @@ const useLudoAction = ({ color }: { color?: string }) => {
         gameState,
         tokens: gameState.tokens,
         status: gameState.status,
+        isCurrentTurn: gameState.currentTurn === currentUser?._id,
         handleDiceRoll,
         handleTokenClick: (token: Token, pos?: number) => handleTokenMove({
             token,
