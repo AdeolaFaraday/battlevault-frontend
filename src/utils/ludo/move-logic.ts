@@ -193,7 +193,7 @@ export const processTokenMove = ({
         availableDiceValues,
         setGameState,
         willBeSafe, // Pass calculations
-        gameState.tokens // Pass all tokens for collision check
+        // gameState.tokens // Pass all tokens for collision check
     );
 };
 
@@ -212,7 +212,7 @@ const updateGameState = (
     allAvailableDice: number[],
     setGameState: ProcessMoveParams['setGameState'],
     isSafePath: boolean,
-    allTokens: { [key: string]: Token[] } = {}
+    // allTokens: { [key: string]: Token[] } = {}
 ) => {
     setGameState(prev => {
         const currentTokens = prev.tokens[color] || [];
@@ -236,7 +236,7 @@ const updateGameState = (
 
         // COLLISION CHECK
         let killedOpponent: { color: string, sn: number } | null = null;
-        let updatedTokensMap = { ...prev.tokens };
+        const updatedTokensMap = { ...prev.tokens };
 
         // We track if the current token gets promoted due to a kill
         let killerPromoted = false;
@@ -276,7 +276,7 @@ const updateGameState = (
         }
 
         // UPDATE CURRENT PLAYER STATS
-        let updatedPlayers = [...players];
+        const updatedPlayers = [...players];
         if (currentPlayerIndex !== -1) {
             const player = { ...updatedPlayers[currentPlayerIndex] };
             let statsChanged = false;
