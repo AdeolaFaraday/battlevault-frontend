@@ -4,6 +4,7 @@ type Token = {
     active?: boolean
     position?: number
     isSafePath?: boolean
+    isFinished?: boolean
 }
 
 type DiceValue = {
@@ -21,7 +22,11 @@ type LudoPlayer = {
     name: string;
     avatarUrl?: string;
     color: "red" | "blue" | "green" | "yellow";
-    tokens: string[]
+    tokens: string[];
+    img?: string; // Legacy support if needed
+    rank?: number; // For UI
+    capturedCount?: number;
+    finishedCount?: number;
 };
 
 type LudoGameState = {
