@@ -28,6 +28,7 @@ const LudoBoard = ({ id }: { id: string }) => {
         tokens,
         gameState,
         activeDiceConfig,
+        isCurrentTurn,
         setActiveDiceConfig,
         usedDiceValues,
         handleTokenClick,
@@ -45,6 +46,9 @@ const LudoBoard = ({ id }: { id: string }) => {
         const index = availableDice.indexOf(val);
         if (index !== -1) availableDice.splice(index, 1);
     });
+
+    // const isCurrentPlayerTurnHasValidTokenMove = isCurrentTurn && 
+    console.log({ findActiveTokens })
 
     const showDiceSelector = gameState.status === "playingToken" && availableDice.length > 0;
 
@@ -164,9 +168,11 @@ const LudoBoard = ({ id }: { id: string }) => {
                 <div className="dice-wrapper w-full flex justify-center items-center mt-6 relative min-h-[100px]">
                     <DiceComponent
                         onRollComplete={handleCustomDiceRoll}
+                        diceValues={gameState.diceValue}
+                        showRollButton={isCurrentTurn && gameState.status === "playingDice"}
                     />
 
-                    {showDiceSelector && (
+                    {isCurrentTurn && showDiceSelector && (
                         <DiceSelector
                             availableDice={availableDice}
                             activeDiceConfig={activeDiceConfig}

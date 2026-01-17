@@ -11,6 +11,7 @@ export interface GameSessionData {
     isRolling: boolean;
     activeDiceConfig: number[] | null;
     lastUpdated?: object | null;
+    lastMoverId?: string;
 }
 
 export const GameService = {
