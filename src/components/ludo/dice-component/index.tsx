@@ -8,12 +8,12 @@ interface DiceComponentProps {
 }
 
 const DiceComponent = ({ onRollComplete, diceValues, showRollButton = true }: DiceComponentProps) => {
-    const defaultValues: [number, number] = [0, 0];
-    const displayValues = (diceValues && diceValues.length >= 2)
-        ? [diceValues[0], diceValues[1]] as [number, number]
-        : defaultValues;
-
+    const [localValues, setLocalValues] = useState<[number, number]>([0, 0]);
     const [isRolling, setIsRolling] = useState(false);
+
+    const displayValues = (diceValues && diceValues.length > 0)
+        ? [diceValues[0], diceValues[1] || 0] as [number, number]
+        : localValues;
 
     // Generate dot pattern for each dice face
     const getDiceDots = (value: number) => {
@@ -33,10 +33,11 @@ const DiceComponent = ({ onRollComplete, diceValues, showRollButton = true }: Di
 
         // Simulate rolling animation
         setTimeout(() => {
-            const firstDiceValue = Math.floor(Math.random() * 6) + 1;
-            const secondDiceValue = Math.floor(Math.random() * 6) + 1;
+            const v1 = Math.floor(Math.random() * 6) + 1;
+            const v2 = Math.floor(Math.random() * 6) + 1;
+            setLocalValues([v1, v2]);
             setIsRolling(false);
-            onRollComplete?.([firstDiceValue, secondDiceValue]);
+            onRollComplete?.([v1, v2]);
         }, 500);
     };
 

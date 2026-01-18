@@ -3,7 +3,7 @@ import { useParams } from "next/navigation";
 import { toast } from "sonner";
 import { useAppSelector } from "@/src/lib/redux/hooks";
 import { cellColors } from "@/src/constants";
-import { processTokenMove, getNextPlayerId } from "@/src/utils/ludo/move-logic";
+import { processTokenMove, getNextPlayerId, isDiceValueUsable, getMovableTokens } from "@/src/utils/ludo/move-logic";
 import { GameService, GameSessionData } from "@/src/services/ludo/game.service";
 import { RootState } from "@/src/lib/redux/store";
 
@@ -108,25 +108,41 @@ const useLudoAction = ({ color }: { color?: string }) => {
             return;
         }
 
-        // AUTO-SKIP CHECK
-        const hasSix = results.includes(6);
-
         const player = gameState.players.find(p => p.id === currentUser._id);
         const playerColors = player?.tokens || []; // Array of colors like ['red'] or ['red', 'green']
 
         // Aggregate all tokens controlled by this player
         const myTokens = playerColors.flatMap(color => gameState.tokens[color] || []);
 
-        const hasMovableTokens = myTokens.some(t => t.active && !t.isFinished);
-        if (!hasSix && !hasMovableTokens) {
-            toast.error("No valid moves! Skipping turn...");
+        // GRANULAR AUTO-SKIP & DISCARD CHECK
+        const hasSix = results.includes(6);
+        const hasTokensAtHome = myTokens.some(t => !t.active && !t.isFinished);
+
+        let usableDice: number[] = [];
+
+        if (hasSix && hasTokensAtHome) {
+            // If we have a 6 and tokens at home, ALL rolled dice are potentially usable 
+            // (6 activates, others move the newly active token)
+            usableDice = results;
+        } else {
+            // Otherwise, check if ANY owned color can use each dice value
+            usableDice = results.filter(diceVal => {
+                return playerColors.some(color => {
+                    const tokensOfColor = gameState.tokens[color] || [];
+                    return isDiceValueUsable(diceVal, tokensOfColor, color);
+                });
+            });
+        }
+
+        if (usableDice.length === 0) {
+            toast.error("No valid moves possible with these dice! Skipping turn...");
 
             // Immediate Pass
             const nextPlayerId = getNextPlayerId(gameState.players, gameState.currentTurn);
 
             syncToFirestore({
                 ...gameState,
-                diceValue: [], // Clear dice so selector doesn't show
+                diceValue: [],
                 status: "playingDice",
                 currentTurn: nextPlayerId,
                 usedDiceValues: [],
@@ -136,9 +152,14 @@ const useLudoAction = ({ color }: { color?: string }) => {
             return;
         }
 
+        // If some dice were unusable, we effectively "discard" them by only setting the usable ones
+        if (usableDice.length < results.length) {
+            toast.info(`${results.length - usableDice.length} unusable dice discarded.`);
+        }
+
         const newGameState = {
             ...gameState,
-            diceValue: results,
+            diceValue: usableDice,
             status: "playingToken" as const,
             lastMoverId: currentUser._id
         };
@@ -164,6 +185,42 @@ const useLudoAction = ({ color }: { color?: string }) => {
             setLastMoveWasActivation,
         });
     };
+
+    // AUTO-MOVE LOGIC
+    // useEffect(() => {
+    //     // Only run if it's our turn, we are in playingToken state, and there's exactly one dice to use
+    //     if (gameState.currentTurn !== currentUser?._id || gameState.status !== 'playingToken' || gameState.diceValue.length !== 1) return;
+
+    //     // Don't auto-move if we have multiple dice available to choose from (activeDiceConfig)
+    //     if (gameState.activeDiceConfig && gameState.activeDiceConfig.length > 1) return;
+
+    //     const player = gameState.players.find(p => p.id === currentUser?._id);
+    //     const playerColors = player?.tokens || [];
+    //     const diceVal = gameState.diceValue[0];
+
+    //     // Find all tokens that can use this dice value
+    //     const allMovable = playerColors.flatMap(color => {
+    //         const tokens = gameState.tokens[color] || [];
+    //         return getMovableTokens(diceVal, tokens, color);
+    //     });
+
+    //     // 1. If only ONE token can move, and it's already ACTIVE (on board)
+    //     // 2. OR if only ONE token can move and it's activation (only one color owned)
+    //     if (allMovable.length === 1) {
+    //         const token = allMovable[0];
+
+    //         // For now, let's only auto-move active tokens to avoid surprising the user with home token selection
+    //         // unless they only have one color and one possible move.
+    //         if (token.active) {
+    //             console.log("Auto-moving token:", token);
+    //             handleTokenMove({
+    //                 token,
+    //                 position: token.position || 0,
+    //                 playerId: currentUser!._id
+    //             });
+    //         }
+    //     }
+    // }, [gameState.diceValue, gameState.status, gameState.currentTurn]);
 
     console.log({ currentUser })
 
