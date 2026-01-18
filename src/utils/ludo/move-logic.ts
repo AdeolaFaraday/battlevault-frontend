@@ -101,7 +101,7 @@ export const processTokenMove = ({
     // ---------------------------------------------------------
     const { diceValue, usedDiceValues, activeDiceConfig, players } = gameState;
     const tokenColor = moveData?.token?.color;
-    const currentTokenPosition = moveData?.token?.position || 0;
+    // const currentTokenPosition = moveData?.token?.position || 0;
     const isTokenActive = moveData?.token?.active;
 
     // Check if the move is valid for the current player

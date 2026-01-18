@@ -3,7 +3,7 @@ import { useParams } from "next/navigation";
 import { toast } from "sonner";
 import { useAppSelector } from "@/src/lib/redux/hooks";
 import { cellColors } from "@/src/constants";
-import { processTokenMove, getNextPlayerId, isDiceValueUsable, getMovableTokens } from "@/src/utils/ludo/move-logic";
+import { processTokenMove, getNextPlayerId, isDiceValueUsable } from "@/src/utils/ludo/move-logic";
 import { GameService, GameSessionData } from "@/src/services/ludo/game.service";
 import { RootState } from "@/src/lib/redux/store";
 
