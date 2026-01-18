@@ -1,6 +1,20 @@
 import { toast } from "sonner";
 import { GameSessionData } from "../../services/ludo/game.service";
 
+export const HOME_POSITIONS: { [key: string]: number } = {
+    green: 19,
+    yellow: 32,
+    blue: 45,
+    red: 58
+};
+
+export const START_PATHS: { [key: string]: number } = {
+    blue: 41,
+    green: 15,
+    yellow: 28,
+    red: 2
+};
+
 // interface TokenMapperItem {
 //     color: string;
 //     value: Token[];
@@ -19,6 +33,51 @@ export const getNextPlayerId = (players: LudoPlayer[], currentTurnId: string) =>
     if (currentIndex === -1) return currentTurnId;
     const nextIndex = (currentIndex + 1) % players.length;
     return players[nextIndex].id;
+};
+
+export const getProjectedPosition = (token: Token, moveAmount: number) => {
+    const { color, position, isSafePath } = token;
+    const currentPos = position || 0;
+
+    if (isSafePath) {
+        return { position: currentPos + moveAmount, willBeSafe: true };
+    }
+
+    let projected = currentPos + moveAmount;
+    let willBeSafe = false;
+
+    // Gate checks
+    if (color === 'red' && projected >= 53) willBeSafe = true;
+    else if (color === 'green' && currentPos <= 13 && projected >= 14) willBeSafe = true;
+    else if (color === 'yellow' && currentPos <= 26 && projected >= 27) willBeSafe = true;
+    else if (color === 'blue' && currentPos <= 39 && projected >= 40) willBeSafe = true;
+
+    if (!willBeSafe && projected > 52) projected -= 52;
+
+    return { position: projected, willBeSafe };
+};
+
+export const getMovableTokens = (diceValue: number, tokens: Token[], color: string) => {
+    const homePos = HOME_POSITIONS[color];
+
+    return tokens.filter(token => {
+        if (!token.active) return diceValue === 6; // Activation
+        if (token.isFinished) return false;
+
+        const { position: projected, willBeSafe } = getProjectedPosition(token, diceValue);
+
+        // Overshoot check only applies if safe or entering safe path
+        if (token.isSafePath || willBeSafe) {
+            return projected <= homePos;
+        }
+
+        return true; // Tokens on main path never overshoot
+    });
+};
+
+export const isDiceValueUsable = (diceValue: number, tokens: Token[], color: string) => {
+    console.log({ gotHere: true, diceValue, tokens, color });
+    return getMovableTokens(diceValue, tokens, color).length > 0;
 };
 
 interface ProcessMoveParams {
@@ -88,8 +147,7 @@ export const processTokenMove = ({
     // ---------------------------------------------------------
     // 4. HANDLE "ACTIVATION" (Getting out of Home)
     // ---------------------------------------------------------
-    const startPaths: { [key: string]: number } = { blue: 41, green: 15, yellow: 28, red: 2 };
-    const startPath = startPaths[tokenColor];
+    const startPath = START_PATHS[tokenColor];
 
     if (!isTokenActive) {
         // To activate, we NEED a 6.
@@ -138,48 +196,14 @@ export const processTokenMove = ({
     }
 
     const moveAmount = diceToUse.reduce((sum, val) => sum + val, 0);
-
-    // Calculate Next Position Logic
-    const isAlreadySafe = moveData?.token?.isSafePath || false;
-
-    // HOME POSITIONS (Safe Path Entry + 5)
-    // Green: 14+5=19, Yellow: 27+5=32, Blue: 40+5=45, Red: 53+5=58
-    const HOME_POSITIONS: { [key: string]: number } = { green: 19, yellow: 32, blue: 45, red: 58 };
+    const { position: finalPosition, willBeSafe } = getProjectedPosition(moveData.token, moveAmount);
     const homePos = HOME_POSITIONS[tokenColor];
 
-    if (isAlreadySafe) {
-        if (currentTokenPosition + moveAmount > homePos) {
-            toast.error(`You need exactly ${homePos - currentTokenPosition} to finish!`);
+    // Overshoot check: Always apply if the resulting position would be in safe path
+    if (willBeSafe || moveData.token.isSafePath) {
+        if (finalPosition > homePos) {
+            toast.error(`You need exactly ${homePos - (moveData.token.position || 0)} to finish!`);
             return;
-        }
-    }
-
-    let finalPosition = currentTokenPosition + moveAmount;
-    let willBeSafe = isAlreadySafe;
-
-    if (isAlreadySafe) {
-        // Just moving within safe path
-        // (Optional: Add logic to prevent moving beyond home end)
-        finalPosition = currentTokenPosition + moveAmount;
-    } else {
-        // Safe Path Entry Check
-        // Green(14), Yellow(27), Blue(40), Red(53)
-        // Logic: specific "gate" check based on color and current position
-        if (tokenColor === 'red' && finalPosition >= 53) {
-            willBeSafe = true;
-        } else if (tokenColor === 'green' && currentTokenPosition <= 13 && finalPosition >= 14) {
-            willBeSafe = true;
-        } else if (tokenColor === 'yellow' && currentTokenPosition <= 26 && finalPosition >= 27) {
-            willBeSafe = true;
-        } else if (tokenColor === 'blue' && currentTokenPosition <= 39 && finalPosition >= 40) {
-            willBeSafe = true;
-        }
-
-        // Apply Main Path Wrapping (1-52) if NOT entering safe path
-        // Since Red doesn't wrap 52->1 (enters safe at 53), this logic works for Red too 
-        // (Red main path is linear 1..52 then Safe 53)
-        if (!willBeSafe) {
-            if (finalPosition > 52) finalPosition -= 52;
         }
     }
 
@@ -220,9 +244,6 @@ const updateGameState = (
         const players = prev.players || [];
         const currentPlayerIndex = players.findIndex(p => p.tokens.includes(color));
 
-        // HOME POSITIONS (Safe Path Entry + 5)
-        // Green: 14+5=19, Yellow: 27+5=32, Blue: 40+5=45, Red: 53+5=58
-        const HOME_POSITIONS: { [key: string]: number } = { green: 19, yellow: 32, blue: 45, red: 58 };
         const isFinished = isSafePath && newPos === HOME_POSITIONS[color];
 
         // Create the updated token object
