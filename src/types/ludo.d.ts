@@ -30,10 +30,23 @@ type LudoPlayer = {
 };
 
 type LudoGameState = {
+    id?: string;
     players: LudoPlayer[];
     currentTurn: string; // Player ID
     diceValue: number[];
     isRolling: boolean;
     status: "waiting" | "playingDice" | "playingToken" | "finished";
     winner?: string;
+    tokens: {
+        blue: Token[];
+        yellow: Token[];
+        green: Token[];
+        red: Token[];
+    };
+    usedDiceValues: number[];
+    activeDiceConfig: number[] | null;
+    lastMoverId?: string;
+    lastUpdated?: any;
+    createdAt?: string;
+    updatedAt?: string;
 };

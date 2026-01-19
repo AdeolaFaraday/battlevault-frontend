@@ -2,6 +2,7 @@ import { doc, onSnapshot, setDoc, updateDoc, getDoc, serverTimestamp } from "fir
 import { firestore } from "../../lib/firebase";
 
 export interface GameSessionData {
+    id?: string;
     tokens: { [key: string]: Token[] };
     players: LudoPlayer[];
     usedDiceValues: number[];
@@ -10,8 +11,11 @@ export interface GameSessionData {
     status: "waiting" | "playingDice" | "playingToken" | "finished";
     isRolling: boolean;
     activeDiceConfig: number[] | null;
-    lastUpdated?: object | null;
+    winner?: string;
     lastMoverId?: string;
+    lastUpdated?: any;
+    createdAt?: string;
+    updatedAt?: string;
 }
 
 export const GameService = {

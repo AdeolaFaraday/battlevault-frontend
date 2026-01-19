@@ -2,7 +2,7 @@
 import { generatePathNumberArray } from "@/src/utils/ludo-board";
 import LudoPath from "./ludo-path";
 import LudoHomeColumn from "./ludo-home-column";
-import useLudoAction from "@/src/hooks/ludo/useLudoAction";
+import useLudoAction from "@/src/hooks/ludo";
 import DiceComponent from "../dice-component";
 import DiceSelector from "../dice-selector";
 
