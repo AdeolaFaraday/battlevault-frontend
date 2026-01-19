@@ -72,6 +72,7 @@ const useBackendLudoAction = ({ color }: { color?: string }) => {
     };
 
     const handleDiceRoll = async (results?: number[]) => {
+        console.log({ results });
         if (gameState.currentTurn !== currentUser?._id) {
             toast.error("It's not your turn!");
             return;
@@ -82,8 +83,8 @@ const useBackendLudoAction = ({ color }: { color?: string }) => {
                 variables: { gameId }
             });
             // State update will come via Firestore subscription
-        } catch (error: any) {
-            toast.error(error.message || "Failed to roll dice");
+        } catch (error: Error | unknown) {
+            toast.error((error as Error).message || "Failed to roll dice");
         }
     };
 
@@ -104,8 +105,8 @@ const useBackendLudoAction = ({ color }: { color?: string }) => {
                 }
             });
             // State update will come via Firestore subscription
-        } catch (error: any) {
-            toast.error(error.message || "Failed to process move");
+        } catch (error: Error | unknown) {
+            toast.error((error as Error).message || "Failed to process move");
         }
     };
 
@@ -124,9 +125,9 @@ const useBackendLudoAction = ({ color }: { color?: string }) => {
                     diceValues: updated || []
                 }
             });
-        } catch (error: any) {
+        } catch (error: Error | unknown) {
             console.error("Dice selection failed:", error);
-            toast.error(error.message || "Failed to select dice");
+            toast.error((error as Error).message || "Failed to select dice");
         }
     };
 

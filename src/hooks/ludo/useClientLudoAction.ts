@@ -6,6 +6,7 @@ import { cellColors } from "@/src/constants";
 import { processTokenMove, getNextPlayerId, isDiceValueUsable } from "@/src/utils/ludo/move-logic";
 import { GameService, GameSessionData } from "@/src/services/ludo/game.service";
 import { RootState } from "@/src/lib/redux/store";
+import { Timestamp } from "firebase/firestore";
 
 const useLudoAction = ({ color }: { color?: string }) => {
     const { id: gameId } = useParams<{ id: string }>();
@@ -29,7 +30,7 @@ const useLudoAction = ({ color }: { color?: string }) => {
         status: "waiting",
         usedDiceValues: [],
         activeDiceConfig: null,
-        lastUpdated: null,
+        lastUpdated: Timestamp.now(),
         tokens: {
             blue: generateDefaultTokenStates("blue") as unknown as Token[],
             yellow: generateDefaultTokenStates("yellow") as unknown as Token[],

@@ -1,4 +1,4 @@
-import { doc, onSnapshot, setDoc, updateDoc, getDoc, serverTimestamp } from "firebase/firestore";
+import { doc, onSnapshot, setDoc, updateDoc, getDoc, serverTimestamp, Timestamp } from "firebase/firestore";
 import { firestore } from "../../lib/firebase";
 
 export interface GameSessionData {
@@ -13,7 +13,7 @@ export interface GameSessionData {
     activeDiceConfig: number[] | null;
     winner?: string;
     lastMoverId?: string;
-    lastUpdated?: any;
+    lastUpdated?: Timestamp;
     createdAt?: string;
     updatedAt?: string;
 }

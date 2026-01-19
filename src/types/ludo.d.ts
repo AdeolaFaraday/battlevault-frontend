@@ -46,7 +46,7 @@ type LudoGameState = {
     usedDiceValues: number[];
     activeDiceConfig: number[] | null;
     lastMoverId?: string;
-    lastUpdated?: any;
+    lastUpdated?: Timestamp;
     createdAt?: string;
     updatedAt?: string;
 };

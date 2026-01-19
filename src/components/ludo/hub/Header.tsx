@@ -3,8 +3,11 @@
 import React from 'react';
 import { Bell, Wallet } from 'lucide-react';
 import LogoIcon from '@/src/components/common/icons/Logo';
+import { useAppSelector } from '@/src/lib/redux/hooks';
+import { RootState } from '@/src/lib/redux/store';
 
 const Header = () => {
+    const currentUser = useAppSelector((state: RootState) => state.auth.loggedInUserDetails);
     return (
         <header className="sticky top-0 z-50 bg-[#1a1d2e]/95 backdrop-blur-md border-b border-white/5 px-4 py-3 md:px-8 md:py-4">
             <div className="max-w-7xl mx-auto flex items-center justify-between">
@@ -37,7 +40,7 @@ const Header = () => {
                                 <div className="w-full h-full rounded-full bg-slate-700 overflow-hidden relative">
                                     {/* Placeholder Avatar */}
                                     <div className="absolute inset-0 bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-xs font-bold text-white">
-                                        PK
+                                        {currentUser?.firstName?.charAt(0).toUpperCase() || 'U' + ' ' + currentUser?.lastName?.charAt(0).toUpperCase() || 'U'}
                                     </div>
                                 </div>
                             </div>
