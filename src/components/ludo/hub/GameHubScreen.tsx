@@ -6,6 +6,7 @@ import ActiveGameCard from './ActiveGameCard';
 import UpcomingGamesSection from './UpcomingGamesSection';
 import TournamentsSection from './TournamentsSection';
 import QuickActions from './QuickActions';
+import Greeting from '../../common/greeting';
 
 const GameHubScreen = () => {
     return (
@@ -13,6 +14,13 @@ const GameHubScreen = () => {
             <Header />
 
             <main className="max-w-7xl mx-auto px-4 md:px-8 py-6 md:py-8 space-y-8 md:space-y-12">
+
+                {/* Welcome Greeting */}
+                <section className="px-1">
+                    <div className="text-white/90 text-2xl md:text-3xl font-bold">
+                        <Greeting />
+                    </div>
+                </section>
 
                 {/* Top Section: Active Game - Full Width */}
                 <section>

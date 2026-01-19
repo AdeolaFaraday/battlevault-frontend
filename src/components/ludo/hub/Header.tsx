@@ -1,7 +1,8 @@
 "use client";
 
 import React from 'react';
-import { Bell, Trophy, Wallet } from 'lucide-react';
+import { Bell, Wallet } from 'lucide-react';
+import LogoIcon from '@/src/components/common/icons/Logo';
 
 const Header = () => {
     return (
@@ -9,9 +10,7 @@ const Header = () => {
             <div className="max-w-7xl mx-auto flex items-center justify-between">
                 {/* Logo Section */}
                 <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center shadow-lg shadow-indigo-500/20">
-                        <Trophy className="text-white w-5 h-5 md:w-6 md:h-6" />
-                    </div>
+                    <LogoIcon width={40} height={40} className="fill-white" />
                     <h1 className="text-xl md:text-2xl font-black bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">
                         BattleVault
                     </h1>

@@ -1,7 +1,7 @@
-import HomeScreen from "../screens/HomeScreen";
+import GameHubScreen from "../components/ludo/hub/GameHubScreen";
 
 const Home = () => {
-  return <HomeScreen />;
+  return <GameHubScreen />;
 }
 
 export default Home;
