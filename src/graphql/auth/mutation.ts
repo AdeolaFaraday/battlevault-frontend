@@ -37,9 +37,19 @@ const SOCIAL_LOGIN_USER_MUTATION = gql`
 	}
 `;
 
-export { 
-    CREATE_USER_MUTATION,
-    LOGIN_USER_MUTATION,
+const LOGOUT_MUTATION = gql`
+	mutation logout {
+		logout {
+			success
+			message
+		}
+	}
+`;
+
+export {
+	CREATE_USER_MUTATION,
+	LOGIN_USER_MUTATION,
 	SOCIAL_LOGIN_USER_MUTATION,
-	VERIFY_EMAIL_MUTATION
- }
+	VERIFY_EMAIL_MUTATION,
+	LOGOUT_MUTATION
+}

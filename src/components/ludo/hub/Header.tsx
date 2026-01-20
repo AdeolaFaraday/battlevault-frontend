@@ -1,13 +1,38 @@
 "use client";
 
-import React from 'react';
-import { Bell, Wallet } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { Bell, Wallet, LogOut, User as UserIcon, Settings } from 'lucide-react';
 import LogoIcon from '@/src/components/common/icons/Logo';
 import { useAppSelector } from '@/src/lib/redux/hooks';
 import { RootState } from '@/src/lib/redux/store';
+import { useLogout } from '@/src/hooks/auth/useLogout';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const Header = () => {
     const currentUser = useAppSelector((state: RootState) => state.auth.loggedInUserDetails);
+    const { logout } = useLogout();
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const dropdownRef = useRef<HTMLDivElement>(null);
+
+    // Close dropdown when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setIsDropdownOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
+    // Toggle dropdown
+    const toggleDropdown = () => {
+        setIsDropdownOpen(!isDropdownOpen);
+    };
+
     return (
         <header className="sticky top-0 z-50 bg-[#1a1d2e]/95 backdrop-blur-md border-b border-white/5 px-4 py-3 md:px-8 md:py-4">
             <div className="max-w-7xl mx-auto flex items-center justify-between">
@@ -33,19 +58,64 @@ const Header = () => {
                         <span className="absolute top-2 right-2 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-[#1a1d2e]" />
                     </button>
 
-                    {/* Profile Avatar */}
-                    <div className="flex items-center gap-3 cursor-pointer group">
-                        <div className="relative">
-                            <div className="w-9 h-9 md:w-10 md:h-10 rounded-full border-2 border-indigo-500/30 p-0.5 group-hover:border-indigo-500 transition-colors">
-                                <div className="w-full h-full rounded-full bg-slate-700 overflow-hidden relative">
-                                    {/* Placeholder Avatar */}
-                                    <div className="absolute inset-0 bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-xs font-bold text-white">
-                                        {`${currentUser?.firstName?.charAt(0).toUpperCase() || 'U'} ${currentUser?.lastName?.charAt(0).toUpperCase() || 'U'}`}
+                    {/* Profile Avatar with Dropdown */}
+                    <div className="relative" ref={dropdownRef}>
+                        <div
+                            className="flex items-center gap-3 cursor-pointer group"
+                            onClick={toggleDropdown}
+                        >
+                            <div className="relative">
+                                <div className="w-9 h-9 md:w-10 md:h-10 rounded-full border-2 border-indigo-500/30 p-0.5 group-hover:border-indigo-500 transition-colors">
+                                    <div className="w-full h-full rounded-full bg-slate-700 overflow-hidden relative">
+                                        {/* Placeholder Avatar */}
+                                        <div className="absolute inset-0 bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-xs font-bold text-white">
+                                            {`${currentUser?.firstName?.charAt(0).toUpperCase() || 'U'} ${currentUser?.lastName?.charAt(0).toUpperCase() || 'U'}`}
+                                        </div>
                                     </div>
                                 </div>
+                                <div className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 rounded-full border-2 border-[#1a1d2e]" />
                             </div>
-                            <div className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 rounded-full border-2 border-[#1a1d2e]" />
                         </div>
+
+                        {/* Dropdown Menu */}
+                        <AnimatePresence>
+                            {isDropdownOpen && (
+                                <motion.div
+                                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                                    transition={{ duration: 0.2 }}
+                                    className="absolute right-0 top-full mt-2 w-64 bg-[#24283b] border border-white/10 rounded-xl shadow-xl overflow-hidden z-50"
+                                >
+                                    <div className="p-4 border-b border-white/5">
+                                        <p className="text-white font-bold truncate">
+                                            {currentUser?.firstName} {currentUser?.lastName}
+                                        </p>
+                                        <p className="text-xs text-slate-400 truncate">
+                                            {currentUser?.email}
+                                        </p>
+                                    </div>
+                                    <div className="p-2 space-y-1">
+                                        <button className="w-full flex items-center gap-3 px-3 py-2 text-sm text-slate-300 hover:text-white hover:bg-white/5 rounded-lg transition-colors text-left">
+                                            <UserIcon size={16} />
+                                            Profile
+                                        </button>
+                                        <button className="w-full flex items-center gap-3 px-3 py-2 text-sm text-slate-300 hover:text-white hover:bg-white/5 rounded-lg transition-colors text-left">
+                                            <Settings size={16} />
+                                            Settings
+                                        </button>
+                                        <div className="h-px bg-white/5 my-1" />
+                                        <button
+                                            onClick={logout}
+                                            className="w-full flex items-center gap-3 px-3 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition-colors text-left"
+                                        >
+                                            <LogOut size={16} />
+                                            Logout
+                                        </button>
+                                    </div>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
                     </div>
                 </div>
             </div>

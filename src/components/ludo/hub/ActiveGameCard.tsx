@@ -1,10 +1,86 @@
 "use client";
 
 import React from 'react';
-import { Play, Clock } from 'lucide-react';
+import { Play, Clock, Gamepad2, LogIn } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useQuery } from '@apollo/client';
+import { GET_ACTIVE_GAMES } from '../../../graphql/game/queries';
+import ActiveGameCardSkeleton from './ActiveGameCardSkeleton';
+import { useAppSelector } from '@/src/lib/redux/hooks';
+import { RootState } from '@/src/lib/redux/store';
+import { useRouter } from 'next/navigation';
+import { safeFormat } from '../../../utils/date-utils';
 
 const ActiveGameCard = () => {
+    const { data, loading } = useQuery(GET_ACTIVE_GAMES);
+    const currentUser = useAppSelector((state: RootState) => state.auth.loggedInUserDetails);
+    const router = useRouter();
+    const isAuthenticated = !!currentUser;
+
+    if (loading) {
+        return <ActiveGameCardSkeleton />;
+    }
+
+    const activeGame = data?.getActiveGames?.[0];
+
+    // Empty state - No active games
+    if (!activeGame) {
+        return (
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="relative w-full overflow-hidden rounded-2xl md:rounded-3xl"
+            >
+                {/* Background Gradient */}
+                <div className="absolute inset-0 bg-gradient-to-br from-slate-700/40 via-slate-800/40 to-slate-900/40" />
+
+                <div className="relative p-8 md:p-12 flex flex-col items-center justify-center text-center space-y-4 min-h-[200px]">
+                    <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center">
+                        <Gamepad2 size={32} className="text-slate-400" />
+                    </div>
+
+                    {isAuthenticated ? (
+                        <>
+                            <div>
+                                <h3 className="text-xl font-bold text-white mb-1">No Active Games</h3>
+                                <p className="text-slate-400 text-sm max-w-[300px]">
+                                    Start a new game and challenge your friends!
+                                </p>
+                            </div>
+                            <button
+                                onClick={() => router.push('/ludo-lobby/create')}
+                                className="px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold text-sm shadow-lg shadow-indigo-500/25 flex items-center gap-2 transition-all"
+                            >
+                                <Gamepad2 size={18} />
+                                Create Game
+                            </button>
+                        </>
+                    ) : (
+                        <>
+                            <div>
+                                <h3 className="text-xl font-bold text-white mb-1">Ready to Play?</h3>
+                                <p className="text-slate-400 text-sm max-w-[300px]">
+                                    Login to start playing and track your progress!
+                                </p>
+                            </div>
+                            <button
+                                onClick={() => router.push('/signin')}
+                                className="px-6 py-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold text-sm shadow-lg shadow-emerald-500/25 flex items-center gap-2 transition-all"
+                            >
+                                <LogIn size={18} />
+                                Login to Play
+                            </button>
+                        </>
+                    )}
+                </div>
+            </motion.div>
+        );
+    }
+
+    // Active game exists - show game card
+    const opponent = activeGame.players.find((p: LudoPlayer) => p.id !== currentUser?._id);
+    const isMyTurn = activeGame.currentTurn === currentUser?._id;
+
     return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -47,28 +123,43 @@ const ActiveGameCard = () => {
                     <div className="space-y-1">
                         <div className="flex items-center justify-center md:justify-start gap-2">
                             <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-white/20 text-white border border-white/10">
-                                Ranked Match
+                                {activeGame.status === 'playingDice' || activeGame.status === 'playingToken' ? 'In Progress' : 'Waiting'}
                             </span>
                             <span className="flex items-center gap-1 text-[10px] font-medium text-indigo-200">
-                                <Clock size={12} /> 2m ago
+                                <Clock size={12} /> {safeFormat(activeGame.updatedAt, 'MMM d, h:mm a', 'Recently')}
                             </span>
                         </div>
                         <h2 className="text-2xl md:text-3xl font-black text-white leading-tight">
-                            vs. Player2
+                            vs. {opponent?.name || 'Opponent'}
                         </h2>
-                        <p className="text-indigo-200 font-medium">It&apos;s your turn!</p>
+                        <p className="text-indigo-200 font-medium">
+                            {isMyTurn ? "It's your turn!" : "Waiting for opponent..."}
+                        </p>
                     </div>
 
                     {/* Avatars tiny row */}
                     <div className="flex items-center justify-center md:justify-start -space-x-2">
-                        <div className="w-8 h-8 rounded-full bg-indigo-400 border-2 border-indigo-600 z-20" />
-                        <div className="w-8 h-8 rounded-full bg-red-400 border-2 border-indigo-600 z-10" />
+                        {activeGame.players.slice(0, 4).map((player: LudoPlayer, idx: number) => (
+                            <div
+                                key={player.id}
+                                className={`w-8 h-8 rounded-full border-2 border-indigo-600 flex items-center justify-center text-xs font-bold text-white`}
+                                style={{
+                                    backgroundColor: player.color || '#6366f1',
+                                    zIndex: 20 - idx
+                                }}
+                            >
+                                {player.name?.charAt(0).toUpperCase()}
+                            </div>
+                        ))}
                     </div>
                 </div>
 
                 {/* Right: Action */}
                 <div className="w-full md:w-auto mt-2 md:mt-0">
-                    <button className="w-full md:w-auto px-8 py-4 bg-emerald-500 hover:bg-emerald-400 active:bg-emerald-600 text-white rounded-xl font-bold text-lg shadow-lg shadow-emerald-500/25 flex items-center justify-center gap-2 transition-all group">
+                    <button
+                        onClick={() => router.push(`/ludo/${activeGame.id}`)}
+                        className="w-full md:w-auto px-8 py-4 bg-emerald-500 hover:bg-emerald-400 active:bg-emerald-600 text-white rounded-xl font-bold text-lg shadow-lg shadow-emerald-500/25 flex items-center justify-center gap-2 transition-all group"
+                    >
                         <span>Resume Game</span>
                         <Play size={20} className="fill-current group-hover:translate-x-1 transition-transform" />
                     </button>

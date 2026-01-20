@@ -40,3 +40,19 @@ export const GET_UPCOMING_GAMES = gql`
     }
   }
 `;
+
+export const GET_ACTIVE_GAMES = gql`
+  query GetActiveGames {
+    getActiveGames {
+      id
+      players {
+        id
+        name
+      }
+      currentTurn
+      status
+      createdAt
+      updatedAt
+    }
+  }
+`;
