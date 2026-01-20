@@ -40,6 +40,9 @@ const useBackendLudoAction = ({ color }: { color?: string }) => {
         },
     });
 
+    // Local rolling state for UI feedback between button click and API response
+    const [isRolling, setIsRolling] = useState(false);
+
     const [rollDiceMutation] = useMutation(ROLL_DICE_MUTATION);
     const [processMoveMutation] = useMutation(PROCESS_MOVE_MUTATION);
     const [selectDiceMutation] = useMutation(SELECT_DICE_MUTATION);
@@ -59,11 +62,17 @@ const useBackendLudoAction = ({ color }: { color?: string }) => {
 
             console.log({ backendSyncData: data });
 
-            if (data) setGameState(data);
+            if (data) {
+                // Stop local rolling animation when dice values are received
+                if (isRolling && data.diceValue && data.diceValue.length > 0) {
+                    setIsRolling(false);
+                }
+                setGameState(data);
+            }
         });
 
         return () => unsubscribe();
-    }, [gameId]);
+    }, [gameId, isRolling]);
 
     const syncToFirestore = (updates: object) => {
         if (!gameId) return;
@@ -78,12 +87,17 @@ const useBackendLudoAction = ({ color }: { color?: string }) => {
             return;
         }
 
+        // Start local rolling animation immediately
+        setIsRolling(true);
+
         try {
             await rollDiceMutation({
                 variables: { gameId }
             });
             // State update will come via Firestore subscription
         } catch (error: Error | unknown) {
+            // Stop rolling on error
+            setIsRolling(false);
             toast.error((error as Error).message || "Failed to roll dice");
         }
     };
@@ -136,6 +150,7 @@ const useBackendLudoAction = ({ color }: { color?: string }) => {
         tokens: gameState.tokens,
         status: gameState.status,
         isCurrentTurn: gameState.currentTurn === currentUser?._id,
+        isRolling,
         handleDiceRoll,
         handleTokenClick: (token: Token, pos?: number) => handleTokenMove({
             token,

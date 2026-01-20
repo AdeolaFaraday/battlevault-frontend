@@ -1,19 +1,16 @@
 "use client"
-import { useState } from 'react';
 
 interface DiceComponentProps {
     onRollComplete?: (results: number[]) => void;
     diceValues?: number[];
     showRollButton?: boolean;
+    isRolling?: boolean;
 }
 
-const DiceComponent = ({ onRollComplete, diceValues, showRollButton = true }: DiceComponentProps) => {
-    const [localValues, setLocalValues] = useState<[number, number]>([0, 0]);
-    const [isRolling, setIsRolling] = useState(false);
-
+const DiceComponent = ({ onRollComplete, diceValues, showRollButton = true, isRolling = false }: DiceComponentProps) => {
     const displayValues = (diceValues && diceValues.length > 0)
         ? [diceValues[0], diceValues[1] || 0] as [number, number]
-        : localValues;
+        : [0, 0] as [number, number];
 
     // Generate dot pattern for each dice face
     const getDiceDots = (value: number) => {
@@ -29,16 +26,8 @@ const DiceComponent = ({ onRollComplete, diceValues, showRollButton = true }: Di
     };
 
     const handleRollClick = () => {
-        setIsRolling(true);
-
-        // Simulate rolling animation
-        setTimeout(() => {
-            const v1 = Math.floor(Math.random() * 6) + 1;
-            const v2 = Math.floor(Math.random() * 6) + 1;
-            setLocalValues([v1, v2]);
-            setIsRolling(false);
-            onRollComplete?.([v1, v2]);
-        }, 500);
+        // Start rolling animation and notify parent to trigger backend roll
+        onRollComplete?.([]);
     };
 
     const renderDice = (value: number, index: number) => {
@@ -79,4 +68,4 @@ const DiceComponent = ({ onRollComplete, diceValues, showRollButton = true }: Di
     );
 };
 
-export default DiceComponent; 
+export default DiceComponent;

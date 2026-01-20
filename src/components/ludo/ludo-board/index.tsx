@@ -29,6 +29,7 @@ const LudoBoard = ({ id }: { id: string }) => {
         gameState,
         activeDiceConfig,
         isCurrentTurn,
+        isRolling,
         setActiveDiceConfig,
         usedDiceValues,
         handleTokenClick,
@@ -170,6 +171,7 @@ const LudoBoard = ({ id }: { id: string }) => {
                         onRollComplete={handleCustomDiceRoll}
                         diceValues={gameState.diceValue}
                         showRollButton={isCurrentTurn && gameState.status === "playingDice"}
+                        isRolling={isRolling}
                     />
 
                     {isCurrentTurn && showDiceSelector && (

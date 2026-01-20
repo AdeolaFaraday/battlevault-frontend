@@ -1,18 +1,22 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Bell, Wallet, LogOut, User as UserIcon, Settings } from 'lucide-react';
+import { Bell, Wallet, LogOut, User as UserIcon, Settings, LogIn } from 'lucide-react';
 import LogoIcon from '@/src/components/common/icons/Logo';
+import DropdownMenuItem from '@/src/components/common/dropdown/DropdownMenuItem';
 import { useAppSelector } from '@/src/lib/redux/hooks';
 import { RootState } from '@/src/lib/redux/store';
 import { useLogout } from '@/src/hooks/auth/useLogout';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 
 const Header = () => {
     const currentUser = useAppSelector((state: RootState) => state.auth.loggedInUserDetails);
     const { logout } = useLogout();
+    const router = useRouter();
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
+    const isAuthenticated = !!currentUser;
 
     // Close dropdown when clicking outside
     useEffect(() => {
@@ -87,32 +91,37 @@ const Header = () => {
                                     transition={{ duration: 0.2 }}
                                     className="absolute right-0 top-full mt-2 w-64 bg-[#24283b] border border-white/10 rounded-xl shadow-xl overflow-hidden z-50"
                                 >
-                                    <div className="p-4 border-b border-white/5">
-                                        <p className="text-white font-bold truncate">
-                                            {currentUser?.firstName} {currentUser?.lastName}
-                                        </p>
-                                        <p className="text-xs text-slate-400 truncate">
-                                            {currentUser?.email}
-                                        </p>
-                                    </div>
-                                    <div className="p-2 space-y-1">
-                                        <button className="w-full flex items-center gap-3 px-3 py-2 text-sm text-slate-300 hover:text-white hover:bg-white/5 rounded-lg transition-colors text-left">
-                                            <UserIcon size={16} />
-                                            Profile
-                                        </button>
-                                        <button className="w-full flex items-center gap-3 px-3 py-2 text-sm text-slate-300 hover:text-white hover:bg-white/5 rounded-lg transition-colors text-left">
-                                            <Settings size={16} />
-                                            Settings
-                                        </button>
-                                        <div className="h-px bg-white/5 my-1" />
-                                        <button
-                                            onClick={logout}
-                                            className="w-full flex items-center gap-3 px-3 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition-colors text-left"
-                                        >
-                                            <LogOut size={16} />
-                                            Logout
-                                        </button>
-                                    </div>
+                                    {isAuthenticated ? (
+                                        <>
+                                            <div className="p-4 border-b border-white/5">
+                                                <p className="text-white font-bold truncate">
+                                                    {currentUser?.firstName} {currentUser?.lastName}
+                                                </p>
+                                                <p className="text-xs text-slate-400 truncate">
+                                                    {currentUser?.email}
+                                                </p>
+                                            </div>
+                                            <div className="p-2 space-y-1">
+                                                <DropdownMenuItem icon={UserIcon} label="Profile" />
+                                                <DropdownMenuItem icon={Settings} label="Settings" />
+                                                <div className="h-px bg-white/5 my-1" />
+                                                <DropdownMenuItem
+                                                    icon={LogOut}
+                                                    label="Logout"
+                                                    variant="danger"
+                                                    onClick={logout}
+                                                />
+                                            </div>
+                                        </>
+                                    ) : (
+                                        <div className="p-2">
+                                            <DropdownMenuItem
+                                                icon={LogIn}
+                                                label="Login"
+                                                onClick={() => router.push('/signin')}
+                                            />
+                                        </div>
+                                    )}
                                 </motion.div>
                             )}
                         </AnimatePresence>
