@@ -10,7 +10,7 @@ const UpcomingTournamentCard = ({
     date,
     entryFee,
     game,
-    maxPlayers,
+    maxUsers,
     prize,
     time,
     title,
@@ -37,7 +37,7 @@ const UpcomingTournamentCard = ({
                     <span className="icon-container users-icon">
                         <Users size={16} />
                     </span>
-                    <span>{maxPlayers} Players Max</span>
+                    <span>{maxUsers} Users Max</span>
                 </div>
                 <div className="tournament-info">
                     <span className="icon-container trophy-icon">

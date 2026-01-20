@@ -40,7 +40,7 @@ const Header = () => {
                                 <div className="w-full h-full rounded-full bg-slate-700 overflow-hidden relative">
                                     {/* Placeholder Avatar */}
                                     <div className="absolute inset-0 bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-xs font-bold text-white">
-                                        {currentUser?.firstName?.charAt(0).toUpperCase() || 'U' + ' ' + currentUser?.lastName?.charAt(0).toUpperCase() || 'U'}
+                                        {`${currentUser?.firstName?.charAt(0).toUpperCase() || 'U'} ${currentUser?.lastName?.charAt(0).toUpperCase() || 'U'}`}
                                     </div>
                                 </div>
                             </div>
