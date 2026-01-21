@@ -1,51 +1,70 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import VersusAvatar from './VersusAvatar';
 import ActionButtons from './ActionButtons';
 import { cn } from '../../../lib/utils';
 import { Swords, Trophy, Dices } from 'lucide-react';
 import { useGameSession } from '@/src/hooks/useGameSession';
-import { useSelector } from 'react-redux';
+import { useAppSelector } from '@/src/lib/redux/hooks';
 import { RootState } from '@/src/lib/redux/store';
+import GuestNameModal from './GuestNameModal';
 
 interface LobbyScreenProps {
     gameId?: string;
 }
 
 const LobbyScreen = ({ gameId }: LobbyScreenProps) => {
-    // Placeholder State for 1v1
-    // Player 1 is current user (always present)
-    // Player 1 is current user (always present)
-    const { loggedInUserDetails } = useSelector((state: RootState) => state.auth);
+    const router = useRouter();
+    const { loggedInUserDetails } = useAppSelector((state: RootState) => state.auth);
 
-    // Construct player object if user exists
+    // Construct player object only if user details exist (auth or guest)
     const player = loggedInUserDetails ? {
-        id: loggedInUserDetails._id || "guest",
-        name: `${loggedInUserDetails.firstName} ${loggedInUserDetails.lastName}`,
-        color: "red", // Defaulting to red for now, can be dynamic later
+        id: loggedInUserDetails._id,
+        name: `${loggedInUserDetails.firstName} ${loggedInUserDetails.lastName}`.trim(),
+        color: "red", // Default color
         tokens: []
     } : undefined;
 
+    // Only join session if we have player info
     const { gameState, loading, error } = useGameSession({
         gameId: gameId || "",
         player: player || { id: "", name: "", color: "", tokens: [] }
     });
 
-    console.log("Lobby Session:", { gameState, loading, error });
+    // Check for guest modal requirement
+    const showGuestModal = !loggedInUserDetails;
+
+    // Auto-redirect when game is full (2 players)
+    useEffect(() => {
+        if (gameState?.players && gameState.players.length === 2 && gameId) {
+            router.push(`/ludo/${gameId}`);
+        }
+    }, [gameState?.players, gameId, router]);
 
     // Derived State from Game Session
-    const sessionCurrentUser = gameState?.players.find(p => p.id === player?.id);
-    const sessionOpponent = gameState?.players.find(p => p.id !== player?.id);
+    // We try to find the player that matches our ID to label as "You"
+    // If not found (e.g. spectator), we just show players as is
 
-    const currentUserDisplay = {
-        name: sessionCurrentUser?.name || player?.name || 'You',
-        isReady: true, // If they are in the game, they are ready? Or add logic.
+    // IMPORTANT: Game State is the Source of Truth
+    // Slot 1 (Host/Player 1)
+    const player1 = gameState?.players[0];
+    // Slot 2 (Opponent/Player 2)
+    const player2 = gameState?.players[1];
+
+    const isPlayer1Me = player1?.id === player?.id;
+    const isPlayer2Me = player2?.id === player?.id;
+
+
+    const currentUserDisplay = player1 ? {
+        name: `${player1.name} ${isPlayer1Me ? '(You)' : ''}`.trim(),
+        isReady: true,
         avatarUrl: ''
-    };
+    } : undefined;
 
-    const opponentDisplay = sessionOpponent ? {
-        name: sessionOpponent.name,
+    const opponentDisplay = player2 ? {
+        name: `${player2.name} ${isPlayer2Me ? '(You)' : ''}`.trim(),
         isReady: true,
         avatarUrl: ''
     } : undefined;
@@ -53,17 +72,13 @@ const LobbyScreen = ({ gameId }: LobbyScreenProps) => {
     // Game Mode State: 'tournament' | 'free'
     const [gameMode] = useState<'tournament' | 'free'>('tournament');
 
-    // Simulate opponent joining (commented out)
-    // const handleSimulateJoin = () => {
-    //     setOpponent({ name: 'Alex_Gamer', isReady: false, avatarUrl: '' });
-    // };
-
-    // const roomCode = "LUDO-8829";
-    const isHost = true; // TODO: Determine based on who created it?
-    const canStart = !!opponentDisplay && opponentDisplay.isReady;
+    const isHost = isPlayer1Me; // Simple host logic: first player is host
+    const canStart = !!player2; // Can start if opponent is present
 
     const handleStartGame = () => {
-        console.log("Starting game...");
+        if (gameId) {
+            router.push(`/ludo/${gameId}`);
+        }
     };
 
     const handleLeaveRoom = () => {
@@ -72,6 +87,8 @@ const LobbyScreen = ({ gameId }: LobbyScreenProps) => {
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-[#1a1d2e] overflow-hidden relative font-sans">
+
+            <GuestNameModal isOpen={showGuestModal} gameId={gameId || 'lobby'} />
 
             {/* Background Decoration */}
             <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
@@ -152,15 +169,6 @@ const LobbyScreen = ({ gameId }: LobbyScreenProps) => {
 
             </div>
 
-            {/* Debug Button (Remove in Prod) */}
-            {/* <div className="absolute top-4 right-4 md:bottom-4 md:top-auto">
-                    <button
-                        onClick={handleSimulateJoin}
-                        className="text-[10px] text-slate-600 hover:text-slate-400 transition-colors border border-slate-700/50 px-2 py-1 rounded"
-                    >
-                        [Simulate Opponent]
-                    </button>
-                </div> */}
             {/* Debug Info */}
             <div className="absolute top-4 left-4 text-white/50 text-xs">
                 {loading && <p>Joining game...</p>}

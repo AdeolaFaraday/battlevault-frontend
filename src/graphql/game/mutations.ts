@@ -14,8 +14,8 @@ export const JOIN_GAME_MUTATION = gql`
 `;
 
 export const ROLL_DICE_MUTATION = gql`
-  mutation RollDice($gameId: ID!) {
-    rollDice(gameId: $gameId) {
+  mutation RollDice($gameId: ID!, $name: String) {
+    rollDice(gameId: $gameId, name: $name) {
       id
       currentTurn
       diceValue
@@ -34,8 +34,8 @@ export const ROLL_DICE_MUTATION = gql`
 `;
 
 export const PROCESS_MOVE_MUTATION = gql`
-  mutation ProcessMove($gameId: ID!, $input: MoveInput!) {
-    processMove(gameId: $gameId, input: $input) {
+  mutation ProcessMove($gameId: ID!, $input: MoveInput!, $name: String) {
+    processMove(gameId: $gameId, input: $input, name: $name) {
       id
       players {
         id
@@ -64,8 +64,8 @@ export const PROCESS_MOVE_MUTATION = gql`
 `;
 
 export const SELECT_DICE_MUTATION = gql`
-  mutation SelectDice($gameId: ID!, $diceValues: [Int!]!) {
-    selectDice(gameId: $gameId, diceValues: $diceValues) {
+  mutation SelectDice($gameId: ID!, $diceValues: [Int!]!, $name: String) {
+    selectDice(gameId: $gameId, diceValues: $diceValues, name: $name) {
       id
       activeDiceConfig
       status

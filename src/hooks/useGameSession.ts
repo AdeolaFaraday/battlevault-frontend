@@ -37,7 +37,7 @@ export const useGameSession = ({ gameId, player }: UseGameSessionProps) => {
     const hasJoinedRef = useRef(false);
 
     useEffect(() => {
-        if (!gameId || !player || hasJoinedRef.current) return;
+        if (!gameId || !player?.name || hasJoinedRef.current) return;
 
         const initGame = async () => {
             try {
@@ -50,7 +50,7 @@ export const useGameSession = ({ gameId, player }: UseGameSessionProps) => {
                 });
 
                 if (data?.joinGame) {
-                    setGameState(data.joinGame);
+                    // setGameState(data.joinGame);
                 }
             } catch (e) {
                 console.error("Failed to join game:", e);
@@ -60,7 +60,7 @@ export const useGameSession = ({ gameId, player }: UseGameSessionProps) => {
 
         initGame();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [gameId]);
+    }, [gameId, player?.name]);
 
     useEffect(() => {
         if (!gameId) return;

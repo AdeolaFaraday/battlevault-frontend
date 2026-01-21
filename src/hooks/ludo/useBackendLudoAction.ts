@@ -9,6 +9,7 @@ import { GameService, GameSessionData } from "@/src/services/ludo/game.service";
 import { RootState } from "@/src/lib/redux/store";
 import { useMutation } from "@apollo/client";
 import { ROLL_DICE_MUTATION, PROCESS_MOVE_MUTATION, SELECT_DICE_MUTATION } from "@/src/graphql/game/mutations";
+import { useSound } from "../useSound";
 
 const useBackendLudoAction = ({ color }: { color?: string }) => {
     const { id: gameId } = useParams<{ id: string }>();
@@ -42,6 +43,7 @@ const useBackendLudoAction = ({ color }: { color?: string }) => {
 
     // Local rolling state for UI feedback between button click and API response
     const [isRolling, setIsRolling] = useState(false);
+    const { playRoll, playMove } = useSound();
 
     const [rollDiceMutation] = useMutation(ROLL_DICE_MUTATION);
     const [processMoveMutation] = useMutation(PROCESS_MOVE_MUTATION);
@@ -80,6 +82,10 @@ const useBackendLudoAction = ({ color }: { color?: string }) => {
         GameService.updateGame(gameId, updates);
     };
 
+    const playerName = currentUser
+        ? `${currentUser.firstName} ${currentUser.lastName}`.trim()
+        : undefined;
+
     const handleDiceRoll = async (results?: number[]) => {
         console.log({ results });
         if (gameState.currentTurn !== currentUser?._id) {
@@ -89,10 +95,14 @@ const useBackendLudoAction = ({ color }: { color?: string }) => {
 
         // Start local rolling animation immediately
         setIsRolling(true);
+        playRoll();
 
         try {
             await rollDiceMutation({
-                variables: { gameId }
+                variables: {
+                    gameId,
+                    name: playerName
+                }
             });
             // State update will come via Firestore subscription
         } catch (error: Error | unknown) {
@@ -109,13 +119,15 @@ const useBackendLudoAction = ({ color }: { color?: string }) => {
         }
 
         try {
+            playMove();
             await processMoveMutation({
                 variables: {
                     gameId,
                     input: {
                         tokenId: moveData.token.sn,
                         color: moveData.token.color
-                    }
+                    },
+                    name: playerName
                 }
             });
             // State update will come via Firestore subscription
@@ -136,7 +148,8 @@ const useBackendLudoAction = ({ color }: { color?: string }) => {
             await selectDiceMutation({
                 variables: {
                     gameId,
-                    diceValues: updated || []
+                    diceValues: updated || [],
+                    name: playerName
                 }
             });
         } catch (error: Error | unknown) {
