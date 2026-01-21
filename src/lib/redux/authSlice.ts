@@ -53,7 +53,7 @@ const authSlice = createSlice({
 				email: '',
 				role: 'guest',
 				// Add other required fields with dummy data if TCommonResponseData enforces them
-			} as any;
+			} as TCommonResponseData;
 			// Explicitly NOT setting isUserLoggedIn to true
 		}
 	},

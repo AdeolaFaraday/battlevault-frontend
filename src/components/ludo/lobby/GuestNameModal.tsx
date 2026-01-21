@@ -50,7 +50,7 @@ const GuestNameModal: React.FC<GuestNameModalProps> = ({ isOpen, gameId }) => {
                 </button>
 
                 <p className="text-xs text-center text-slate-500">
-                    You're joining as a guest.
+                    You&apos;re joining as a guest.
                     <span className="block mt-1">
                         Sign in later to save your stats!
                     </span>
