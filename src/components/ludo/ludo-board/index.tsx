@@ -77,6 +77,7 @@ const LudoBoard = ({ id }: { id: string }) => {
                         color={getPlayer("green") ? "green" : "red"}
                         isCurrentTurn={(getPlayer("green") || getPlayer("red"))?.id === currentTurnId}
                         position="top-right"
+                        tokenData={gameState.tokens}
                     />
                 </div>
 
@@ -190,6 +191,7 @@ const LudoBoard = ({ id }: { id: string }) => {
                         color={getPlayer("blue") ? "blue" : "yellow"}
                         isCurrentTurn={(getPlayer("blue") || getPlayer("yellow"))?.id === currentTurnId}
                         position="bottom-left"
+                        tokenData={gameState.tokens}
                     />
                 </div>
             </div>

@@ -72,7 +72,7 @@ const UpcomingGamesSection = () => {
                         <div className="flex justify-between items-start">
                             <div className="space-y-1">
                                 <h4 className="font-bold text-slate-200 group-hover:text-white transition-colors">
-                                    Ludo Challenge
+                                    {game?.name || 'Unknown Game'}
                                 </h4>
                                 <div className="flex items-center gap-3 text-xs text-slate-400">
                                     <span className="bg-indigo-500/10 text-indigo-400 px-2 py-0.5 rounded">

@@ -28,6 +28,7 @@ export const GET_UPCOMING_GAMES = gql`
   query GetUpcomingGames {
     getUpcomingGames {
       id
+      name
       players {
         id
         name

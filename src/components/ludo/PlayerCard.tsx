@@ -8,9 +8,10 @@ interface PlayerCardProps {
     diceValue?: number; // Value to display if they just rolled? Or maybe handled separate
     color: "red" | "blue" | "green" | "yellow";
     position: "top-left" | "top-right" | "bottom-left" | "bottom-right";
+    tokenData?: { [key: string]: Token[] };
 }
 
-const PlayerCard: React.FC<PlayerCardProps> = ({ player, isCurrentTurn, color, position }) => {
+const PlayerCard: React.FC<PlayerCardProps> = ({ player, isCurrentTurn, color, position, tokenData }) => {
     // Map Ludo colors to Tailwind classes
     // const colorStyles = {
     //     red: "bg-red-500/10 border-red-500/50 text-red-100",
@@ -70,13 +71,27 @@ const PlayerCard: React.FC<PlayerCardProps> = ({ player, isCurrentTurn, color, p
                                     // Total dots across all rows up to this one
                                     const previousDots = colorIndex * 4;
                                     const dotIndex = previousDots + i;
-                                    const isFinished = dotIndex < (player?.finishedCount || 0);
+
+                                    // NEW LOGIC: Check specific token if data available
+                                    let isFinished = false;
+                                    if (tokenData && tokenData[tokenColor]) {
+                                        // We assume the tokens are ordered by SN or index matches logic. 
+                                        // Usually Ludo has 4 tokens per color.
+                                        // Let's safe check index access.
+                                        const token = tokenData[tokenColor][i];
+                                        isFinished = token?.isFinished || false;
+                                    } else {
+                                        // Fallback to old count
+                                        isFinished = dotIndex < (player?.finishedCount || 0);
+                                    }
+
+                                    console.log({ tokenColor, dotIndex, isFinished, player });
 
                                     const dotColors = {
                                         red: "bg-red-400 border-red-400 shadow-[0_0_4px_rgba(239,68,68,0.6)]",
                                         blue: "bg-blue-400 border-blue-400 shadow-[0_0_4px_rgba(59,130,246,0.6)]",
                                         green: "bg-green-400 border-green-400 shadow-[0_0_4px_rgba(34,197,94,0.6)]",
-                                        yellow: "bg-amber-400 border-amber-400 shadow-[0_0_4px_rgba(251,191,36,0.6)]",
+                                        yellow: "bg-[#FFD700] border-[#FFD700] shadow-[0_0_4px_rgba(251,191,36,0.6)]",
                                     };
 
                                     return (
