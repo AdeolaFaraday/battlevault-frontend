@@ -1,25 +1,14 @@
 import { gql } from "@apollo/client";
 
 export const JOIN_GAME_MUTATION = gql`
-  mutation JoinGame($gameId: ID!, $player: LudoPlayerInput!) {
-    joinGame(gameId: $gameId, player: $player) {
+  mutation JoinGame($gameId: ID!, $name: String!) {
+    joinGame(gameId: $gameId, name: $name) {
       id
       name
       type
-      tournamentId
-      matchStage
       players {
         id
-        name
-        color
-        tokens
       }
-      currentTurn
-      diceValue
-      isRolling
-      status
-      createdAt
-      updatedAt
     }
   }
 `;
@@ -80,6 +69,23 @@ export const SELECT_DICE_MUTATION = gql`
       id
       activeDiceConfig
       status
+    }
+  }
+`;
+
+export const CREATE_FREE_GAME_MUTATION = gql`
+  mutation CreateFreeGame($name: String!) {
+    createFreeGame(name: $name) {
+      id
+      players {
+        id
+        name
+        color
+      }
+      currentTurn
+      status
+      createdAt
+      updatedAt
     }
   }
 `;

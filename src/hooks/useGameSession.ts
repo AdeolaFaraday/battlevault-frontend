@@ -45,12 +45,7 @@ export const useGameSession = ({ gameId, player }: UseGameSessionProps) => {
                 const { data } = await joinGame({
                     variables: {
                         gameId,
-                        player: {
-                            id: player.id,
-                            name: player.name,
-                            color: player.color, // Ensure this matches backend expected format (e.g. UPPERCASE if needed)
-                            tokens: player.tokens
-                        }
+                        name: player.name,
                     }
                 });
 
