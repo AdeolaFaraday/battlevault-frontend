@@ -1,6 +1,7 @@
 "use client"
 import clsx from "clsx";
 import LudoToken from "./ludo-token";
+import { Token } from "@/src/types/ludo";
 
 const LudoHomeColumn = ({
     customClassName,

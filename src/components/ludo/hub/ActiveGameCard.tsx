@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import { Play, Clock } from 'lucide-react';
+import { Play, Clock, Dices, Gamepad2, Trophy, Ghost } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useQuery } from '@apollo/client';
 import { GET_ACTIVE_GAMES } from '../../../graphql/game/queries';
@@ -11,12 +11,13 @@ import { useAppSelector } from '@/src/lib/redux/hooks';
 import { RootState } from '@/src/lib/redux/store';
 import { useRouter } from 'next/navigation';
 import { safeFormat } from '../../../utils/date-utils';
+import { LudoPlayer } from '@/src/types/ludo';
 
 const ActiveGameCard = () => {
     const { data, loading } = useQuery(GET_ACTIVE_GAMES);
-    const currentUser = useAppSelector((state: RootState) => state.auth.loggedInUserDetails);
+    const { loggedInUserDetails: currentUser, isUserLoggedIn } = useAppSelector((state: RootState) => state.auth);
     const router = useRouter();
-    const isAuthenticated = !!currentUser;
+    const isAuthenticated = isUserLoggedIn === true;
 
     if (loading) {
         return <ActiveGameCardSkeleton />;
@@ -37,16 +38,21 @@ const ActiveGameCard = () => {
         <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="relative w-full overflow-hidden rounded-2xl md:rounded-3xl"
+            className="relative w-full overflow-hidden rounded-2xl md:rounded-3xl bg-[#0f111a] border border-white/10 shadow-2xl group/card"
         >
-            {/* Background Gradient */}
-            <div className="absolute inset-0 bg-gradient-to-br from-indigo-600 via-purple-700 to-indigo-900" />
+            {/* Slick Background Icons */}
+            <div className="absolute inset-0 z-0 opacity-10 pointer-events-none overflow-hidden">
+                <Dices className="absolute top-4 left-6 rotate-12 text-white blur-[1px]" size={90} />
+                <Gamepad2 className="absolute -bottom-10 right-14 -rotate-12 text-white" size={140} />
+                <Trophy className="absolute top-1/2 left-1/3 -translate-y-1/2 rotate-[35deg] text-indigo-400" size={70} />
+                <Ghost className="absolute top-4 right-1/4 -rotate-45 text-white/50" size={50} />
+            </div>
 
-            {/* Decorative Circles */}
-            <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-            <div className="absolute bottom-0 left-0 w-48 h-48 bg-black/20 rounded-full blur-2xl translate-y-1/2 -translate-x-1/2" />
+            {/* Subtle Gradient Glow */}
+            <div className="absolute -top-[20%] -right-[10%] w-[400px] h-[400px] bg-indigo-500/15 rounded-full blur-[120px] pointer-events-none group-hover/card:bg-indigo-500/25 transition-colors duration-700" />
+            <div className="absolute -bottom-[20%] -left-[10%] w-[300px] h-[300px] bg-indigo-600/10 rounded-full blur-[100px] pointer-events-none" />
 
-            <div className="relative p-5 md:p-8 flex flex-col md:flex-row items-center gap-6">
+            <div className="relative z-10 p-5 md:p-8 flex flex-col md:flex-row items-center gap-6">
 
                 {/* Left: Board Preview */}
                 <div className="relative shrink-0">

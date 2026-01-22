@@ -1,5 +1,6 @@
 import { toast } from "sonner";
 import { GameSessionData } from "../../services/ludo/game.service";
+import { LudoPlayer, Token } from "@/src/types/ludo";
 
 export const HOME_POSITIONS: { [key: string]: number } = {
     green: 19,

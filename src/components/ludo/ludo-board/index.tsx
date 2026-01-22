@@ -5,6 +5,9 @@ import LudoHomeColumn from "./ludo-home-column";
 import useLudoAction from "@/src/hooks/ludo";
 import DiceComponent from "../dice-component";
 import DiceSelector from "../dice-selector";
+import { useRouter } from "next/navigation";
+import GameCelebration from "../celebration/GameCelebration";
+
 
 /* 
  Component built with flex box
@@ -22,6 +25,7 @@ import PlayerCard from "../PlayerCard";
  */
 
 const LudoBoard = ({ id }: { id: string }) => {
+    const router = useRouter();
     console.log({ id });
     const {
         findActiveTokens,
@@ -56,9 +60,17 @@ const LudoBoard = ({ id }: { id: string }) => {
     // Helper to get player data safely
     const getPlayer = (color: string) => gameState.players?.find(p => p.tokens?.includes(color));
     const currentTurnId = gameState.currentTurn;
+    const winner = gameState.players?.find(p => p.id === gameState.winner);
 
     return (
         <div className="flex flex-col h-screen w-full bg-[#1e293b] overflow-hidden relative">
+            <GameCelebration
+                isOpen={gameState.status === "finished"}
+                winner={winner}
+                onClose={() => router.push("/ludo-lobby")}
+                onRestart={() => window.location.reload()}
+            />
+
             {/* Background Effects */}
             <div className="absolute inset-0 z-0 opacity-20 pointer-events-none">
                 <div className="absolute top-0 left-0 w-[500px] h-[500px] rounded-full bg-blue-500/30 blur-[100px]" />

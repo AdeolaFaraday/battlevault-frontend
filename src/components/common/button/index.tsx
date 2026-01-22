@@ -31,9 +31,9 @@ const Button = ({
         whileTap={{ scale: 0.95 }}
     >
         <button
-            style={{
+            style={!customClassName ? {
                 backgroundColor: btnVariant[variant || "primary"]
-            }}
+            } : {}}
             className={clsx("button", customClassName)}
             {...rest}>
             {loading ? <Loader /> : title}

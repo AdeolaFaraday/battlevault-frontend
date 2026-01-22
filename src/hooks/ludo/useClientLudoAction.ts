@@ -7,6 +7,7 @@ import { processTokenMove, getNextPlayerId, isDiceValueUsable } from "@/src/util
 import { GameService, GameSessionData } from "@/src/services/ludo/game.service";
 import { RootState } from "@/src/lib/redux/store";
 import { Timestamp } from "firebase/firestore";
+import { LudoPlayer, Token } from "@/src/types/ludo";
 
 const useLudoAction = ({ color }: { color?: string }) => {
     const { id: gameId } = useParams<{ id: string }>();
@@ -113,11 +114,11 @@ const useLudoAction = ({ color }: { color?: string }) => {
         const playerColors = player?.tokens || []; // Array of colors like ['red'] or ['red', 'green']
 
         // Aggregate all tokens controlled by this player
-        const myTokens = playerColors.flatMap(color => gameState.tokens[color] || []);
+        const myTokens = playerColors.flatMap((color: string) => gameState.tokens[color] || []);
 
         // GRANULAR AUTO-SKIP & DISCARD CHECK
         const hasSix = results.includes(6);
-        const hasTokensAtHome = myTokens.some(t => !t.active && !t.isFinished);
+        const hasTokensAtHome = myTokens.some((t: Token) => !t.active && !t.isFinished);
 
         let usableDice: number[] = [];
 
@@ -127,8 +128,8 @@ const useLudoAction = ({ color }: { color?: string }) => {
             usableDice = results;
         } else {
             // Otherwise, check if ANY owned color can use each dice value
-            usableDice = results.filter(diceVal => {
-                return playerColors.some(color => {
+            usableDice = results.filter((diceVal: number) => {
+                return playerColors.some((color: string) => {
                     const tokensOfColor = gameState.tokens[color] || [];
                     return isDiceValueUsable(diceVal, tokensOfColor, color);
                 });

@@ -1,6 +1,7 @@
 import React from 'react';
 import { User, Swords } from 'lucide-react';
 import { cn } from '../../lib/utils';
+import { LudoPlayer, Token } from '@/src/types/ludo';
 
 interface PlayerCardProps {
     player?: LudoPlayer;

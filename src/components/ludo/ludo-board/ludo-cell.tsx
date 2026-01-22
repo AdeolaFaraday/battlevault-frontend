@@ -3,6 +3,7 @@ import { useDrop } from "react-dnd"
 import LudoToken from "./ludo-token"
 import clsx from "clsx"
 import { RefObject } from "react"
+import { Token } from "@/src/types/ludo"
 
 type LudoPathProp = {
     number: number

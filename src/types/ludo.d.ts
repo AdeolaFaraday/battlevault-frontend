@@ -1,4 +1,4 @@
-type Token = {
+export type Token = {
     sn: number
     color: string
     active?: boolean
@@ -7,7 +7,7 @@ type Token = {
     isFinished?: boolean
 }
 
-type DiceValue = {
+export type DiceValue = {
     sides: string;
     dieType: string;
     groupId: number;
@@ -17,7 +17,7 @@ type DiceValue = {
     value: number;
 }
 
-type LudoPlayer = {
+export type LudoPlayer = {
     id: string;
     name: string;
     avatarUrl?: string;
@@ -29,7 +29,7 @@ type LudoPlayer = {
     finishedCount?: number;
 };
 
-type LudoGameState = {
+export type LudoGameState = {
     id?: string;
     players: LudoPlayer[];
     currentTurn: string; // Player ID

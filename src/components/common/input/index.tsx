@@ -12,6 +12,7 @@ type Props = {
 const Input = ({
     label,
     error,
+    className,
     ...rest
 }: Props) => {
     return <div className="input_container">
@@ -19,7 +20,7 @@ const Input = ({
             <span className="input_label">{label}</span>
             {error && <span data-testid="input_error" className="input_error">{error?.message}</span>}
         </div>}
-        <input className="input" {...rest} />
+        <input className={`input ${className}`} {...rest} />
     </div>
 }
 

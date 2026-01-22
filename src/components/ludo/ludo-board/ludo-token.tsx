@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { cellColors } from "@/src/constants";
+import { Token } from "@/src/types/ludo";
 
 type LudoToken = {
     isInHomeColumn?: boolean

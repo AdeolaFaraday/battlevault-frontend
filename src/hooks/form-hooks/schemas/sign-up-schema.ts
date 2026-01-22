@@ -7,6 +7,7 @@ const signUpSchema = yup
         userName: yup.string().max(10).required(),
         email: yup.string().email().max(32).required(),
         password: yup.string().max(32).required(),
+        country: yup.string().required("Please select your country"),
     })
     .required()
 

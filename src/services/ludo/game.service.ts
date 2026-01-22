@@ -1,5 +1,6 @@
 import { doc, onSnapshot, setDoc, updateDoc, getDoc, serverTimestamp, Timestamp } from "firebase/firestore";
 import { firestore } from "../../lib/firebase";
+import { LudoPlayer, Token } from "@/src/types/ludo";
 
 export interface GameSessionData {
     id?: string;

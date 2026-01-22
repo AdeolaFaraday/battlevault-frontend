@@ -2,6 +2,7 @@
 import clsx from "clsx";
 import LudoCell from "./ludo-cell";
 import { cellColors } from "@/src/constants";
+import { Token } from "@/src/types/ludo";
 
 type LudoPathProp = {
     customClassName?: string

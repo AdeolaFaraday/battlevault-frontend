@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form"
+import { useForm, Resolver } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from "yup"
 
@@ -10,9 +10,10 @@ const useHookForm = <T extends object>({ schema }: Props<T>) => {
     const {
         register,
         handleSubmit,
+        control,
         formState: { errors, touchedFields, isValid },
-    } = useForm({
-        resolver: yupResolver(schema),
+    } = useForm<T>({
+        resolver: yupResolver(schema) as unknown as Resolver<T>,
     })
 
     return {
@@ -21,6 +22,7 @@ const useHookForm = <T extends object>({ schema }: Props<T>) => {
         isValid,
         register,
         handleSubmit,
+        control,
     }
 }
 

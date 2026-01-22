@@ -42,7 +42,7 @@ const Header = () => {
             <div className="max-w-7xl mx-auto flex items-center justify-between">
                 {/* Logo Section */}
                 <div className="flex items-center gap-2">
-                    <LogoIcon width={40} height={40} className="fill-white" />
+                    <LogoIcon width={40} height={40} className="fill-white" color="white" />
                     <h1 className="text-xl md:text-2xl font-black bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">
                         BattleVault
                     </h1>
@@ -73,7 +73,7 @@ const Header = () => {
                                     <div className="w-full h-full rounded-full bg-slate-700 overflow-hidden relative">
                                         {/* Placeholder Avatar */}
                                         <div className="absolute inset-0 bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-xs font-bold text-white">
-                                            {`${currentUser?.firstName?.charAt(0).toUpperCase() || 'U'} ${currentUser?.lastName?.charAt(0).toUpperCase() || 'U'}`}
+                                            {`${currentUser?.firstName?.charAt(0).toUpperCase() || 'B'} ${currentUser?.lastName?.charAt(0).toUpperCase() || 'V'}`}
                                         </div>
                                     </div>
                                 </div>

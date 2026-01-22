@@ -10,6 +10,7 @@ import { RootState } from "@/src/lib/redux/store";
 import { useMutation } from "@apollo/client";
 import { ROLL_DICE_MUTATION, PROCESS_MOVE_MUTATION, SELECT_DICE_MUTATION } from "@/src/graphql/game/mutations";
 import { useSound } from "../useSound";
+import { Token } from "@/src/types/ludo";
 
 const useBackendLudoAction = ({ color }: { color?: string }) => {
     const { id: gameId } = useParams<{ id: string }>();

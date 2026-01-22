@@ -3,6 +3,7 @@ import { useMutation } from '@apollo/client';
 import { doc, onSnapshot } from 'firebase/firestore';
 import { firestore } from '@/src/lib/firebase';
 import { JOIN_GAME_MUTATION } from '@/src/graphql/game/mutations';
+import { LudoPlayer } from '../types/ludo';
 
 export interface Game {
     id: string;
