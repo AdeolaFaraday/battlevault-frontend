@@ -1,4 +1,4 @@
-"use client"
+import { memo } from "react";
 import clsx from "clsx";
 import LudoCell from "./ludo-cell";
 import { cellColors } from "@/src/constants";
@@ -9,7 +9,7 @@ type LudoPathProp = {
     customRowClassName?: string
     customCellClassName?: string
     color: string
-    findActiveTokens: Token[]
+    tokenPositionMap: Record<number, { main: Token[]; safe: Token[] }>;
     startPathNumbers: number[]
     endPathNumbers: number[]
     middlePathNumbers: number[]
@@ -20,7 +20,7 @@ type LudoPathProp = {
 // TODO: create context provider to expose the findActiveTokens and handleTokenClick to the components 
 // instead of passing down as props
 
-const LudoPath = ({
+const LudoPath = memo(({
     customClassName,
     customRowClassName,
     customCellClassName,
@@ -29,7 +29,7 @@ const LudoPath = ({
     endPathNumbers = [],
     middlePathNumbers = [],
     startPathNumber,
-    findActiveTokens,
+    tokenPositionMap,
     handleTokenDrop
 }: LudoPathProp) => {
     const findBgColor = cellColors?.find((data) => data?.color === color)
@@ -39,7 +39,7 @@ const LudoPath = ({
             {startPathNumbers.map((number) => (
                 <LudoCell
                     key={number}
-                    findActiveTokens={findActiveTokens}
+                    tokens={tokenPositionMap[number]?.main || []}
                     customCellClassName={customCellClassName}
                     number={number}
                     style={{ backgroundColor: number === startPathNumber ? findBgColor?.style : "transparent" }}
@@ -51,7 +51,7 @@ const LudoPath = ({
             {middlePathNumbers.map((number) => (
                 <LudoCell
                     key={number}
-                    findActiveTokens={findActiveTokens}
+                    tokens={tokenPositionMap[number]?.safe || []}
                     customCellClassName={customCellClassName}
                     isSafePath={number !== Math.min(...middlePathNumbers)}
                     number={number}
@@ -64,7 +64,7 @@ const LudoPath = ({
             {endPathNumbers.map((number) => (
                 <LudoCell
                     key={number}
-                    findActiveTokens={findActiveTokens}
+                    tokens={tokenPositionMap[number]?.main || []}
                     customCellClassName={customCellClassName}
                     number={number}
                     style={{ backgroundColor: number === startPathNumber ? findBgColor?.style : "transparent" }}
@@ -73,6 +73,8 @@ const LudoPath = ({
             ))}
         </div>
     </div>
-}
+});
+
+LudoPath.displayName = "LudoPath";
 
 export default LudoPath;

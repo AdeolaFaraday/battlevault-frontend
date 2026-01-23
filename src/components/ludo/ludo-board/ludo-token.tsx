@@ -1,15 +1,15 @@
-import React from "react";
+import React, { memo } from "react";
 import { motion } from "framer-motion";
 import { cellColors } from "@/src/constants";
 import { Token } from "@/src/types/ludo";
 
-type LudoToken = {
+type LudoTokenProp = {
     isInHomeColumn?: boolean
     homeActive?: boolean
     onClick?: (e?: object) => void
 } & Token
 
-const LudoToken = ({
+const LudoToken = memo(({
     color = "red",
     // active,
     homeActive,
@@ -17,7 +17,7 @@ const LudoToken = ({
     // position,
     isInHomeColumn,
     onClick
-}: LudoToken) => {
+}: LudoTokenProp) => {
     // onClick is passed but not currently used in this component
     const findBgColor = cellColors?.find((data) => data?.color === color)
     const isDragging = false; // Mocking isDragging since hook is removed
@@ -34,20 +34,12 @@ const LudoToken = ({
                 backgroundColor: findBgColor?.style,
             }}
             initial={false}
-            animate={{
-                scale: [1, 1.1, 1],
-                y: [0, -4, 0], // Subtle bounce on re-render/move
-            }}
             transition={{
                 layout: {
                     type: "spring",
-                    stiffness: 400,
-                    damping: 25,
+                    stiffness: 300,
+                    damping: 30,
                     mass: 0.8
-                },
-                y: {
-                    duration: 0.3,
-                    ease: "easeOut"
                 }
             }}
             onClick={(e) => {
@@ -55,15 +47,17 @@ const LudoToken = ({
                 onClick?.();
             }}
             whileHover={{
-                scale: 1.15,
+                scale: 1.1,
                 boxShadow: "0 10px 20px rgba(0,0,0,0.3)",
                 zIndex: 50
             }}
-            whileTap={{ scale: 0.9 }}
+            whileTap={{ scale: 0.95 }}
         >
             <div className="absolute inset-2 rounded-full border-2 border-white/30" />
         </motion.div>
     );
-};
+});
+
+LudoToken.displayName = "LudoToken";
 
 export default LudoToken;

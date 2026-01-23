@@ -1,4 +1,5 @@
 "use client"
+import { useMemo } from "react";
 import { generatePathNumberArray } from "@/src/utils/ludo-board";
 import LudoPath from "./ludo-path";
 import LudoHomeColumn from "./ludo-home-column";
@@ -17,6 +18,7 @@ import GameCelebration from "../celebration/GameCelebration";
 
 import GameHeader, { GameStats } from "../GameHeader";
 import PlayerCard from "../PlayerCard";
+import { Token } from "@/src/types/ludo";
 
 /* 
  Component built with flex box
@@ -28,7 +30,6 @@ const LudoBoard = ({ id }: { id: string }) => {
     const router = useRouter();
     console.log({ id });
     const {
-        findActiveTokens,
         tokens,
         gameState,
         activeDiceConfig,
@@ -57,10 +58,25 @@ const LudoBoard = ({ id }: { id: string }) => {
     const showDiceSelector = gameState.status === "playingToken" && availableDice.length > 0;
     console.log({ availableDice, activeDiceConfig, usedDiceValues, showDiceSelector, gameState, isShowRollBtn: isCurrentTurn && gameState.status === "playingDice" })
 
-    // Helper to get player data safely
     const getPlayer = (color: string) => gameState.players?.find(p => p.tokens?.includes(color));
     const currentTurnId = gameState.currentTurn;
     const winner = gameState.players?.find(p => p.id === gameState.winner);
+
+    // memoize token positions to avoid filtering in every cell
+    const tokenPositionMap = useMemo(() => {
+        const map: Record<number, { main: Token[]; safe: Token[] }> = {};
+        Object.values(gameState.tokens).flat().forEach((token) => {
+            if (!token.active || token.isFinished) return;
+            const pos = token.position || 0;
+            if (!map[pos]) map[pos] = { main: [], safe: [] };
+            if (token.isSafePath) {
+                map[pos].safe.push(token);
+            } else {
+                map[pos].main.push(token);
+            }
+        });
+        return map;
+    }, [gameState.tokens]);
 
     return (
         <div className="flex flex-col h-screen w-full bg-[#1e293b] overflow-hidden relative">
@@ -114,7 +130,7 @@ const LudoBoard = ({ id }: { id: string }) => {
                             startPathNumber={15}
                             handleTokenDrop={handleTokenClick}
                             color="green"
-                            findActiveTokens={findActiveTokens}
+                            tokenPositionMap={tokenPositionMap}
                         />
                         <LudoHomeColumn
                             color="green"
@@ -133,7 +149,7 @@ const LudoBoard = ({ id }: { id: string }) => {
                             color="red"
                             customClassName="ludo-cell__vertial"
                             customRowClassName="ludo-row"
-                            findActiveTokens={findActiveTokens}
+                            tokenPositionMap={tokenPositionMap}
                         />
                         <div className="ludo-center">
                             <div className="clip-triangle-tl" />
@@ -150,7 +166,7 @@ const LudoBoard = ({ id }: { id: string }) => {
                             color="yellow"
                             customClassName="ludo-cell__vertial"
                             customRowClassName="ludo-row"
-                            findActiveTokens={findActiveTokens}
+                            tokenPositionMap={tokenPositionMap}
                         />
                     </span>
                     <div>
@@ -167,7 +183,7 @@ const LudoBoard = ({ id }: { id: string }) => {
                             handleTokenDrop={handleTokenClick}
                             startPathNumber={41}
                             color="blue"
-                            findActiveTokens={findActiveTokens}
+                            tokenPositionMap={tokenPositionMap}
                         />
                         <LudoHomeColumn
                             handleTokenClick={handleTokenClick}

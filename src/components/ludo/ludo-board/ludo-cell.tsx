@@ -1,27 +1,25 @@
-import { CSSProperties } from "react"
+import { CSSProperties, memo, RefObject } from "react"
 import { useDrop } from "react-dnd"
 import LudoToken from "./ludo-token"
 import clsx from "clsx"
-import { RefObject } from "react"
 import { Token } from "@/src/types/ludo"
 
-type LudoPathProp = {
+type LudoCellProp = {
     number: number
     isSafePath?: boolean
-    findActiveTokens: Token[]
+    tokens: Token[]
     style?: CSSProperties
     customCellClassName?: string
     handleTokenDrop: (token: Token, position?: number) => void
 }
 
-const LudoCell = ({
+const LudoCell = memo(({
     customCellClassName,
-    findActiveTokens,
+    tokens,
     number,
     style,
     handleTokenDrop,
-    isSafePath
-}: LudoPathProp) => {
+}: LudoCellProp) => {
     const [, dropRef] = useDrop(() => ({
         accept: "ITEM",
         drop: (item: Token) => {
@@ -32,12 +30,7 @@ const LudoCell = ({
             isOver: monitor.isOver(),
         }),
     }));
-    const cellTokens = findActiveTokens?.filter((token) => {
-        if (isSafePath) {
-            return token.isSafePath && token.position === number;
-        }
-        return !token.isSafePath && token.position === number;
-    }) || [];
+    const cellTokens = tokens || [];
 
     const isStacked = cellTokens.length > 1;
 
@@ -50,6 +43,8 @@ const LudoCell = ({
             <></>
         )}
     </div>
-}
+});
+
+LudoCell.displayName = "LudoCell";
 
 export default LudoCell;

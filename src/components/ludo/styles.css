@@ -67,22 +67,22 @@ div.column-4 {
 }
 
 .ludo-cell.stacked .ludo-token:nth-child(1) {
-    transform: translate(-30%, -30%) !important;
+    transform: translate(-30%, -30%);
     z-index: 10;
 }
 
 .ludo-cell.stacked .ludo-token:nth-child(2) {
-    transform: translate(30%, 30%) !important;
+    transform: translate(30%, 30%);
     z-index: 20;
 }
 
 .ludo-cell.stacked .ludo-token:nth-child(3) {
-    transform: translate(-30%, 30%) !important;
+    transform: translate(-30%, 30%);
     z-index: 30;
 }
 
 .ludo-cell.stacked .ludo-token:nth-child(4) {
-    transform: translate(30%, -30%) !important;
+    transform: translate(30%, -30%);
     z-index: 40;
 }
 
