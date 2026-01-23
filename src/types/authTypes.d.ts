@@ -16,7 +16,10 @@ type TCreateUserArgs = {
     lastName: string
     email: string
     password: string
-    country: string
+    country: {
+        countryName: string
+        countryCode: string
+    }
 }
 
 type TSignInSchema = {

@@ -29,8 +29,11 @@ const countries: Country[] = [
 ];
 
 interface CountrySelectProps {
-    value?: string;
-    onChange: (value: string) => void;
+    value?: {
+        countryName: string;
+        countryCode: string;
+    };
+    onChange: (value: { countryName: string; countryCode: string }) => void;
     error?: string;
     label?: string;
 }
@@ -40,7 +43,7 @@ const CountrySelect: React.FC<CountrySelectProps> = ({ value, onChange, error, l
     const [searchTerm, setSearchTerm] = useState("");
     const containerRef = useRef<HTMLDivElement>(null);
 
-    const selectedCountry = countries.find(c => c.name === value);
+    const selectedCountry = countries.find(c => c.code === value?.countryCode);
 
     const filteredCountries = countries.filter(c =>
         c.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -117,20 +120,23 @@ const CountrySelect: React.FC<CountrySelectProps> = ({ value, onChange, error, l
                                             key={country.code}
                                             type="button"
                                             onClick={() => {
-                                                onChange(country.name);
+                                                onChange({
+                                                    countryName: country.name,
+                                                    countryCode: country.code
+                                                });
                                                 setIsOpen(false);
                                                 setSearchTerm("");
                                             }}
                                             className={clsx(
                                                 "w-full flex items-center justify-between px-4 py-3 hover:bg-white/5 transition-colors text-left",
-                                                value === country.name ? "bg-indigo-500/10" : ""
+                                                value?.countryCode === country.code ? "bg-indigo-500/10" : ""
                                             )}
                                         >
                                             <div className="flex items-center gap-3">
                                                 <span className="text-xl">{country.flag}</span>
                                                 <span className="text-sm font-medium text-white">{country.name}</span>
                                             </div>
-                                            {value === country.name && <Check size={16} className="text-indigo-400" />}
+                                            {value?.countryCode === country.code && <Check size={16} className="text-indigo-400" />}
                                         </button>
                                     ))
                                 ) : (

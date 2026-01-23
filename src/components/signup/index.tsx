@@ -27,14 +27,37 @@ const SignUpComponent = () => {
 
     const { loading, handleUserSignup } = useSignup();
 
+    const containerVariants = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.08,
+                delayChildren: 0.2
+            }
+        }
+    };
+
+    const itemVariants = {
+        hidden: { y: 10, opacity: 0 },
+        visible: {
+            y: 0,
+            opacity: 1,
+            transition: { duration: 0.4, ease: "easeOut" }
+        }
+    };
+
     return (
         <ModernAuthWrapper>
-            <div className="flex flex-col items-center">
+            <motion.div
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+                className="flex flex-col items-center w-full"
+            >
                 {/* Header section */}
                 <motion.div
-                    initial={{ y: -10, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{ delay: 0.2 }}
+                    variants={itemVariants}
                     className="mb-8 flex flex-col items-center text-center"
                 >
                     <div className="w-16 h-16 mb-4 bg-white/5 rounded-[1.2rem] flex items-center justify-center border border-white/10 shadow-inner">
@@ -50,11 +73,7 @@ const SignUpComponent = () => {
                     className="w-full space-y-4"
                 >
                     <div className="grid grid-cols-2 gap-4">
-                        <motion.div
-                            initial={{ x: -10, opacity: 0 }}
-                            animate={{ x: 0, opacity: 1 }}
-                            transition={{ delay: 0.3 }}
-                        >
+                        <motion.div variants={itemVariants}>
                             <Input
                                 {...register("firstName")}
                                 error={errors?.firstName}
@@ -62,11 +81,7 @@ const SignUpComponent = () => {
                                 label='First Name'
                             />
                         </motion.div>
-                        <motion.div
-                            initial={{ x: 10, opacity: 0 }}
-                            animate={{ x: 0, opacity: 1 }}
-                            transition={{ delay: 0.4 }}
-                        >
+                        <motion.div variants={itemVariants}>
                             <Input
                                 {...register("lastName")}
                                 error={errors?.lastName}
@@ -76,11 +91,7 @@ const SignUpComponent = () => {
                         </motion.div>
                     </div>
 
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.5 }}
-                    >
+                    <motion.div variants={itemVariants}>
                         <Input
                             {...register("userName")}
                             error={errors?.userName}
@@ -89,11 +100,7 @@ const SignUpComponent = () => {
                         />
                     </motion.div>
 
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.6 }}
-                    >
+                    <motion.div variants={itemVariants}>
                         <Input
                             {...register("email")}
                             error={errors?.email}
@@ -102,11 +109,7 @@ const SignUpComponent = () => {
                         />
                     </motion.div>
 
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.7 }}
-                    >
+                    <motion.div variants={itemVariants}>
                         <Controller
                             name="country"
                             control={control}
@@ -121,11 +124,7 @@ const SignUpComponent = () => {
                         />
                     </motion.div>
 
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.8 }}
-                    >
+                    <motion.div variants={itemVariants}>
                         <Input
                             {...register("password")}
                             error={errors?.password}
@@ -136,9 +135,7 @@ const SignUpComponent = () => {
                     </motion.div>
 
                     <motion.div
-                        initial={{ y: 20, opacity: 0 }}
-                        animate={{ y: 0, opacity: 1 }}
-                        transition={{ delay: 0.9 }}
+                        variants={itemVariants}
                         className="pt-4"
                     >
                         <Button
@@ -156,9 +153,7 @@ const SignUpComponent = () => {
                     </motion.div>
 
                     <motion.p
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 1.0 }}
+                        variants={itemVariants}
                         className="text-center text-white/40 text-xs mt-6"
                     >
                         Already have an account?{' '}
@@ -167,7 +162,7 @@ const SignUpComponent = () => {
                         </Link>
                     </motion.p>
                 </form>
-            </div>
+            </motion.div>
         </ModernAuthWrapper>
     );
 };

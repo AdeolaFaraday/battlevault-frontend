@@ -28,34 +28,55 @@ const SignInComponent = () => {
         handleUserSignIn
     } = useSignIn();
 
+    const containerVariants = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.1,
+                delayChildren: 0.2
+            }
+        }
+    };
+
+    const itemVariants = {
+        hidden: { y: 10, opacity: 0 },
+        visible: {
+            y: 0,
+            opacity: 1,
+            transition: { duration: 0.4, ease: "easeOut" }
+        }
+    };
+
     return (
         <ModernAuthWrapper>
-            <div className="flex flex-col items-center">
+            <motion.div
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+                className="flex flex-col items-center w-full"
+            >
                 {/* Header section */}
                 <motion.div
-                    initial={{ y: -10, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{ delay: 0.2 }}
-                    className="mb-10 flex flex-col items-center text-center"
+                    variants={itemVariants}
+                    className="mb-8 flex flex-col items-center text-center"
                 >
-                    <div className="w-20 h-20 mb-6 bg-white/5 rounded-[1.5rem] flex items-center justify-center border border-white/10 shadow-inner">
-                        <LogoIcon color="white" />
+                    <div className="w-16 h-16 mb-4 bg-white/5 rounded-[1.2rem] flex items-center justify-center border border-white/10 shadow-inner">
+                        <LogoIcon width={32} height={32} color="white" />
                     </div>
-                    <h1 className="text-3xl font-black text-white mb-2 tracking-tight">Welcome Back</h1>
-                    <p className="text-white/40 text-sm font-medium">Log in to your BattleVault account</p>
+                    <h1 className="text-2xl font-black text-white mb-1 tracking-tight">Welcome Back</h1>
+                    <p className="text-white/40 text-xs font-medium">Log in to your BattleVault account</p>
                 </motion.div>
 
                 {/* Google Sign In */}
                 <motion.div
-                    initial={{ y: 10, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{ delay: 0.3 }}
-                    className="w-full mb-8"
+                    variants={itemVariants}
+                    className="w-full mb-6"
                 >
                     <button
                         type="button"
                         onClick={handGoogleSignIn}
-                        className="w-full flex items-center justify-center gap-4 bg-white hover:bg-white/90 text-black py-4 px-6 rounded-2xl font-bold transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-white/5 group"
+                        className="w-full flex items-center justify-center gap-4 bg-white hover:bg-white/90 text-black py-4 px-6 rounded-2xl font-bold transition-all active:scale-[0.98] shadow-lg shadow-white/5 group"
                     >
                         <GoogleIcon />
                         <span className="text-sm">Continue with Google</span>
@@ -64,10 +85,8 @@ const SignInComponent = () => {
 
                 {/* Separator */}
                 <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.4 }}
-                    className="w-full flex items-center gap-4 mb-8"
+                    variants={itemVariants}
+                    className="w-full flex items-center gap-4 mb-6"
                 >
                     <div className="h-[1px] flex-1 bg-white/10" />
                     <span className="text-white/20 text-[10px] font-black uppercase tracking-[0.2em]">OR</span>
@@ -79,11 +98,7 @@ const SignInComponent = () => {
                     onSubmit={handleSubmit(handleUserSignIn)}
                     className="w-full space-y-5"
                 >
-                    <motion.div
-                        initial={{ x: -10, opacity: 0 }}
-                        animate={{ x: 0, opacity: 1 }}
-                        transition={{ delay: 0.5 }}
-                    >
+                    <motion.div variants={itemVariants}>
                         <Input
                             {...register("email")}
                             error={errors?.email}
@@ -93,9 +108,7 @@ const SignInComponent = () => {
                     </motion.div>
 
                     <motion.div
-                        initial={{ x: 10, opacity: 0 }}
-                        animate={{ x: 0, opacity: 1 }}
-                        transition={{ delay: 0.6 }}
+                        variants={itemVariants}
                         className="space-y-2"
                     >
                         <Input
@@ -113,9 +126,7 @@ const SignInComponent = () => {
                     </motion.div>
 
                     <motion.div
-                        initial={{ y: 20, opacity: 0 }}
-                        animate={{ y: 0, opacity: 1 }}
-                        transition={{ delay: 0.7 }}
+                        variants={itemVariants}
                         className="pt-4"
                     >
                         <Button
@@ -133,9 +144,7 @@ const SignInComponent = () => {
                     </motion.div>
 
                     <motion.p
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.8 }}
+                        variants={itemVariants}
                         className="text-center text-white/40 text-xs mt-6"
                     >
                         Don&apos;t have account yet?{' '}
@@ -144,7 +153,7 @@ const SignInComponent = () => {
                         </Link>
                     </motion.p>
                 </form>
-            </div>
+            </motion.div>
         </ModernAuthWrapper>
     );
 };

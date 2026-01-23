@@ -53,9 +53,9 @@ const LudoBoard = ({ id }: { id: string }) => {
     });
 
     // const isCurrentPlayerTurnHasValidTokenMove = isCurrentTurn && 
-    console.log({ findActiveTokens })
 
     const showDiceSelector = gameState.status === "playingToken" && availableDice.length > 0;
+    console.log({ availableDice, activeDiceConfig, usedDiceValues, showDiceSelector, gameState, isShowRollBtn: isCurrentTurn && gameState.status === "playingDice" })
 
     // Helper to get player data safely
     const getPlayer = (color: string) => gameState.players?.find(p => p.tokens?.includes(color));

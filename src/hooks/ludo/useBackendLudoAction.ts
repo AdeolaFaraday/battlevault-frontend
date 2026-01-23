@@ -58,6 +58,7 @@ const useBackendLudoAction = ({ color }: { color?: string }) => {
         if (!gameId) return;
 
         const unsubscribe = GameService.subscribeToGame(gameId, (data) => {
+            console.log({ gameData: data });
             if (isInternalUpdate.current) {
                 isInternalUpdate.current = false;
                 return;

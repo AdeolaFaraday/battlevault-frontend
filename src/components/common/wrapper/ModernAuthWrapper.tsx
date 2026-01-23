@@ -10,29 +10,25 @@ const ModernAuthWrapper = ({ children }: { children: React.ReactNode }) => {
             <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
                 <motion.div
                     animate={{
-                        x: [0, 50, 0],
-                        y: [0, 30, 0],
-                        scale: [1, 1.1, 1],
+                        opacity: [0.1, 0.2, 0.1],
                     }}
                     transition={{
-                        duration: 15,
+                        duration: 8,
                         repeat: Infinity,
-                        ease: "linear",
+                        ease: "easeInOut",
                     }}
-                    className="absolute -top-[10%] -left-[5%] w-[400px] h-[400px] rounded-full bg-indigo-600/20 blur-[100px]"
+                    className="absolute -top-[10%] -left-[5%] w-[400px] h-[400px] rounded-full bg-indigo-600/20 blur-[80px]"
                 />
                 <motion.div
                     animate={{
-                        x: [0, -40, 0],
-                        y: [0, 60, 0],
-                        scale: [1, 1.2, 1],
+                        opacity: [0.1, 0.3, 0.1],
                     }}
                     transition={{
-                        duration: 20,
+                        duration: 10,
                         repeat: Infinity,
-                        ease: "linear",
+                        ease: "easeInOut",
                     }}
-                    className="absolute -bottom-[15%] -right-[5%] w-[500px] h-[500px] rounded-full bg-purple-600/20 blur-[120px]"
+                    className="absolute -bottom-[15%] -right-[5%] w-[500px] h-[500px] rounded-full bg-purple-600/20 blur-[100px]"
                 />
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[url('/assets/grid-pattern.svg')] opacity-[0.03]" />
             </div>
@@ -44,7 +40,7 @@ const ModernAuthWrapper = ({ children }: { children: React.ReactNode }) => {
                 className="relative z-10 w-full max-w-[480px]"
             >
                 {/* Main Card */}
-                <div className="bg-[#1a1d2e]/80 backdrop-blur-2xl border border-white/10 rounded-[2.5rem] p-8 md:p-12 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.5)]">
+                <div className="bg-[#1a1d2e]/90 backdrop-blur-xl border border-white/10 rounded-[2.5rem] p-8 md:p-12 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.5)]">
                     {children}
                 </div>
 
