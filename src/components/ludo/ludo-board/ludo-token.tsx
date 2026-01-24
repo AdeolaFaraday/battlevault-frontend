@@ -36,7 +36,7 @@ const LudoToken = memo(({
                 willChange: "transform",
             }}
             transition={{
-                // type: "tween",
+                type: "tween",
                 ease: "linear",
                 duration: 0.2
             }}
