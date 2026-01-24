@@ -1,4 +1,4 @@
-"use client"
+import React, { useMemo } from "react";
 import { generatePathNumberArray } from "@/src/utils/ludo-board";
 import LudoPath from "./ludo-path";
 import LudoHomeColumn from "./ludo-home-column";
@@ -7,7 +7,7 @@ import DiceComponent from "../dice-component";
 import DiceSelector from "../dice-selector";
 import { useRouter } from "next/navigation";
 import GameCelebration from "../celebration/GameCelebration";
-
+import { Token } from "@/src/types/ludo";
 
 /* 
  Component built with flex box
@@ -17,12 +17,6 @@ import GameCelebration from "../celebration/GameCelebration";
 
 import GameHeader, { GameStats } from "../GameHeader";
 import PlayerCard from "../PlayerCard";
-
-/* 
- Component built with flex box
- Ludo path is inserted in the middle of each flex box
- THe middle horizontal Ludo path span around the center so it contains two path space betweened each other
- */
 
 const LudoBoard = ({ id }: { id: string }) => {
     const router = useRouter();
@@ -52,10 +46,18 @@ const LudoBoard = ({ id }: { id: string }) => {
         if (index !== -1) availableDice.splice(index, 1);
     });
 
-    // const isCurrentPlayerTurnHasValidTokenMove = isCurrentTurn && 
+    // Pre-calculate tokens by cell for performance
+    const tokensByCell = useMemo(() => {
+        const map: Record<string, Token[]> = {};
+        findActiveTokens.forEach(token => {
+            const key = token.isSafePath ? `safe-${token.position}` : `${token.position}`;
+            if (!map[key]) map[key] = [];
+            map[key].push(token);
+        });
+        return map;
+    }, [findActiveTokens]);
 
     const showDiceSelector = gameState.status === "playingToken" && availableDice.length > 0;
-    console.log({ availableDice, activeDiceConfig, usedDiceValues, showDiceSelector, gameState, isShowRollBtn: isCurrentTurn && gameState.status === "playingDice" })
 
     // Helper to get player data safely
     const getPlayer = (color: string) => gameState.players?.find(p => p.tokens?.includes(color));
@@ -102,11 +104,6 @@ const LudoBoard = ({ id }: { id: string }) => {
                             token={tokens.red}
                             handleTokenClick={handleTokenClick}
                         />
-                        {/* 
-                    Path are dictated and reversed for some to match 
-                    a continued sequence, in order to make it possible
-                    to perfoem logic and ui update base on a predictive path number
-                    */}
                         <LudoPath
                             startPathNumbers={generatePathNumberArray(7).reverse()}
                             middlePathNumbers={generatePathNumberArray(13)}
@@ -114,7 +111,7 @@ const LudoBoard = ({ id }: { id: string }) => {
                             startPathNumber={15}
                             handleTokenDrop={handleTokenClick}
                             color="green"
-                            findActiveTokens={findActiveTokens}
+                            tokensByCell={tokensByCell}
                         />
                         <LudoHomeColumn
                             color="green"
@@ -133,7 +130,7 @@ const LudoBoard = ({ id }: { id: string }) => {
                             color="red"
                             customClassName="ludo-cell__vertial"
                             customRowClassName="ludo-row"
-                            findActiveTokens={findActiveTokens}
+                            tokensByCell={tokensByCell}
                         />
                         <div className="ludo-center">
                             <div className="clip-triangle-tl" />
@@ -150,7 +147,7 @@ const LudoBoard = ({ id }: { id: string }) => {
                             color="yellow"
                             customClassName="ludo-cell__vertial"
                             customRowClassName="ludo-row"
-                            findActiveTokens={findActiveTokens}
+                            tokensByCell={tokensByCell}
                         />
                     </span>
                     <div>
@@ -167,7 +164,7 @@ const LudoBoard = ({ id }: { id: string }) => {
                             handleTokenDrop={handleTokenClick}
                             startPathNumber={41}
                             color="blue"
-                            findActiveTokens={findActiveTokens}
+                            tokensByCell={tokensByCell}
                         />
                         <LudoHomeColumn
                             handleTokenClick={handleTokenClick}

@@ -1,15 +1,15 @@
-import React from "react";
+import React, { memo } from "react";
 import { motion } from "framer-motion";
 import { cellColors } from "@/src/constants";
 import { Token } from "@/src/types/ludo";
 
-type LudoToken = {
+type LudoTokenProps = {
     isInHomeColumn?: boolean
     homeActive?: boolean
     onClick?: (e?: object) => void
 } & Token
 
-const LudoToken = ({
+const LudoToken = memo(({
     color = "red",
     // active,
     homeActive,
@@ -17,7 +17,7 @@ const LudoToken = ({
     // position,
     isInHomeColumn,
     onClick
-}: LudoToken) => {
+}: LudoTokenProps) => {
     // onClick is passed but not currently used in this component
     const findBgColor = cellColors?.find((data) => data?.color === color)
     const isDragging = false; // Mocking isDragging since hook is removed
@@ -33,21 +33,24 @@ const LudoToken = ({
                 touchAction: "none",
                 ...(isInHomeColumn && { visibility: homeActive ? "visible" : "hidden" }),
                 backgroundColor: findBgColor?.style,
+                willChange: "transform, opacity",
             }}
             transition={{
-                type: "spring",
-                stiffness: 300,
-                damping: 30
+                type: "tween",
+                ease: "easeInOut",
+                duration: 0.3
             }}
             onClick={(e) => {
                 e.stopPropagation();
                 onClick?.();
             }}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
         >
         </motion.div>
     );
-};
+});
+
+LudoToken.displayName = "LudoToken";
 
 export default LudoToken;
