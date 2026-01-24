@@ -20,7 +20,6 @@ const LudoToken = memo(({
 }: LudoTokenProps) => {
     // onClick is passed but not currently used in this component
     const findBgColor = cellColors?.find((data) => data?.color === color)
-    const isDragging = false; // Mocking isDragging since hook is removed
 
     return (
         <motion.div
@@ -30,14 +29,14 @@ const LudoToken = memo(({
             style={{
                 // width: size,
                 // height: size,
-                opacity: isDragging ? 0.5 : 1,
+                // opacity: isDragging ? 0.5 : 1,
                 touchAction: "none",
                 ...(isInHomeColumn && { visibility: homeActive ? "visible" : "hidden" }),
                 backgroundColor: findBgColor?.style,
-                willChange: "transform, opacity",
+                willChange: "transform",
             }}
             transition={{
-                type: "tween",
+                // type: "tween",
                 ease: "linear",
                 duration: 0.2
             }}
