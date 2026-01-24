@@ -1,6 +1,4 @@
-"use client";
-
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "next/navigation";
 import { toast } from "sonner";
 import { useAppSelector } from "@/src/lib/redux/hooks";
@@ -88,8 +86,8 @@ const useBackendLudoAction = ({ color }: { color?: string }) => {
         ? `${currentUser.firstName} ${currentUser.lastName}`.trim()
         : undefined;
 
-    const handleDiceRoll = async (results?: number[]) => {
-        console.log({ results });
+    const handleDiceRoll = React.useCallback(async (results?: number[]) => {
+        console.log({ results, currentTurn: gameState.currentTurn, userId: currentUser?._id });
         if (gameState.currentTurn !== currentUser?._id) {
             toast.error("It's not your turn!");
             return;
@@ -112,9 +110,10 @@ const useBackendLudoAction = ({ color }: { color?: string }) => {
             setIsRolling(false);
             toast.error((error as Error).message || "Failed to roll dice");
         }
-    };
+    }, [gameState.currentTurn, currentUser?._id, playRoll, rollDiceMutation, gameId, playerName]);
 
-    const handleTokenMove = async (moveData: { token: Token, position: number, playerId: string }) => {
+    const handleTokenMove = React.useCallback(async (moveData: { token: Token, position: number, playerId: string }) => {
+        console.log({ currentUser, gameState })
         if (gameState.currentTurn !== currentUser?._id) {
             toast.error("It's not your turn!");
             return;
@@ -136,9 +135,9 @@ const useBackendLudoAction = ({ color }: { color?: string }) => {
         } catch (error: Error | unknown) {
             toast.error((error as Error).message || "Failed to process move");
         }
-    };
+    }, [gameState.currentTurn, currentUser?._id, playMove, processMoveMutation, gameId, playerName, gameState]);
 
-    const handleSelectDice = async (val: number[] | null | ((prev: number[] | null) => number[] | null)) => {
+    const handleSelectDice = React.useCallback(async (val: number[] | null | ((prev: number[] | null) => number[] | null)) => {
         if (gameState.currentTurn !== currentUser?._id) {
             toast.error("It's not your turn!");
             return;
@@ -158,7 +157,7 @@ const useBackendLudoAction = ({ color }: { color?: string }) => {
             console.error("Dice selection failed:", error);
             toast.error((error as Error).message || "Failed to select dice");
         }
-    };
+    }, [gameState.currentTurn, currentUser?._id, gameState.activeDiceConfig, selectDiceMutation, gameId, playerName]);
 
     return {
         gameState,
@@ -167,11 +166,11 @@ const useBackendLudoAction = ({ color }: { color?: string }) => {
         isCurrentTurn: gameState.currentTurn === currentUser?._id,
         isRolling,
         handleDiceRoll,
-        handleTokenClick: (token: Token, pos?: number) => handleTokenMove({
+        handleTokenClick: React.useCallback((token: Token, pos?: number) => handleTokenMove({
             token,
             position: pos || 0,
             playerId: currentUser?._id || ""
-        }),
+        }), [handleTokenMove, currentUser?._id]),
         usedDiceValues: gameState.usedDiceValues,
         activeDiceConfig: gameState.activeDiceConfig,
         setActiveDiceConfig: handleSelectDice,
