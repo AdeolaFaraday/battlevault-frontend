@@ -57,7 +57,7 @@ const LudoCell = memo(({
             t.color === nextProps.cellTokens[i].color &&
             t.sn === nextProps.cellTokens[i].sn
         ) &&
-        JSON.stringify(prevProps.style) === JSON.stringify(nextProps.style)
+        prevProps.style?.backgroundColor === nextProps.style?.backgroundColor
     );
 });
 

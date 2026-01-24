@@ -47,14 +47,15 @@ const LudoPath = memo(({
             </div>
             <div className={clsx("", customRowClassName)}>
                 {middlePathNumbers.map((number) => {
-                    const cellId = `safe-${number}`;
+                    const isEntryCell = number === Math.min(...middlePathNumbers);
+                    const cellId = isEntryCell ? number.toString() : `safe-${number}`;
                     return (
                         <LudoCell
                             key={number}
                             cellTokens={tokensByCell[cellId] || []}
                             customCellClassName={customCellClassName}
                             number={number}
-                            style={{ backgroundColor: number !== Math.min(...middlePathNumbers) ? findBgColor?.style : "transparent" }}
+                            style={{ backgroundColor: !isEntryCell ? findBgColor?.style : "transparent" }}
                             handleTokenDrop={handleTokenDrop}
                         />
                     );

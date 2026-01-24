@@ -25,6 +25,7 @@ const LudoToken = memo(({
     return (
         <motion.div
             layoutId={`${color}-${sn}`}
+            layout="position"
             className="ludo-token"
             style={{
                 // width: size,
@@ -37,15 +38,13 @@ const LudoToken = memo(({
             }}
             transition={{
                 type: "tween",
-                ease: "easeInOut",
-                duration: 0.3
+                ease: "linear",
+                duration: 0.2
             }}
             onClick={(e) => {
                 e.stopPropagation();
                 onClick?.();
             }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
         >
         </motion.div>
     );

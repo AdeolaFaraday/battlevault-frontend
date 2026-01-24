@@ -49,7 +49,10 @@ const useBackendLudoAction = ({ color }: { color?: string }) => {
     const [selectDiceMutation] = useMutation(SELECT_DICE_MUTATION);
 
     const isInternalUpdate = useRef(false);
-    const findActiveTokens = Object.values(gameState.tokens).flat().filter(t => t.active);
+    const findActiveTokens = React.useMemo(() =>
+        Object.values(gameState.tokens).flat().filter(t => t.active),
+        [gameState.tokens]
+    );
 
     // 1. Subscribe to Firestore (SOURCE OF TRUTH)
     useEffect(() => {
