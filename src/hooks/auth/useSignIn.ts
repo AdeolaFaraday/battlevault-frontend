@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import useUserSignIn from '@/src/api/auth/useUserSignin';
@@ -11,6 +12,7 @@ import { setLoggedInUserDetails } from '@/src/lib/redux/authSlice';
 const useSignIn = () => {
     const dispatch = useAppDispatch()
     const router = useRouter();
+    const [googleLoading, setGoogleLoading] = useState(false);
 
     const onCompleted = (data: TCommonResponseData, success: boolean, message: string) => {
         if (success) {
@@ -25,16 +27,24 @@ const useSignIn = () => {
         }
     }
 
-    const { socialAuth } = useSocialAuth(
-        (data) => onCompleted(data?.socialAuth?.data as TCommonResponseData, data?.socialAuth?.success, data?.socialAuth?.message)
+    const { socialAuth, loading: socialAuthLoading } = useSocialAuth(
+        (data) => {
+            setGoogleLoading(false);
+            onCompleted(data?.socialAuth?.data as TCommonResponseData, data?.socialAuth?.success, data?.socialAuth?.message);
+        },
+        () => {
+            setGoogleLoading(false);
+        }
     )
     const handGoogleSignIn = () => {
+        setGoogleLoading(true);
         signInWithPopup(auth, googleAuthProvider).then((data: UserCredential) => {
             data.user?.getIdToken().then((token) => {
                 socialAuth({ token })
             })
         }).catch((error) => {
             console.log({ error });
+            setGoogleLoading(false);
         })
     }
 
@@ -47,6 +57,7 @@ const useSignIn = () => {
 
     return {
         loading,
+        isGoogleLoading: googleLoading || socialAuthLoading,
         handGoogleSignIn,
         handleUserSignIn
     }

@@ -11,6 +11,7 @@ import useSignIn from '@/src/hooks/auth/useSignIn';
 import GoogleIcon from '../common/icons/GoogleIcon';
 import LogoIcon from '../common/icons/Logo';
 import ModernAuthWrapper from '../common/wrapper/ModernAuthWrapper';
+import Loader from '../common/icons/Loader';
 
 const SignInComponent = () => {
     const {
@@ -24,6 +25,7 @@ const SignInComponent = () => {
 
     const {
         loading,
+        isGoogleLoading,
         handGoogleSignIn,
         handleUserSignIn
     } = useSignIn();
@@ -75,11 +77,23 @@ const SignInComponent = () => {
                 >
                     <button
                         type="button"
+                        disabled={isGoogleLoading}
                         onClick={handGoogleSignIn}
-                        className="w-full flex items-center justify-center gap-4 bg-white hover:bg-white/90 text-black py-4 px-6 rounded-2xl font-bold transition-all active:scale-[0.98] shadow-lg shadow-white/5 group"
+                        className={clsx(
+                            "w-full flex items-center justify-center gap-4 bg-white hover:bg-white/90 text-black py-4 px-6 rounded-2xl font-bold transition-all active:scale-[0.98] shadow-lg shadow-white/5 group",
+                            isGoogleLoading && "opacity-70 cursor-not-allowed"
+                        )}
                     >
-                        <GoogleIcon />
-                        <span className="text-sm">Continue with Google</span>
+                        {isGoogleLoading ? (
+                            <div className="flex items-center justify-center">
+                                <Loader />
+                            </div>
+                        ) : (
+                            <>
+                                <GoogleIcon />
+                                <span className="text-sm">Continue with Google</span>
+                            </>
+                        )}
                     </button>
                 </motion.div>
 
