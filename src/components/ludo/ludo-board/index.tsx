@@ -7,7 +7,7 @@ import DiceComponent from "../dice-component";
 import DiceSelector from "../dice-selector";
 import { useRouter } from "next/navigation";
 import GameCelebration from "../celebration/GameCelebration";
-import { Token } from "@/src/types/ludo";
+import { LudoPlayer, Token } from "@/src/types/ludo";
 
 /* 
  Component built with flex box
@@ -82,7 +82,7 @@ const LudoBoard = ({ id }: { id: string }) => {
                 <div className="absolute bottom-0 right-0 w-[500px] h-[500px] rounded-full bg-indigo-500/30 blur-[100px]" />
             </div>
 
-            <div className="flex-1 flex flex-col items-center justify-center relative z-10 w-full max-w-[500px] mx-auto pb-4">
+            <div className="flex-1 flex flex-col items-center justify-start mt-10 relative z-10 w-full max-w-[500px] mx-auto pb-4">
                 <GameStats />
 
                 {/* Top Opponent Card (Green or Red) */}
@@ -213,6 +213,7 @@ const LudoBoard = ({ id }: { id: string }) => {
             {recentlyFinishedToken && (
                 <TokenFlyingAnimation
                     color={recentlyFinishedToken}
+                    player={getPlayer(recentlyFinishedToken) as LudoPlayer}
                     onComplete={() => { }}
                 />
             )}

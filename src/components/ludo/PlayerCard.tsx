@@ -34,7 +34,7 @@ const PlayerCard: React.FC<PlayerCardProps> = ({ player, isCurrentTurn, isCurren
 
     return (
         <div
-            id={`player-card-${color}`}
+            id={`player-card-${player?.id}`}
             className={cn(
                 "relative flex items-center p-2 rounded-full border backdrop-blur-md transition-all duration-300 w-[160px] md:w-[200px]",
                 `bg-gradient-to-r ${bgGradient}`,
