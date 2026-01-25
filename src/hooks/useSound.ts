@@ -5,7 +5,7 @@ export const useSound = () => {
 
     useEffect(() => {
         // Initialize AudioContext on mount (or first interaction)
-        const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+        const AudioContextClass = window.AudioContext || (window as unknown as { webkitAudioContext: AudioContext }).webkitAudioContext;
         if (AudioContextClass) {
             audioContextRef.current = new AudioContext();
         }
@@ -33,7 +33,7 @@ export const useSound = () => {
         }
 
         // Multiple short bursts to simulate shaking multiple dice
-        [0, 0.1, 0.2, 0.3, 0.4].forEach((time, index) => {
+        [0, 0.1, 0.2, 0.3, 0.4].forEach((time) => {
             const noise = ctx.createBufferSource();
             noise.buffer = buffer;
 

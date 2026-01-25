@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import { Zap, Trophy, Users, Clock, ArrowRight } from 'lucide-react';
+import { Zap, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const DailyBlitzSection = () => {

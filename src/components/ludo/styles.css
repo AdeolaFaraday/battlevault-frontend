@@ -347,7 +347,7 @@ div.column-4 {
     @apply flex flex-col items-center gap-4 p-5 rounded-[2.5rem] bg-slate-950/80 backdrop-blur-3xl border border-white/10;
     box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
     position: fixed;
-    top: 40px;
+    top: 10px;
     transform: translateX(-50%);
     z-index: 100;
     min-width: 340px;
@@ -469,7 +469,7 @@ div.column-4 {
 @media (max-width: 768px) {
     .dice-selector__wrapper {
         width: calc(100% - 32px);
-        top: 32px;
+        top: 5px;
         bottom: auto;
         padding: 1.5rem 1rem;
         min-width: unset;
