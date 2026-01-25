@@ -8,7 +8,7 @@ import { RootState } from "@/src/lib/redux/store";
 import { useMutation } from "@apollo/client";
 import { ROLL_DICE_MUTATION, PROCESS_MOVE_MUTATION, SELECT_DICE_MUTATION } from "@/src/graphql/game/mutations";
 import { useSound } from "../useSound";
-import { Token } from "@/src/types/ludo";
+import { LudoPlayer, Token } from "@/src/types/ludo";
 
 const useBackendLudoAction = ({ color }: { color?: string }) => {
     const { id: gameId } = useParams<{ id: string }>();
@@ -162,12 +162,48 @@ const useBackendLudoAction = ({ color }: { color?: string }) => {
         }
     }, [gameState.currentTurn, currentUser?._id, gameState.activeDiceConfig, selectDiceMutation, gameId, playerName]);
 
+    // Track finished tokens for animation
+    const [recentlyFinishedToken, setRecentlyFinishedToken] = useState<string | null>(null);
+    const prevPlayersRef = useRef<LudoPlayer[]>([]);
+
+    useEffect(() => {
+        if (!gameState.players) return;
+
+        // Skip first run
+        if (prevPlayersRef.current.length === 0 && gameState.players.length > 0) {
+            prevPlayersRef.current = gameState.players;
+            return;
+        }
+
+        gameState.players.forEach(player => {
+            const prevPlayer = prevPlayersRef.current.find(p => p.id === player.id);
+            if (prevPlayer) {
+                const diff = (player.finishedCount || 0) - (prevPlayer.finishedCount || 0);
+                if (diff > 0) {
+                    // A token finished for this player!
+                    // Find color for this player
+                    const playerColor = Object.keys(gameState.tokens).find(key => player.tokens?.includes(key));
+
+                    if (playerColor) {
+                        setRecentlyFinishedToken(playerColor);
+                        // Reset after animation time (approx)
+                        setTimeout(() => setRecentlyFinishedToken(null), 2000);
+                    }
+                }
+            }
+        });
+
+        prevPlayersRef.current = gameState.players;
+    }, [gameState.players, gameState.tokens]);
+
     return {
         gameState,
         tokens: gameState.tokens,
         status: gameState.status,
         isCurrentTurn: gameState.currentTurn === currentUser?._id,
+        currentUserId: currentUser?._id,
         isRolling,
+        recentlyFinishedToken,
         handleDiceRoll,
         handleTokenClick: React.useCallback((token: Token, pos?: number) => handleTokenMove({
             token,

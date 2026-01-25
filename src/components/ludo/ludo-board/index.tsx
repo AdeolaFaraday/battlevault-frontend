@@ -15,8 +15,9 @@ import { Token } from "@/src/types/ludo";
  THe middle horizontal Ludo path span around the center so it contains two path space betweened each other
  */
 
-import GameHeader, { GameStats } from "../GameHeader";
+import GameStats from "../GameHeader";
 import PlayerCard from "../PlayerCard";
+import TokenFlyingAnimation from "./TokenFlyingAnimation";
 
 const LudoBoard = ({ id }: { id: string }) => {
     const router = useRouter();
@@ -31,7 +32,9 @@ const LudoBoard = ({ id }: { id: string }) => {
         setActiveDiceConfig,
         usedDiceValues,
         handleTokenClick,
-        handleDiceRoll
+        handleDiceRoll,
+        currentUserId,
+        recentlyFinishedToken
     } = useLudoAction({})
 
     const handleCustomDiceRoll = (results: number[]) => {
@@ -79,8 +82,6 @@ const LudoBoard = ({ id }: { id: string }) => {
                 <div className="absolute bottom-0 right-0 w-[500px] h-[500px] rounded-full bg-indigo-500/30 blur-[100px]" />
             </div>
 
-            <GameHeader />
-
             <div className="flex-1 flex flex-col items-center justify-center relative z-10 w-full max-w-[500px] mx-auto pb-4">
                 <GameStats />
 
@@ -90,6 +91,7 @@ const LudoBoard = ({ id }: { id: string }) => {
                         player={getPlayer("green") || getPlayer("red")}
                         color={getPlayer("green") ? "green" : "red"}
                         isCurrentTurn={(getPlayer("green") || getPlayer("red"))?.id === currentTurnId}
+                        isCurrentUser={(getPlayer("green") || getPlayer("red"))?.id === currentUserId}
                         position="top-right"
                         tokenData={gameState.tokens}
                     />
@@ -184,11 +186,12 @@ const LudoBoard = ({ id }: { id: string }) => {
                         isRolling={isRolling}
                     />
 
-                    {isCurrentTurn && showDiceSelector && (
+                    {showDiceSelector && (
                         <DiceSelector
                             availableDice={availableDice}
                             activeDiceConfig={activeDiceConfig}
                             onSelect={setActiveDiceConfig}
+                            disabled={!isCurrentTurn}
                         />
                     )}
                 </div>
@@ -199,11 +202,20 @@ const LudoBoard = ({ id }: { id: string }) => {
                         player={getPlayer("blue") || getPlayer("yellow")}
                         color={getPlayer("blue") ? "blue" : "yellow"}
                         isCurrentTurn={(getPlayer("blue") || getPlayer("yellow"))?.id === currentTurnId}
+                        isCurrentUser={(getPlayer("blue") || getPlayer("yellow"))?.id === currentUserId}
                         position="bottom-left"
                         tokenData={gameState.tokens}
                     />
                 </div>
             </div>
+
+            {/* Token Finish Animation */}
+            {recentlyFinishedToken && (
+                <TokenFlyingAnimation
+                    color={recentlyFinishedToken}
+                    onComplete={() => { }}
+                />
+            )}
         </div>
     );
 }

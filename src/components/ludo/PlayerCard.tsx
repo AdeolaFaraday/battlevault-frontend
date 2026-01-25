@@ -6,13 +6,14 @@ import { LudoPlayer, Token } from '@/src/types/ludo';
 interface PlayerCardProps {
     player?: LudoPlayer;
     isCurrentTurn: boolean;
+    isCurrentUser?: boolean; // New prop to identify if this is the current user's card
     diceValue?: number; // Value to display if they just rolled? Or maybe handled separate
     color: "red" | "blue" | "green" | "yellow";
     position: "top-left" | "top-right" | "bottom-left" | "bottom-right";
     tokenData?: { [key: string]: Token[] };
 }
 
-const PlayerCard: React.FC<PlayerCardProps> = ({ player, isCurrentTurn, color, position, tokenData }) => {
+const PlayerCard: React.FC<PlayerCardProps> = ({ player, isCurrentTurn, isCurrentUser = false, color, position, tokenData }) => {
     // Map Ludo colors to Tailwind classes
     // const colorStyles = {
     //     red: "bg-red-500/10 border-red-500/50 text-red-100",
@@ -32,13 +33,15 @@ const PlayerCard: React.FC<PlayerCardProps> = ({ player, isCurrentTurn, color, p
     const borderStyle = isCurrentTurn ? "border-white/40 shadow-[0_0_15px_rgba(255,255,255,0.2)]" : "border-white/10";
 
     return (
-        <div className={cn(
-            "relative flex items-center p-2 rounded-full border backdrop-blur-md transition-all duration-300 w-[160px] md:w-[200px]",
-            `bg-gradient-to-r ${bgGradient}`,
-            borderStyle,
-            // Reverse layout for right-side players
-            (position === "top-right" || position === "bottom-right") ? "flex-row-reverse text-right" : "flex-row text-left"
-        )}>
+        <div
+            id={`player-card-${color}`}
+            className={cn(
+                "relative flex items-center p-2 rounded-full border backdrop-blur-md transition-all duration-300 w-[160px] md:w-[200px]",
+                `bg-gradient-to-r ${bgGradient}`,
+                borderStyle,
+                // Reverse layout for right-side players
+                (position === "top-right" || position === "bottom-right") ? "flex-row-reverse text-right" : "flex-row text-left"
+            )}>
             {/* Avatar Circle */}
             <div className={cn(
                 "relative shrink-0 w-10 h-10 md:w-12 md:h-12 rounded-full border-2 overflow-hidden flex items-center justify-center bg-slate-800",
@@ -118,7 +121,7 @@ const PlayerCard: React.FC<PlayerCardProps> = ({ player, isCurrentTurn, color, p
                 <div className={cn(
                     "absolute -top-3 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded-full bg-white text-slate-900 text-[8px] font-black tracking-tighter uppercase shadow-lg shadow-white/20 border border-white/50 z-20 whitespace-nowrap animate-bounce",
                 )}>
-                    Your Turn
+                    {isCurrentUser ? "Your Turn" : "Their Turn"}
                 </div>
             )}
 
