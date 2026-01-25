@@ -7,6 +7,7 @@ import UpcomingGamesSection from './UpcomingGamesSection';
 import TournamentsSection from './TournamentsSection';
 import QuickActions from './QuickActions';
 import Greeting from '../../common/greeting';
+import DailyBlitzSection from './DailyBlitzSection';
 
 const GameHubScreen = () => {
     return (
@@ -35,6 +36,10 @@ const GameHubScreen = () => {
                         <section>
                             <TournamentsSection />
                         </section>
+                        {/* TODO: Daily Blitz (Coming soon) */}
+                        {/* <section>
+                            <DailyBlitzSection />
+                        </section> */}
                         <section>
                             <UpcomingGamesSection />
                         </section>

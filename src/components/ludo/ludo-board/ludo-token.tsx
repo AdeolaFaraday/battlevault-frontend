@@ -6,7 +6,8 @@ import { Token } from "@/src/types/ludo";
 type LudoTokenProps = {
     isInHomeColumn?: boolean
     homeActive?: boolean
-    onClick?: (e?: object) => void
+    onClick?: (e: React.MouseEvent) => void
+    disableAnim?: boolean // New prop
 } & Token
 
 const LudoToken = memo(({
@@ -16,15 +17,16 @@ const LudoToken = memo(({
     sn,
     // position,
     isInHomeColumn,
-    onClick
+    onClick,
+    disableAnim
 }: LudoTokenProps) => {
     // onClick is passed but not currently used in this component
     const findBgColor = cellColors?.find((data) => data?.color === color)
 
     return (
         <motion.div
-            layoutId={`${color}-${sn}`}
-            layout="position"
+            layoutId={disableAnim ? undefined : `${color}-${sn}`}
+            layout={disableAnim ? undefined : "position"}
             className="ludo-token"
             style={{
                 // width: size,
@@ -42,7 +44,7 @@ const LudoToken = memo(({
             }}
             onClick={(e) => {
                 e.stopPropagation();
-                onClick?.();
+                onClick?.(e);
             }}
         >
         </motion.div>
