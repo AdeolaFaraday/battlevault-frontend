@@ -82,7 +82,7 @@ const LudoBoard = ({ id }: { id: string }) => {
                 <div className="absolute bottom-0 right-0 w-[500px] h-[500px] rounded-full bg-indigo-500/30 blur-[100px]" />
             </div>
 
-            <div className="flex-1 flex flex-col items-center justify-start mt-10 relative z-10 w-full max-w-[500px] mx-auto pb-4">
+            <div className="flex-1 flex flex-col items-center justify-start mt-5 relative z-10 w-full max-w-[500px] mx-auto pb-4">
                 <GameStats />
 
                 {/* Top Opponent Card (Green or Red) */}
@@ -178,7 +178,7 @@ const LudoBoard = ({ id }: { id: string }) => {
                 </div>
 
                 {/* Dice Controls (Moved Outside to Bottom) */}
-                <div className="dice-wrapper w-full flex justify-center items-center mt-6 relative min-h-[100px]">
+                <div className="dice-wrapper w-full flex justify-center items-center relative min-h-[80px]">
                     <DiceComponent
                         onRollComplete={handleCustomDiceRoll}
                         diceValues={gameState.diceValue}
@@ -197,7 +197,7 @@ const LudoBoard = ({ id }: { id: string }) => {
                 </div>
 
                 {/* Bottom User Card (Blue or Yellow) */}
-                <div className="w-full flex justify-center mt-2 px-4">
+                <div className="w-full flex justify-center px-4">
                     <PlayerCard
                         player={getPlayer("blue") || getPlayer("yellow")}
                         color={getPlayer("blue") ? "blue" : "yellow"}
