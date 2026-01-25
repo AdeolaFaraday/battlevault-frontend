@@ -2,13 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { createPortal } from 'react-dom';
 import { cellColors } from '@/src/constants';
+import { LudoPlayer } from '@/src/types/ludo';
 
 interface TokenFlyingAnimationProps {
     color: string;
+    player: LudoPlayer;
     onComplete: () => void;
 }
 
-const TokenFlyingAnimation: React.FC<TokenFlyingAnimationProps> = ({ color, onComplete }) => {
+const TokenFlyingAnimation: React.FC<TokenFlyingAnimationProps> = ({ color, player, onComplete }) => {
     const [targetPos, setTargetPos] = useState({ x: 0, y: 0 });
     const [startPos, setStartPos] = useState({ x: 0, y: 0 });
     const [fly, setFly] = useState(false);
@@ -22,7 +24,7 @@ const TokenFlyingAnimation: React.FC<TokenFlyingAnimationProps> = ({ color, onCo
         setStartPos({ x: startX, y: startY });
 
         // End: Player card position
-        const targetEl = document.getElementById(`player-card-${color}`);
+        const targetEl = document.getElementById(`player-card-${player.id}`);
         if (targetEl) {
             const rect = targetEl.getBoundingClientRect();
             // Aim for the avatar circle (left side of card usually)
