@@ -37,9 +37,9 @@ const LudoBoard = ({ id }: { id: string }) => {
         recentlyFinishedToken
     } = useLudoAction({})
 
-    const handleCustomDiceRoll = (results: number[]) => {
+    const handleCustomDiceRoll = () => {
         if (handleDiceRoll) {
-            handleDiceRoll(results);
+            handleDiceRoll();
         }
     };
 

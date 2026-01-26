@@ -6,7 +6,8 @@ import { JOIN_GAME_MUTATION } from '@/src/graphql/game/mutations';
 import { LudoPlayer } from '../types/ludo';
 
 export interface Game {
-    id: string;
+    _id: string;
+    id?: string;
     name: string;
     type: string;
     tournamentId?: string;

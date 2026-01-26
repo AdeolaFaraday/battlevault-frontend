@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { toast } from 'sonner';
+import { useAlert } from '../common/useAlert';
 import useUserSignIn from '@/src/api/auth/useUserSignin';
 import { auth, googleAuthProvider } from '@/src/lib/firebase';
 import { signInWithPopup, UserCredential } from 'firebase/auth';
@@ -12,18 +12,19 @@ import { setLoggedInUserDetails } from '@/src/lib/redux/authSlice';
 const useSignIn = () => {
     const dispatch = useAppDispatch()
     const router = useRouter();
+    const { success, error } = useAlert();
     const [googleLoading, setGoogleLoading] = useState(false);
 
-    const onCompleted = (data: TCommonResponseData, success: boolean, message: string) => {
-        if (success) {
+    const onCompleted = (data: TCommonResponseData, successStatus: boolean, message: string) => {
+        if (successStatus) {
             dispatch(setLoggedInUserDetails({
                 isUserLoggedIn: true,
                 ...data
             }))
-            toast.success(message)
+            success("Sign In Successful", message)
             router.push("/")
         } else {
-            toast.error(message)
+            error("Sign In Failed", message)
         }
     }
 

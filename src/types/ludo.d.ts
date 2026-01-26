@@ -30,6 +30,7 @@ export type LudoPlayer = {
 };
 
 export type LudoGameState = {
+    _id?: string;
     id?: string;
     players: LudoPlayer[];
     currentTurn: string; // Player ID

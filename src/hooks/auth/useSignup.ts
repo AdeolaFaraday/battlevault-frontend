@@ -1,14 +1,15 @@
-import { toast } from 'sonner'
+import { useAlert } from '../common/useAlert';
 import useUserSignup from "@/src/api/auth/useUserSignup";
 
 
 const useSignup = () => {
+    const { success, error } = useAlert();
     const { createUser, loading } = useUserSignup(
         (data) => {
             if (data?.createUser?.success) {
-                toast.success(data?.createUser?.message)
+                success("Registration Successful", data?.createUser?.message)
             } else {
-                toast.error(data?.createUser?.message)
+                error("Registration Failed", data?.createUser?.message)
             }
         },
     )
