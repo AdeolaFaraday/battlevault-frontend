@@ -5,7 +5,6 @@ import { motion } from 'framer-motion';
 
 const WinLossChart = () => {
     const winRate = 72;
-    const circumference = 2 * Math.PI * 40; // Assuming radius 40
 
     return (
         <div className="bg-[#24283b]/40 border border-white/5 rounded-3xl p-8 flex flex-col items-center justify-center backdrop-blur-md relative overflow-hidden group">

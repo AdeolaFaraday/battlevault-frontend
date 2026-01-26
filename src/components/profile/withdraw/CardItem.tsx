@@ -9,12 +9,11 @@ interface CardItemProps {
     id: string;
     bank: string;
     lastFour: string;
-    type: string;
     isSelected: boolean;
     onSelect: (id: string) => void;
 }
 
-const CardItem = ({ id, bank, lastFour, type, isSelected, onSelect }: CardItemProps) => {
+const CardItem = ({ id, bank, lastFour, isSelected, onSelect }: CardItemProps) => {
     return (
         <motion.button
             whileHover={{ x: 5 }}

@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowDownCircle, CheckCircle2, CreditCard, ChevronRight } from 'lucide-react';
+import { ArrowDownCircle, CheckCircle2, ChevronRight } from 'lucide-react';
 import QuickAmountGrid from './QuickAmountGrid';
 
 const DepositForm = () => {
