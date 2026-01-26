@@ -30,7 +30,7 @@ const TournamentsSection = ({
                 <Trophy className="w-5 h-5 text-amber-400" />
                 Live Tournaments
             </h3>
-            {showViewAll && data?.getTournaments?.length > 1 && (
+            {showViewAll && data?.getTournaments?.data?.tournaments?.length > 1 && (
                 <button
                     onClick={() => router.push('/arena')}
                     className="text-sm text-amber-400 font-medium hover:text-amber-300 transition-colors flex items-center gap-1"
@@ -51,7 +51,10 @@ const TournamentsSection = ({
         );
     }
 
-    if (error || !data?.getTournaments || data.getTournaments.length === 0) {
+    const tournamentList = data?.getTournaments?.data;
+    const tournaments = tournamentList && 'tournaments' in tournamentList ? tournamentList.tournaments : [];
+
+    if (error || !tournaments || tournaments.length === 0) {
         return (
             <div className="w-full space-y-4">
                 {title}
@@ -72,19 +75,19 @@ const TournamentsSection = ({
         );
     }
 
-    const tournaments = data.getTournaments.slice(0, limit);
+    const displayedTournaments = tournaments.slice(0, limit);
 
     if (layout === 'horizontal') {
         return (
             <div className="w-full space-y-4">
                 {title}
                 <HorizontalScroll>
-                    {tournaments.map((tournament: Tournament) => (
+                    {displayedTournaments.map((tournament: Tournament) => (
                         <TournamentCard
                             key={tournament._id}
                             tournament={tournament}
-                            variant={tournament === data.getTournaments[0] ? 'full' : 'compact'}
-                            className={tournament === data.getTournaments[0] ? 'w-[400px]' : 'w-[300px]'}
+                            variant={tournament === tournaments[0] ? 'full' : 'compact'}
+                            className={tournament === tournaments[0] ? 'w-[400px]' : 'w-[300px]'}
                         />
                     ))}
                 </HorizontalScroll>
@@ -92,8 +95,8 @@ const TournamentsSection = ({
         );
     }
 
-    const featuredTournament = data.getTournaments[0];
-    const otherTournaments = data.getTournaments.slice(1, limit);
+    const featuredTournament = tournaments[0];
+    const otherTournaments = tournaments.slice(1, limit);
 
     return (
         <div className="w-full space-y-4">

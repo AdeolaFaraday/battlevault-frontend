@@ -3,6 +3,7 @@ import { firestore } from "../../lib/firebase";
 import { LudoPlayer, Token } from "@/src/types/ludo";
 
 export interface GameSessionData {
+    _id?: string;
     id?: string;
     tokens: { [key: string]: Token[] };
     players: LudoPlayer[];

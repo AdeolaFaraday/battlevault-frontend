@@ -30,7 +30,7 @@ const UpcomingGamesSection = ({
                 <Calendar className="w-5 h-5 text-indigo-400" />
                 Upcoming Games
             </h3>
-            {showViewAll && data?.getUpcomingGames?.length > 2 && (
+            {showViewAll && data?.getUpcomingGames?.data?.games?.length > 2 && (
                 <button
                     onClick={() => router.push('/arena')}
                     className="text-sm text-indigo-400 font-medium hover:text-indigo-300 transition-colors flex items-center gap-1"
@@ -50,7 +50,10 @@ const UpcomingGamesSection = ({
         );
     }
 
-    if (error || !data?.getUpcomingGames || data.getUpcomingGames.length === 0) {
+    const gameList = data?.getUpcomingGames?.data;
+    const games = gameList && 'games' in gameList ? gameList.games : [];
+
+    if (error || !games || games.length === 0) {
         return (
             <div className="w-full space-y-4">
                 {title}
@@ -66,18 +69,18 @@ const UpcomingGamesSection = ({
         );
     }
 
-    const games = data.getUpcomingGames.slice(0, limit);
+    const displayedGames = games.slice(0, limit);
 
     if (layout === 'horizontal') {
         return (
             <div className="w-full space-y-4">
                 {title}
                 <HorizontalScroll>
-                    {games.map((game: Game) => (
+                    {displayedGames.map((game: Game) => (
                         <GameCard
-                            key={game.id}
+                            key={game._id}
                             game={game}
-                            onClick={() => router.push(`/ludo-lobby/${game.id}`)}
+                            onClick={() => router.push(`/ludo-lobby/${game._id}`)}
                             className="w-[280px]"
                         />
                     ))}
@@ -91,11 +94,11 @@ const UpcomingGamesSection = ({
             {title}
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {games.map((game: Game) => (
+                {displayedGames.map((game: Game) => (
                     <GameCard
-                        key={game.id}
+                        key={game._id}
                         game={game}
-                        onClick={() => router.push(`/ludo-lobby/${game.id}`)}
+                        onClick={() => router.push(`/ludo-lobby/${game._id}`)}
                     />
                 ))}
             </div>
