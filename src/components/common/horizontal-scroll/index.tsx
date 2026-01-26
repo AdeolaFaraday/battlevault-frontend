@@ -19,7 +19,7 @@ const HorizontalScroll = ({
             <div
                 className={cn(
                     "flex overflow-x-auto pb-4 gap-4 scrollbar-hide snap-x snap-mandatory scroll-smooth",
-                    "px-4 md:px-0 -mx-4 md:mx-0", // Bleed to edges on mobile, align on desktop
+                    "px-4 md:px-0", // Bleed to edges on mobile, align on desktop
                     itemClassName
                 )}
                 style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}

@@ -6,6 +6,7 @@ import { Search, Award, Crown, ArrowLeft } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import Header from '../components/ludo/hub/Header';
+import BottomNav from '../components/common/bottom-nav';
 import LeaderboardCard from '../components/leaderboard/LeaderboardCard';
 import { LeaderboardData } from '../constants/game';
 import { cn } from '../lib/utils';
@@ -30,6 +31,8 @@ const LeaderboardScreen = () => {
         <div className="min-h-screen bg-[#1a1d2e] font-sans pb-32">
             <Header />
 
+            <BottomNav />
+
             <main className="max-w-xl mx-auto px-4 py-8 space-y-8">
                 {/* Header Section */}
                 <div className="flex items-center justify-between gap-4">
@@ -49,15 +52,24 @@ const LeaderboardScreen = () => {
 
                 {/* Search Bar */}
                 <div className="relative group">
-                    <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
-                        <Search className="h-5 w-5 text-slate-500 group-focus-within:text-indigo-400 transition-colors" />
+                    <div
+                        className="absolute flex items-center pointer-events-none z-20"
+                        style={{
+                            left: '1.25rem',
+                            top: '50%',
+                            transform: 'translateY(-50%)',
+                            marginTop: '1px' // Subtle adjustment for optical alignment with text
+                        }}
+                    >
+                        <Search size={22} className="text-slate-500 group-focus-within:text-indigo-400 transition-colors" />
                     </div>
                     <input
                         type="text"
                         placeholder="Search champions..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="block w-full pl-12 pr-4 py-4 bg-[#24283b]/60 border border-white/5 rounded-2xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:bg-[#24283b] transition-all backdrop-blur-md"
+                        style={{ paddingLeft: '3.5rem' }}
+                        className="block w-full pr-4 py-4 bg-[#24283b]/60 border border-white/5 rounded-2xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:bg-[#24283b] transition-all backdrop-blur-md"
                     />
                 </div>
 

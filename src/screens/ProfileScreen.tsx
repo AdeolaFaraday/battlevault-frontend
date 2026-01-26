@@ -14,11 +14,13 @@ import {
     Wallet
 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 import ProfileItem from '../components/profile/ProfileItem';
 import Header from '../components/ludo/hub/Header';
+import BottomNav from '../components/common/bottom-nav';
 
 const ProfileScreen = () => {
-    // const router = useRouter();
+    const router = useRouter();
 
     const menuItems = [
         { id: 'edit-profile', label: 'Edit Profile', icon: User, color: 'text-indigo-400' },
@@ -33,9 +35,27 @@ const ProfileScreen = () => {
         { id: 'security', label: 'Security', icon: ShieldCheck, color: 'text-indigo-400' },
     ];
 
+    const handleMenuClick = (id: string) => {
+        if (id === 'edit-profile') {
+            router.push('/profile/edit');
+        } else if (id === 'match-history') {
+            router.push('/profile/match-history');
+        } else if (id === 'stats') {
+            router.push('/profile/stats');
+        } else if (id === 'withdraw') {
+            router.push('/profile/withdraw');
+        } else if (id === 'deposit') {
+            router.push('/profile/deposit');
+        } else {
+            console.log(`Navigating to ${id}`);
+        }
+    };
+
     return (
         <div className="min-h-screen bg-[#1a1d2e] font-sans pb-32">
             <Header />
+
+            <BottomNav />
 
             <main className="max-w-xl mx-auto px-4 py-8 space-y-8">
                 {/* User Profile Header */}
@@ -67,7 +87,7 @@ const ProfileScreen = () => {
                                 <Wallet size={24} className="text-white" />
                             </div>
                         </div>
-                        <div className="absolute -bottom-6 -left-6 opacity-10 group-hover:scale-110 transition-transform duration-700">
+                        <div style={{ bottom: '-3rem' }} className="absolute -left-6 opacity-10 group-hover:scale-110 transition-transform duration-700">
                             <Wallet size={120} className="text-white" />
                         </div>
                     </div>
@@ -83,7 +103,7 @@ const ProfileScreen = () => {
                                 icon={item.icon}
                                 label={item.label}
                                 iconColor={item.color}
-                                onClick={() => console.log(`Navigating to ${item.id}`)}
+                                onClick={() => handleMenuClick(item.id)}
                             />
                         ))}
                     </div>
