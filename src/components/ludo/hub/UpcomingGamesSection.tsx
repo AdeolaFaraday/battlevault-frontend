@@ -1,27 +1,50 @@
 "use client";
 
 import React from 'react';
-import { Calendar, ChevronRight, ArrowRight } from 'lucide-react';
+import { Calendar, ArrowRight } from 'lucide-react';
 import { useQuery } from '@apollo/client';
 import { GET_UPCOMING_GAMES } from '../../../graphql/game/queries';
 import UpcomingGamesSkeleton from './UpcomingGamesSkeleton';
-import { safeFormat } from '../../../utils/date-utils';
 import { useRouter } from 'next/navigation';
 import { Game } from '@/src/hooks/useGameSession';
+import GameCard from './GameCard';
+import HorizontalScroll from '../../common/horizontal-scroll';
 
-const UpcomingGamesSection = () => {
+interface UpcomingGamesSectionProps {
+    layout?: 'grid' | 'horizontal';
+    limit?: number;
+    showViewAll?: boolean;
+}
+
+const UpcomingGamesSection = ({
+    layout = 'grid',
+    limit = 4,
+    showViewAll = true
+}: UpcomingGamesSectionProps) => {
     const { data, loading, error } = useQuery(GET_UPCOMING_GAMES);
     const router = useRouter();
+
+    const title = (
+        <div className="flex items-center justify-between px-1">
+            <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                <Calendar className="w-5 h-5 text-indigo-400" />
+                Upcoming Games
+            </h3>
+            {showViewAll && data?.getUpcomingGames?.length > 2 && (
+                <button
+                    onClick={() => router.push('/arena')}
+                    className="text-sm text-indigo-400 font-medium hover:text-indigo-300 transition-colors flex items-center gap-1"
+                >
+                    View All <ArrowRight size={14} />
+                </button>
+            )}
+        </div>
+    );
 
     if (loading) {
         return (
             <div className="w-full space-y-4">
-                <div className="flex items-center justify-between px-1">
-                    <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                        <Calendar className="w-5 h-5 text-indigo-400" />
-                        Upcoming Games
-                    </h3>
-                </div>
+                {title}
                 <UpcomingGamesSkeleton />
             </div>
         );
@@ -30,12 +53,7 @@ const UpcomingGamesSection = () => {
     if (error || !data?.getUpcomingGames || data.getUpcomingGames.length === 0) {
         return (
             <div className="w-full space-y-4">
-                <div className="flex items-center justify-between px-1">
-                    <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                        <Calendar className="w-5 h-5 text-indigo-400" />
-                        Upcoming Games
-                    </h3>
-                </div>
+                {title}
 
                 {/* Nice Default State */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -48,48 +66,37 @@ const UpcomingGamesSection = () => {
         );
     }
 
+    const games = data.getUpcomingGames.slice(0, limit);
+
+    if (layout === 'horizontal') {
+        return (
+            <div className="w-full space-y-4">
+                {title}
+                <HorizontalScroll>
+                    {games.map((game: Game) => (
+                        <GameCard
+                            key={game.id}
+                            game={game}
+                            onClick={() => router.push(`/ludo-lobby/${game.id}`)}
+                            className="w-[280px]"
+                        />
+                    ))}
+                </HorizontalScroll>
+            </div>
+        );
+    }
+
     return (
         <div className="w-full space-y-4">
-            <div className="flex items-center justify-between px-1">
-                <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                    <Calendar className="w-5 h-5 text-indigo-400" />
-                    Upcoming Games
-                </h3>
-                {data.getUpcomingGames.length > 2 && (
-                    <button className="text-sm text-indigo-400 font-medium hover:text-indigo-300 transition-colors flex items-center gap-1">
-                        View All <ArrowRight size={14} />
-                    </button>
-                )}
-            </div>
+            {title}
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {data.getUpcomingGames.slice(0, 4).map((game: Game) => (
-                    <div
+                {games.map((game: Game) => (
+                    <GameCard
                         key={game.id}
-                        className="bg-[#24283b] hover:bg-[#2a2e42] border border-white/5 rounded-xl p-4 transition-colors cursor-pointer group"
+                        game={game}
                         onClick={() => router.push(`/ludo-lobby/${game.id}`)}
-                    >
-                        <div className="flex justify-between items-start">
-                            <div className="space-y-1">
-                                <h4 className="font-bold text-slate-200 group-hover:text-white transition-colors">
-                                    {game?.name || 'Unknown Game'}
-                                </h4>
-                                <div className="flex items-center gap-3 text-xs text-slate-400">
-                                    <span className="bg-indigo-500/10 text-indigo-400 px-2 py-0.5 rounded">
-                                        {safeFormat(game.createdAt, 'EEE')}
-                                    </span>
-                                    <span>{safeFormat(game.createdAt, 'h:mm a')}</span>
-                                </div>
-                            </div>
-                            <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-indigo-500 group-hover:text-white transition-all text-slate-500">
-                                <ChevronRight size={16} />
-                            </div>
-                        </div>
-                        <div className="mt-4 flex items-center justify-between text-xs text-slate-500">
-                            <span>4-Player Classic</span>
-                            <span>{game.players.length}/4 Registered</span>
-                        </div>
-                    </div>
+                    />
                 ))}
             </div>
         </div>

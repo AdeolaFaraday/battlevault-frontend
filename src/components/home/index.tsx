@@ -1,5 +1,4 @@
 import HomeCtaCard from './home-cta-card';
-import LeaderBoardCardContainer from '../common/leaderboardcard';
 import Greeting from '../common/greeting';
 import FeaturedGamesCardContainer from './featured-games-card';
 import UpcomingTournamentCardContainer from './upcoming-tournament-card';
@@ -9,6 +8,7 @@ import PaymentLottie from '../common/lottie/payment.json';
 import PLayLottie from '../common/lottie/play.json';
 
 import './styles.css';
+import LeaderBoardCardContainer from '../leaderboard';
 
 
 const HomeComponent = () => {

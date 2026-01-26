@@ -8,11 +8,14 @@ import TournamentsSection from './TournamentsSection';
 import QuickActions from './QuickActions';
 import Greeting from '../../common/greeting';
 import DailyBlitzSection from './DailyBlitzSection';
+import BottomNav from '../../common/bottom-nav';
 
 const GameHubScreen = () => {
     return (
-        <div className="min-h-screen bg-[#1a1d2e] font-sans pb-24 md:pb-12">
+        <div className="min-h-screen bg-[#1a1d2e] font-sans pb-32 md:pb-12">
             <Header />
+
+            <BottomNav />
 
             <main className="max-w-7xl mx-auto px-4 md:px-8 py-6 md:py-8 space-y-8 md:space-y-12">
 

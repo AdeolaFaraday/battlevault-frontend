@@ -8,14 +8,12 @@ import './styles.css';
 
 const UpcomingTournamentCard = ({
     date,
-    entryFee,
-    game,
+    // entryFee,
     maxUsers,
     prize,
     time,
     title,
 }: Tournament) => {
-    console.log(entryFee, game);
 
     return (
         <div className="tournament-card keen-slider__slide">

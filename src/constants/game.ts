@@ -18,21 +18,28 @@ export type LeaderboardCardType = {
     ringColor: string;
 };
 
-export type Tournament = {
-    _id: number;
-    title: string;
-    game: "Ludo" | "Chess";
-    date: string;
-    time: string;
-    maxUsers: number;
-    entryFee: number;
-    prize: number;
-    status?: "Upcoming" | "Ongoing" | "Completed";
-    color?: string;
-    createdAt?: string;
-    registeredUsers?: string[];
-    startDate?: string;
+export type TournamentUser = {
+    _id: string;
+    userName: string;
+};
 
+export type Tournament = {
+    _id: string;
+    date?: string;
+    time?: string;
+    title: string;
+    description?: string;
+    gameType?: string;
+    entryFee: number;
+    entryFeeCurrency?: string;
+    prize: string | number;
+    status: string;
+    frequency?: string;
+    isPrivate?: boolean;
+    maxUsers: number;
+    startDate: string;
+    endDate?: string;
+    registeredUsers?: TournamentUser[];
 };
 
 export const FeatureGame: FeatureGameType[] = [
@@ -95,23 +102,23 @@ export const LeaderboardData: LeaderboardCardType[] = [
 
 export const UpcomingTournaments: Tournament[] = [
     {
-        _id: 1,
+        _id: "1",
         title: "Ludo Championship",
-        game: "Ludo",
-        date: "Feb 20, 2025",
-        time: "6:00 PM GMT",
+        gameType: "Ludo",
+        startDate: "2025-02-20T18:00:00Z",
         maxUsers: 32,
         entryFee: 500,
         prize: 50000,
+        status: "Upcoming"
     },
     {
-        _id: 2,
+        _id: "2",
         title: "Chess Grand Battle",
-        game: "Chess",
-        date: "Feb 25, 2025",
-        time: "7:00 PM GMT",
+        gameType: "Chess",
+        startDate: "2025-02-25T19:00:00Z",
         maxUsers: 16,
         entryFee: 1000,
         prize: 100000,
+        status: "Upcoming"
     },
 ];
