@@ -1,0 +1,59 @@
+/* Bottom Navigation Custom Styles */
+
+.bottom-nav-container {
+    mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+}
+
+/* Glassmorphism subtle glow */
+.bottom-nav-glass {
+    background: rgba(26, 29, 46, 0.8);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Optional: Pulse animation for active state items if needed */
+@keyframes active-pulse {
+    0% {
+        transform: scale(1);
+        opacity: 0.4;
+    }
+
+    50% {
+        transform: scale(1.1);
+        opacity: 0.6;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 0.4;
+    }
+}
+
+/* Shine effect across the nav if we want to be fancy */
+.nav-shine {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(120deg,
+            transparent,
+            rgba(255, 255, 255, 0.05),
+            transparent);
+    animation: shine 6s infinite;
+}
+
+@keyframes shine {
+    0% {
+        left: -100%;
+    }
+
+    20% {
+        left: 100%;
+    }
+
+    100% {
+        left: 100%;
+    }
+}

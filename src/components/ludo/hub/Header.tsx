@@ -41,7 +41,7 @@ const Header = () => {
         <header className="sticky top-0 z-50 bg-[#1a1d2e]/95 backdrop-blur-md border-b border-white/5 px-4 py-3 md:px-8 md:py-4">
             <div className="max-w-7xl mx-auto flex items-center justify-between">
                 {/* Logo Section */}
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 cursor-pointer" onClick={() => router.push('/')}>
                     <LogoIcon width={40} height={40} className="fill-white" color="white" />
                     <h1 className="text-xl md:text-2xl font-black bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">
                         BattleVault
