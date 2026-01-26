@@ -103,7 +103,7 @@ const GameCelebration: React.FC<GameCelebrationProps> = ({ isOpen, winner, onClo
                                     <div className="w-10 h-10 rounded-2xl bg-white/5 flex items-center justify-center group-hover:scale-110 transition-transform">
                                         <Home size={20} />
                                     </div>
-                                    <span className="text-xs font-bold uppercase tracking-wider">Lobby</span>
+                                    <span className="text-xs font-bold uppercase tracking-wider">Home</span>
                                 </button>
                                 <button
                                     onClick={onRestart}

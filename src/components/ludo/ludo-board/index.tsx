@@ -72,7 +72,7 @@ const LudoBoard = ({ id }: { id: string }) => {
             <GameCelebration
                 isOpen={gameState.status === "finished"}
                 winner={winner}
-                onClose={() => router.push("/ludo-lobby")}
+                onClose={() => router.push("/")}
                 onRestart={() => window.location.reload()}
             />
 
