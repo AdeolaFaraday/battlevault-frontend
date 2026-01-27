@@ -1,0 +1,16 @@
+#!/bin/bash
+mkdir -p node_modules/@apollo/client/utilities/invariant
+echo "export { invariant } from '../globals/index.js';" > node_modules/@apollo/client/utilities/invariant/index.js
+cp node_modules/@apollo/client/utilities/index.d.ts node_modules/@apollo/client/utilities/invariant/index.d.ts
+
+mkdir -p node_modules/@apollo/client/utilities/environment
+echo "export * from '../globals/index.js';" > node_modules/@apollo/client/utilities/environment/index.js
+cp node_modules/@apollo/client/utilities/index.d.ts node_modules/@apollo/client/utilities/environment/index.d.ts
+
+mkdir -p node_modules/@apollo/client/utilities/internal
+echo "export * from '../index.js';" > node_modules/@apollo/client/utilities/internal/index.js
+cp node_modules/@apollo/client/utilities/index.d.ts node_modules/@apollo/client/utilities/internal/index.d.ts
+
+mkdir -p node_modules/@apollo/client/utilities/observables
+echo "export * from '../index.js';" > node_modules/@apollo/client/utilities/observables/index.js
+cp node_modules/@apollo/client/utilities/index.d.ts node_modules/@apollo/client/utilities/observables/index.d.ts
