@@ -8,10 +8,11 @@
     "start": "next start",
     "lint": "next lint",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "postinstall": "./.gemini/scripts/fix-apollo.sh"
   },
   "dependencies": {
-    "@apollo/client": "^3.12.8",
+    "@apollo/client": "~3.12.8",
     "@apollo/experimental-nextjs-app-support": "^0.14.4",
     "@hookform/resolvers": "^3.10.0",
     "@reduxjs/toolkit": "^2.5.1",
