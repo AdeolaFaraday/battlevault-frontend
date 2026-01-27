@@ -44,7 +44,7 @@ const GameHubScreen = () => {
                             <DailyBlitzSection />
                         </section>
                         <section>
-                            <UpcomingGamesSection />
+                            <UpcomingGamesSection limit={5} />
                         </section>
                     </div>
 

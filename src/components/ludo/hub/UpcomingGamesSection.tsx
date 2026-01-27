@@ -14,15 +14,70 @@ interface UpcomingGamesSectionProps {
     layout?: 'grid' | 'horizontal';
     limit?: number;
     showViewAll?: boolean;
+    enableInfiniteScroll?: boolean;
 }
 
 const UpcomingGamesSection = ({
     layout = 'grid',
     limit = 4,
-    showViewAll = true
+    showViewAll = true,
+    enableInfiniteScroll = false
 }: UpcomingGamesSectionProps) => {
-    const { data, loading, error } = useQuery(GET_UPCOMING_GAMES);
+    const { data, loading, error, fetchMore } = useQuery(GET_UPCOMING_GAMES, {
+        variables: { page: 1, limit },
+        notifyOnNetworkStatusChange: true,
+    });
+    const [isFetchingMore, setIsFetchingMore] = React.useState(false);
+    const [hasMore, setHasMore] = React.useState(true);
+    const [page, setPage] = React.useState(1);
+
     const router = useRouter();
+
+    const handleFetchMore = async () => {
+        if (!enableInfiniteScroll || isFetchingMore || !hasMore || loading) return;
+
+        setIsFetchingMore(true);
+        try {
+            const nextPage = page + 1;
+            const { data: newData } = await fetchMore({
+                variables: {
+                    page: nextPage,
+                    limit,
+                },
+                updateQuery: (prev, { fetchMoreResult }) => {
+                    if (!fetchMoreResult) return prev;
+
+                    const prevGames = prev.getUpcomingGames?.data?.games || [];
+                    const newGames = fetchMoreResult.getUpcomingGames?.data?.games || [];
+
+                    if (newGames.length < limit) {
+                        setHasMore(false);
+                    }
+
+                    return {
+                        ...prev,
+                        getUpcomingGames: {
+                            ...prev.getUpcomingGames,
+                            data: {
+                                ...prev.getUpcomingGames.data,
+                                games: [...prevGames, ...newGames],
+                            },
+                        },
+                    };
+                },
+            });
+
+            if (newData?.getUpcomingGames?.data?.games?.length > 0) {
+                setPage(nextPage);
+            } else {
+                setHasMore(false);
+            }
+        } catch (err) {
+            console.error("Error fetching more games:", err);
+        } finally {
+            setIsFetchingMore(false);
+        }
+    };
 
     const title = (
         <div className="flex items-center justify-between px-1">
@@ -41,7 +96,7 @@ const UpcomingGamesSection = ({
         </div>
     );
 
-    if (loading) {
+    if (loading && !isFetchingMore) {
         return (
             <div className="w-full space-y-4">
                 {title}
@@ -53,7 +108,7 @@ const UpcomingGamesSection = ({
     const gameList = data?.getUpcomingGames?.data;
     const games = gameList && 'games' in gameList ? gameList.games : [];
 
-    if (error || !games || games.length === 0) {
+    if ((error || !games || games.length === 0) && !isFetchingMore) {
         return (
             <div className="w-full space-y-4">
                 {title}
@@ -69,14 +124,12 @@ const UpcomingGamesSection = ({
         );
     }
 
-    const displayedGames = games.slice(0, limit);
-
     if (layout === 'horizontal') {
         return (
             <div className="w-full space-y-4">
                 {title}
-                <HorizontalScroll>
-                    {displayedGames.map((game: Game) => (
+                <HorizontalScroll onReachEnd={handleFetchMore}>
+                    {games.map((game: Game) => (
                         <GameCard
                             key={game._id}
                             game={game}
@@ -84,6 +137,11 @@ const UpcomingGamesSection = ({
                             className="w-[280px]"
                         />
                     ))}
+                    {isFetchingMore && (
+                        <div className="flex items-center justify-center w-[280px] h-full bg-white/5 rounded-xl animate-pulse">
+                            <span className="text-slate-400 text-sm">Loading more...</span>
+                        </div>
+                    )}
                 </HorizontalScroll>
             </div>
         );
@@ -94,13 +152,18 @@ const UpcomingGamesSection = ({
             {title}
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {displayedGames.map((game: Game) => (
+                {games.map((game: Game) => (
                     <GameCard
                         key={game._id}
                         game={game}
                         onClick={() => router.push(`/ludo-lobby/${game._id}`)}
                     />
                 ))}
+                {isFetchingMore && (
+                    <div className="col-span-full py-4 flex justify-center">
+                        <div className="w-8 h-8 border-2 border-indigo-400 border-t-transparent rounded-full animate-spin" />
+                    </div>
+                )}
             </div>
         </div>
     );
