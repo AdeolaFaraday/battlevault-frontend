@@ -35,8 +35,8 @@ export const GET_TOURNAMENTS = gql`
 `;
 
 export const GET_UPCOMING_GAMES = gql`
-  query GetUpcomingGames {
-    getUpcomingGames {
+  query GetUpcomingGames($page: Int, $limit: Int) {
+    getUpcomingGames(page: $page, limit: $limit) {
       statusCode
       success
       message

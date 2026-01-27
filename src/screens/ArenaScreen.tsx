@@ -38,6 +38,7 @@ const ArenaScreen = () => {
                         layout="horizontal"
                         limit={10}
                         showViewAll={false}
+                        enableInfiniteScroll={true}
                     />
                 </div>
 
