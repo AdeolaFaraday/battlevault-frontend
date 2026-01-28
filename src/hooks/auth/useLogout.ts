@@ -36,9 +36,9 @@ export const useLogout = () => {
             }
             // If mutation succeeds, perform cleanup
             await handleCleanup();
-        } catch (err: any) {
+        } catch (err: unknown) {
             console.error('Logout error:', err);
-            showError('Logout Failed', err.message || 'An unexpected error occurred');
+            showError('Logout Failed', (err as Error).message || 'An unexpected error occurred');
             // If mutation fails, still perform cleanup to prevent "stuck" state
             await handleCleanup();
         }
