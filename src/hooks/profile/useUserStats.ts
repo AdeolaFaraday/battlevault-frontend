@@ -6,6 +6,8 @@ export interface UserStats {
 	totalWins: number;
 	totalLosses: number;
 	winPercentage: number;
+	currentStreak: number;
+	bestStreak: number;
 }
 
 interface GetUserStatsResponse {
@@ -14,10 +16,10 @@ interface GetUserStatsResponse {
 		success: boolean;
 		message: string;
 		data:
-			| ({
-				__typename: string;
-			} & Partial<UserStats>)
-			| null;
+		| ({
+			__typename: string;
+		} & Partial<UserStats>)
+		| null;
 	};
 }
 
@@ -38,6 +40,8 @@ export const useUserStats = (): UseUserStatsReturn => {
 			totalWins: raw.totalWins ?? 0,
 			totalLosses: raw.totalLosses ?? 0,
 			winPercentage: raw.winPercentage ?? 0,
+			currentStreak: raw.currentStreak ?? 0,
+			bestStreak: raw.bestStreak ?? 0,
 		}
 		: null;
 

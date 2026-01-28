@@ -7,7 +7,7 @@ import Header from '../components/ludo/hub/Header';
 import BottomNav from '../components/common/bottom-nav';
 import StatsOverview from '../components/profile/stats/StatsOverview';
 import WinLossChart from '../components/profile/stats/WinLossChart';
-import GamePerformanceList from '../components/profile/stats/GamePerformanceList';
+// import GamePerformanceList from '../components/profile/stats/GamePerformanceList';
 
 const WinLossStatsScreen = () => {
     const router = useRouter();
@@ -44,7 +44,7 @@ const WinLossStatsScreen = () => {
                 <StatsOverview />
 
                 {/* Detailed Game Breakdown */}
-                <GamePerformanceList />
+                {/* <GamePerformanceList /> */}
 
                 <div className="text-center pt-8">
                     <p className="text-[10px] font-black text-slate-600 uppercase tracking-widest">Stats updated 2 minutes ago</p>

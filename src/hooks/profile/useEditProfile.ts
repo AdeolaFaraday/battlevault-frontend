@@ -6,16 +6,16 @@ import { useAlert } from '../common/useAlert';
 import useUpdateProfileApi from '@/src/api/profile/useUpdateProfile';
 
 export type EditProfileFormState = {
-	displayName: string;
+	firstName: string;
+	lastName: string;
 	userName: string;
 	bio: string;
 };
 
 const deriveInitialState = (user?: TCommonResponseData): EditProfileFormState => {
-	const displayName = [user?.firstName, user?.lastName].filter(Boolean).join(' ').trim();
-
 	return {
-		displayName,
+		firstName: user?.firstName ?? '',
+		lastName: user?.lastName ?? '',
 		userName: user?.userName ?? '',
 		bio: user?.bio ?? '',
 	};
@@ -70,12 +70,9 @@ const useEditProfile = () => {
 			return;
 		}
 
-		const [firstName, ...rest] = form.displayName.split(' ');
-		const lastName = rest.join(' ');
-
 		updateProfile({
-			firstName: firstName || loggedInUserDetails.firstName,
-			lastName: lastName || loggedInUserDetails.lastName,
+			firstName: form.firstName || loggedInUserDetails.firstName,
+			lastName: form.lastName || loggedInUserDetails.lastName,
 			userName: form.userName || loggedInUserDetails.userName || '',
 			bio: form.bio,
 		});

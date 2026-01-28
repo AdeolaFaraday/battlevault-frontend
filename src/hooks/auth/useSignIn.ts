@@ -9,7 +9,7 @@ import { useAppDispatch } from '@/src/lib/redux/hooks';
 import { setLoggedInUserDetails } from '@/src/lib/redux/authSlice';
 import { authTokenStorage } from '@/src/lib/authToken';
 
-const mapAuthPayloadToCommon = (payload: any): TCommonResponseData => {
+const mapAuthPayloadToCommon = (payload: unknown): TCommonResponseData => {
     if (!payload) {
         // Fallback empty structure; runtime calls should guard against this
         return {

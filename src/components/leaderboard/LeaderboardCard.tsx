@@ -3,7 +3,7 @@
 import React from 'react';
 import NextImage from 'next/image';
 import { motion } from 'framer-motion';
-import { Trophy, Zap, Crown, TrendingUp } from 'lucide-react';
+import { Trophy, Crown, TrendingUp } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { LeaderboardPlayer } from '../../types/leaderboard.d';
 

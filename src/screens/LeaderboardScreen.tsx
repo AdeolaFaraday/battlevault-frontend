@@ -26,7 +26,7 @@ const LeaderboardScreen = () => {
         loading,
         error,
         hasMore,
-        isFetchingMore,
+        // isFetchingMore,
         searchQuery,
         debouncedSearch,
         setSearchQuery,

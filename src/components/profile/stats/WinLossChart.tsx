@@ -2,9 +2,14 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useUserStats } from '@/src/hooks/profile/useUserStats';
 
 const WinLossChart = () => {
-    const winRate = 72;
+    const { stats, loading } = useUserStats();
+
+    const winRate = stats?.winPercentage ?? 0;
+    const totalWins = stats?.totalWins ?? 0;
+    const totalLosses = stats?.totalLosses ?? 0;
 
     return (
         <div className="bg-[#24283b]/40 border border-white/5 rounded-3xl p-8 flex flex-col items-center justify-center backdrop-blur-md relative overflow-hidden group">
@@ -45,7 +50,7 @@ const WinLossChart = () => {
                         transition={{ delay: 0.5 }}
                         className="text-4xl font-black text-white italic"
                     >
-                        {winRate}%
+                        {loading ? '...' : `${winRate}%`}
                     </motion.span>
                     <span className="text-[10px] font-black text-emerald-500 uppercase tracking-widest">Win Rate</span>
                 </div>
@@ -53,12 +58,16 @@ const WinLossChart = () => {
 
             <div className="mt-8 flex gap-8">
                 <div className="flex flex-col items-center">
-                    <span className="text-2xl font-black text-white italic">82</span>
+                    <span className="text-2xl font-black text-white italic">
+                        {loading ? '...' : totalWins}
+                    </span>
                     <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Wins</span>
                 </div>
                 <div className="w-[1px] h-8 bg-white/5 self-center" />
                 <div className="flex flex-col items-center">
-                    <span className="text-2xl font-black text-white italic text-red-400">42</span>
+                    <span className="text-2xl font-black text-white italic text-red-400">
+                        {loading ? '...' : totalLosses}
+                    </span>
                     <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Losses</span>
                 </div>
             </div>

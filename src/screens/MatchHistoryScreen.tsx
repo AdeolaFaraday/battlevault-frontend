@@ -20,7 +20,7 @@ const MatchHistoryScreen = () => {
 		loading,
 		error,
 		hasMore,
-		isFetchingMore,
+		// isFetchingMore,
 		searchQuery,
 		debouncedSearch,
 		setSearchQuery,

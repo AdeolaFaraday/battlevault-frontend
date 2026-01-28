@@ -1,7 +1,7 @@
 type TCreateUserResponse = TAPIResponse<TCommonResponseData, 'createUser'>;
-type TLoginUserResponse = TAPIResponse<any, 'login'>;
+type TLoginUserResponse = TAPIResponse<TCommonResponseData, 'login'>;
 type TVerifyEmailResponse = TAPIResponse<TCommonResponseData, 'verifyEmail'>;
-type TSocialLoginUserResponse = TAPIResponse<any, 'socialAuth'>;
+type TSocialLoginUserResponse = TAPIResponse<TCommonResponseData, 'socialAuth'>;
 
 type TCommonResponseData = {
     /**

@@ -28,10 +28,10 @@ interface GetUserGamesResponse {
 		success: boolean;
 		message: string;
 		data:
-			| ({
-				__typename: string;
-			} & Partial<UserGamesResult>)
-			| null;
+		| ({
+			__typename: string;
+		} & Partial<UserGamesResult>)
+		| null;
 	};
 }
 
@@ -69,29 +69,33 @@ export const useUserGames = (): UseUserGamesReturn => {
 		return () => clearTimeout(timer);
 	}, [searchQuery]);
 
-	const { loading, error, fetchMore } = useQuery<GetUserGamesResponse>(GET_USER_GAMES, {
+	const { loading, error, data, fetchMore } = useQuery<GetUserGamesResponse>(GET_USER_GAMES, {
 		variables: {
 			page: 1,
 			limit: ITEMS_PER_PAGE,
 			search: debouncedSearch || null,
 		},
 		notifyOnNetworkStatusChange: true,
-		onCompleted: (data) => {
-			const result = data?.getUserGames?.data as UserGamesResult | null;
-
-			if (result && Array.isArray(result.games)) {
-				setAllGames(result.games);
-				setTotalGames(result.total ?? result.games.length);
-				setPage(result.page ?? 1);
-				const totalPages = result.pages ?? 1;
-				setHasMore(result.page < totalPages);
-			} else {
-				setAllGames([]);
-				setTotalGames(0);
-				setHasMore(false);
-			}
-		},
 	});
+
+	// Handle initial data load in useEffect to avoid state updates before mount
+	useEffect(() => {
+		if (loading) return;
+
+		const result = data?.getUserGames?.data as UserGamesResult | null;
+
+		if (result && Array.isArray(result.games)) {
+			setAllGames(result.games);
+			setTotalGames(result.total ?? result.games.length);
+			setPage(result.page ?? 1);
+			const totalPages = result.pages ?? 1;
+			setHasMore(result.page < totalPages);
+		} else {
+			setAllGames([]);
+			setTotalGames(0);
+			setHasMore(false);
+		}
+	}, [data, loading]);
 
 	const fetchNextPage = useCallback(async () => {
 		if (isFetchingMore || !hasMore || loading) return;

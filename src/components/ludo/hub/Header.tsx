@@ -53,7 +53,7 @@ const Header = () => {
                     {/* Balance - Hidden on small mobile */}
                     <div className="hidden md:flex items-center gap-2 bg-slate-800/50 px-3 py-1.5 rounded-full border border-white/5">
                         <Wallet className="w-4 h-4 text-emerald-400" />
-                        <span className="text-emerald-400 font-bold text-sm">2,500</span>
+                        <span className="text-emerald-400 font-bold text-sm">0.00</span>
                     </div>
 
                     {/* Notifications */}

@@ -74,9 +74,9 @@ const EditProfileScreen = () => {
 
                 {/* Form Fields */}
                 <div className="space-y-6">
-                    {/* Display Name */}
+                    {/* First Name */}
                     <div className="space-y-2">
-                        <label className="text-[10px] font-black text-indigo-300 uppercase tracking-[0.2em] px-1">Display Name</label>
+                        <label className="text-[10px] font-black text-indigo-300 uppercase tracking-[0.2em] px-1">First Name</label>
                         <div className="relative group">
                             <div
                                 className="absolute flex items-center pointer-events-none z-20"
@@ -91,11 +91,37 @@ const EditProfileScreen = () => {
                             </div>
                             <input
                                 type="text"
-                                value={form.displayName}
-                                onChange={(e) => handleChange('displayName', e.target.value)}
+                                value={form.firstName}
+                                onChange={(e) => handleChange('firstName', e.target.value)}
                                 style={{ paddingLeft: '3.5rem' }}
                                 className="w-full pr-4 py-4 bg-[#24283b]/60 border border-white/5 rounded-2xl text-white font-bold placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all backdrop-blur-md"
-                                placeholder="How should we call you?"
+                                placeholder="Enter your first name"
+                            />
+                        </div>
+                    </div>
+
+                    {/* Last Name */}
+                    <div className="space-y-2">
+                        <label className="text-[10px] font-black text-indigo-300 uppercase tracking-[0.2em] px-1">Last Name</label>
+                        <div className="relative group">
+                            <div
+                                className="absolute flex items-center pointer-events-none z-20"
+                                style={{
+                                    left: '1.25rem',
+                                    top: '50%',
+                                    transform: 'translateY(-50%)',
+                                    marginTop: '1px'
+                                }}
+                            >
+                                <User size={18} className="text-slate-500 group-focus-within:text-indigo-400 transition-colors" />
+                            </div>
+                            <input
+                                type="text"
+                                value={form.lastName}
+                                onChange={(e) => handleChange('lastName', e.target.value)}
+                                style={{ paddingLeft: '3.5rem' }}
+                                className="w-full pr-4 py-4 bg-[#24283b]/60 border border-white/5 rounded-2xl text-white font-bold placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all backdrop-blur-md"
+                                placeholder="Enter your last name"
                             />
                         </div>
                     </div>

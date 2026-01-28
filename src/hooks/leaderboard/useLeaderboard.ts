@@ -45,7 +45,7 @@ export const useLeaderboard = (options: UseLeaderboardOptions = {}): UseLeaderbo
         return () => clearTimeout(timer);
     }, [searchQuery]);
 
-    const { data, loading, error, fetchMore } = useQuery<GetLeaderboardResponse>(GET_LEADERBOARD, {
+    const { loading, error, fetchMore } = useQuery<GetLeaderboardResponse>(GET_LEADERBOARD, {
         variables: {
             page: 1,
             limit: ITEMS_PER_PAGE,
