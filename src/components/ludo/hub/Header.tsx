@@ -102,7 +102,7 @@ const Header = () => {
                                                 </p>
                                             </div>
                                             <div className="p-2 space-y-1">
-                                                <DropdownMenuItem icon={UserIcon} label="Profile" />
+                                                <DropdownMenuItem icon={UserIcon} onClick={() => router.push('/profile')} label="Profile" />
                                                 <DropdownMenuItem icon={Settings} label="Settings" />
                                                 <div className="h-px bg-white/5 my-1" />
                                                 <DropdownMenuItem
