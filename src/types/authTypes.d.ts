@@ -1,13 +1,21 @@
 type TCreateUserResponse = TAPIResponse<TCommonResponseData, 'createUser'>;
-type TLoginUserResponse = TAPIResponse<TCommonResponseData, 'login'>;
+type TLoginUserResponse = TAPIResponse<any, 'login'>;
 type TVerifyEmailResponse = TAPIResponse<TCommonResponseData, 'verifyEmail'>;
-type TSocialLoginUserResponse = TAPIResponse<TCommonResponseData, 'socialAuth'>;
+type TSocialLoginUserResponse = TAPIResponse<any, 'socialAuth'>;
 
 type TCommonResponseData = {
-    _id: string
-    firstName: string
-    lastName: string
-    email: string
+    /**
+     * JWT token returned from auth endpoints (login, socialAuth, etc.)
+     * This is optional so that non-auth flows can keep using the same type.
+     */
+    token?: string;
+    _id: string;
+    userName?: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    bio?: string;
+    role?: string;
 }
 
 type TCreateUserArgs = {

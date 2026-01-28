@@ -1,12 +1,14 @@
 "use client";
 // ^ this file needs the "use client" pragma
 
-import { HttpLink } from "@apollo/client";
+import { HttpLink, from } from "@apollo/client";
+import { setContext } from "@apollo/client/link/context";
 import {
   ApolloNextAppProvider,
   ApolloClient,
   InMemoryCache,
 } from "@apollo/experimental-nextjs-app-support";
+import { authTokenStorage } from "@/src/lib/authToken";
 
 // have a function to create a client for you
 function makeClient() {
@@ -23,18 +25,29 @@ function makeClient() {
     // const { data } = useSuspenseQuery(MY_QUERY, { context: { fetchOptions: { cache: "force-cache" }}});
   });
 
+  const authLink = setContext((_, { headers }) => {
+    const token = authTokenStorage.get();
+
+    return {
+      headers: {
+        ...headers,
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+    };
+  });
+
   // use the `ApolloClient` from "@apollo/experimental-nextjs-app-support"
   return new ApolloClient({
     // use the `InMemoryCache` from "@apollo/experimental-nextjs-app-support"
     cache: new InMemoryCache(),
-    link: httpLink,
+    link: from([authLink, httpLink]),
   });
 }
 
 export function ApolloWrapper({ children }: React.PropsWithChildren) {
-    return (
-      <ApolloNextAppProvider makeClient={makeClient}>
-        {children}
-      </ApolloNextAppProvider>
-    );
-  }
+  return (
+    <ApolloNextAppProvider makeClient={makeClient}>
+      {children}
+    </ApolloNextAppProvider>
+  );
+}

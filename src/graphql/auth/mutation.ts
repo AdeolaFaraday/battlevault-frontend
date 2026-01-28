@@ -37,6 +37,15 @@ const SOCIAL_LOGIN_USER_MUTATION = gql`
 	}
 `;
 
+const UPDATE_PROFILE_MUTATION = gql`
+	${USER_RESPONSE_FRAGMENT}
+	mutation UpdateMyProfile($input: UpdateUserProfileInput!) {
+		updateUserProfile(args: $input) {
+			...UserResponseFragment
+		}
+	}
+`;
+
 const LOGOUT_MUTATION = gql`
 	mutation logout {
 		logout {
@@ -51,5 +60,6 @@ export {
 	LOGIN_USER_MUTATION,
 	SOCIAL_LOGIN_USER_MUTATION,
 	VERIFY_EMAIL_MUTATION,
-	LOGOUT_MUTATION
+	LOGOUT_MUTATION,
+	UPDATE_PROFILE_MUTATION
 }
