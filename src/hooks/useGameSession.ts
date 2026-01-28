@@ -4,6 +4,7 @@ import { doc, onSnapshot } from 'firebase/firestore';
 import { firestore } from '@/src/lib/firebase';
 import { JOIN_GAME_MUTATION } from '@/src/graphql/game/mutations';
 import { LudoPlayer } from '../types/ludo';
+import { useAlert } from './common/useAlert';
 
 export interface Game {
     _id: string;
@@ -33,7 +34,16 @@ export interface UseGameSessionProps {
 
 export const useGameSession = ({ gameId, player }: UseGameSessionProps) => {
     const [gameState, setGameState] = useState<Game | null>(null);
-    const [joinGame, { loading: joining, error: joinError }] = useMutation(JOIN_GAME_MUTATION);
+    const { success: showSuccess, error: showError } = useAlert();
+    const [joinGame, { loading: joining, error: joinError }] = useMutation(JOIN_GAME_MUTATION, {
+        onCompleted: (data) => {
+            showSuccess('Success', data.joinGame.message || 'Game joined successfully');
+        },
+        onError: (error) => {
+            console.error("Failed to join game:", error);
+            showError('Failed to join game', error.message);
+        }
+    });
 
     // Use a ref to track if we've attempted to join to prevent double calling in React 18 strict mode
     const hasJoinedRef = useRef(false);
