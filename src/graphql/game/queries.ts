@@ -91,3 +91,84 @@ export const GET_ACTIVE_GAMES = gql`
     }
   }
 `;
+
+export const GET_LEADERBOARD = gql`
+  query GetLeaderboard($limit: Int, $page: Int, $search: String) {
+    getLeaderboard(limit: $limit, page: $page, search: $search) {
+      statusCode
+      success
+      message
+      data {
+        __typename
+        ... on LeaderboardResult {
+          players {
+            _id
+            userName
+            firstName
+            lastName
+            avatar
+            totalGamesPlayed
+            totalWins
+            totalLosses
+            currentStreak
+            bestStreak
+            winPercentage
+          }
+          total
+          page
+          totalPages
+          hasMore
+        }
+      }
+    }
+  }
+`;
+
+export const GET_USER_GAMES = gql`
+  query MyGames($page: Int, $limit: Int, $search: String) {
+    getUserGames(page: $page, limit: $limit, search: $search) {
+      statusCode
+      success
+      message
+      data {
+        __typename
+        ... on GameList {
+          games {
+            _id
+            name
+            type
+            status
+            startDate
+            createdAt
+            updatedAt
+          }
+          total
+          page
+          limit
+          pages
+        }
+      }
+    }
+  }
+`;
+
+export const GET_USER_STATS = gql`
+  query GetUserStats {
+    getUserStats {
+      statusCode
+      success
+      message
+      data {
+        __typename
+        ... on UserStats {
+          totalGamesPlayed
+          totalWins
+          totalLosses
+          winPercentage
+          currentStreak
+          bestStreak
+        }
+      }
+    }
+  }
+`;

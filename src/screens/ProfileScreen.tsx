@@ -5,12 +5,12 @@ import {
     User,
     History,
     BarChart3,
-    ArrowDownCircle,
-    ArrowUpCircle,
-    ShieldCheck,
+    // ArrowDownCircle,
+    // ArrowUpCircle,
+    // ShieldCheck,
     CheckCircle2,
     LogOut,
-    Bell,
+    // Bell,
     Wallet
 } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -18,22 +18,26 @@ import { useRouter } from 'next/navigation';
 import ProfileItem from '../components/profile/ProfileItem';
 import Header from '../components/ludo/hub/Header';
 import BottomNav from '../components/common/bottom-nav';
+import { useAppSelector } from '../lib/redux/hooks';
+import { RootState } from '@/src/lib/redux/store';
 
 const ProfileScreen = () => {
     const router = useRouter();
+
+    const currentUser = useAppSelector((state: RootState) => state.auth.loggedInUserDetails);
 
     const menuItems = [
         { id: 'edit-profile', label: 'Edit Profile', icon: User, color: 'text-indigo-400' },
         { id: 'match-history', label: 'Match History', icon: History, color: 'text-indigo-400' },
         { id: 'stats', label: 'Win / Loss Stats', icon: BarChart3, color: 'text-indigo-400' },
-        { id: 'withdraw', label: 'Withdraw', icon: ArrowUpCircle, color: 'text-indigo-400' },
-        { id: 'deposit', label: 'Deposit', icon: ArrowDownCircle, color: 'text-indigo-400' },
+        // { id: 'withdraw', label: 'Withdraw', icon: ArrowUpCircle, color: 'text-indigo-400' },
+        // { id: 'deposit', label: 'Deposit', icon: ArrowDownCircle, color: 'text-indigo-400' },
     ];
 
-    const secondaryItems = [
-        { id: 'notifications', label: 'Notifications', icon: Bell, color: 'text-indigo-400' },
-        { id: 'security', label: 'Security', icon: ShieldCheck, color: 'text-indigo-400' },
-    ];
+    // const secondaryItems = [
+    //     { id: 'notifications', label: 'Notifications', icon: Bell, color: 'text-indigo-400' },
+    //     { id: 'security', label: 'Security', icon: ShieldCheck, color: 'text-indigo-400' },
+    // ];
 
     const handleMenuClick = (id: string) => {
         if (id === 'edit-profile') {
@@ -72,8 +76,9 @@ const ProfileScreen = () => {
                         </div>
                     </div>
                     <div className="text-center">
-                        <h1 className="text-3xl font-black text-white uppercase tracking-tighter">John Doe</h1>
-                        <p className="text-indigo-300 font-black uppercase tracking-[0.2em] text-[11px] mt-2 filter drop-shadow-[0_0_8px_rgba(99,102,241,0.5)]">Elite Vanguard • Level 24</p>
+                        <h1 className="text-3xl font-black text-white uppercase tracking-tighter">{currentUser?.firstName || ""} {currentUser?.lastName || ""}</h1>
+                        {/* <p className="text-indigo-300 font-black uppercase tracking-[0.2em] text-[11px] mt-2 filter drop-shadow-[0_0_8px_rgba(99,102,241,0.5)]">Elite Vanguard • Level 24</p> */}
+                        <p className="text-indigo-300 font-black uppercase tracking-[0.2em] text-[11px] mt-2 filter drop-shadow-[0_0_8px_rgba(99,102,241,0.5)]">{currentUser?.email || ""}</p>
                     </div>
 
                     {/* Wallet Quick View */}
@@ -81,7 +86,7 @@ const ProfileScreen = () => {
                         <div className="relative z-10 flex items-center justify-between">
                             <div className="space-y-1">
                                 <span className="text-white/90 text-[10px] font-black uppercase tracking-widest block mb-1">Total Balance</span>
-                                <h2 className="text-3xl font-black text-white italic">₦45,250.00</h2>
+                                <h2 className="text-3xl font-black text-white italic">₦0.00</h2>
                             </div>
                             <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center border border-white/10 backdrop-blur-md">
                                 <Wallet size={24} className="text-white" />
@@ -111,7 +116,7 @@ const ProfileScreen = () => {
 
                 {/* Settings & Security */}
                 <section className="space-y-3">
-                    <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] px-2 mb-2">Preferences</h3>
+                    {/* <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] px-2 mb-2">Preferences</h3>
                     {secondaryItems.map((item) => (
                         <ProfileItem
                             key={item.id}
@@ -119,7 +124,7 @@ const ProfileScreen = () => {
                             label={item.label}
                             iconColor={item.color}
                         />
-                    ))}
+                    ))} */}
 
                     <motion.button
                         whileHover={{ x: 5 }}

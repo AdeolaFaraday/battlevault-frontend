@@ -1,14 +1,36 @@
 "use client";
 
 import React from 'react';
-import { TrendingUp, DollarSign, Flame } from 'lucide-react';
+import { TrendingUp, Flame, Trophy } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useUserStats } from '@/src/hooks/profile/useUserStats';
 
 const StatsOverview = () => {
+    const { stats, loading } = useUserStats();
+
     const mainStats = [
-        { label: 'Overall Win Rate', value: '72%', icon: TrendingUp, color: 'text-emerald-400', bg: 'bg-emerald-400/10' },
-        { label: 'Total Earnings', value: '₦125,400', icon: DollarSign, color: 'text-indigo-400', bg: 'bg-indigo-400/10' },
-        { label: 'Current Streak', value: '5 Wins', icon: Flame, color: 'text-orange-500', bg: 'bg-orange-500/10' },
+        {
+            label: 'Overall Win Rate',
+            value: loading ? '...' : `${stats?.winPercentage ?? 0}%`,
+            icon: TrendingUp,
+            color: 'text-emerald-400',
+            bg: 'bg-emerald-400/10'
+        },
+        // { label: 'Total Earnings', value: '₦125,400', icon: DollarSign, color: 'text-indigo-400', bg: 'bg-indigo-400/10' },
+        {
+            label: 'Best Streak',
+            value: loading ? '...' : `${stats?.bestStreak ?? 0} Wins`,
+            icon: Trophy,
+            color: 'text-indigo-400',
+            bg: 'bg-indigo-400/10'
+        },
+        {
+            label: 'Current Streak',
+            value: loading ? '...' : `${stats?.currentStreak ?? 0} Wins`,
+            icon: Flame,
+            color: 'text-orange-500',
+            bg: 'bg-orange-500/10'
+        },
     ];
 
     return (
@@ -27,7 +49,7 @@ const StatsOverview = () => {
                         </div>
                         <div className="space-y-1">
                             <h3 className="text-lg md:text-xl font-black text-white italic">{stat.value}</h3>
-                            <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest">{stat.label.split(' ').pop()}</p>
+                            <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest">{stat.label}</p>
                         </div>
                     </div>
 

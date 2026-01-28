@@ -25,7 +25,7 @@ const BalanceCard = () => {
                 </div>
 
                 <div className="space-y-1">
-                    <h2 className="text-5xl font-black text-white italic tracking-tighter">₦45,250.00</h2>
+                    <h2 className="text-5xl font-black text-white italic tracking-tighter">₦0.00</h2>
                     <p className="text-indigo-200/60 text-[10px] font-bold uppercase tracking-widest">Withdrawals processed within 24hrs</p>
                 </div>
 

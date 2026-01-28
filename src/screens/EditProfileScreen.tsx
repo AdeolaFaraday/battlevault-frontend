@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import React from 'react';
 import {
     ArrowLeft,
     Camera,
@@ -13,24 +12,17 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Header from '../components/ludo/hub/Header';
+import useEditProfile from '../hooks/profile/useEditProfile';
 
 const EditProfileScreen = () => {
-    const router = useRouter();
-    const [isSaving, setIsSaving] = useState(false);
-    const [showSuccess, setShowSuccess] = useState(false);
-
-    const handleSave = () => {
-        setIsSaving(true);
-        // Simulate API call
-        setTimeout(() => {
-            setIsSaving(false);
-            setShowSuccess(true);
-            setTimeout(() => {
-                setShowSuccess(false);
-                router.back();
-            }, 2000);
-        }, 1500);
-    };
+    const {
+        form,
+        loading,
+        showSuccess,
+        handleChange,
+        handleSubmit,
+        goBack,
+    } = useEditProfile();
 
     return (
         <div className="min-h-screen bg-[#1a1d2e] font-sans pb-32">
@@ -40,7 +32,7 @@ const EditProfileScreen = () => {
                 {/* Navigation Header */}
                 <div className="flex items-center gap-4">
                     <button
-                        onClick={() => router.back()}
+                        onClick={goBack}
                         className="p-3 bg-white/5 hover:bg-white/10 rounded-xl transition-all text-white group"
                     >
                         <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
@@ -82,9 +74,9 @@ const EditProfileScreen = () => {
 
                 {/* Form Fields */}
                 <div className="space-y-6">
-                    {/* Display Name */}
+                    {/* First Name */}
                     <div className="space-y-2">
-                        <label className="text-[10px] font-black text-indigo-300 uppercase tracking-[0.2em] px-1">Display Name</label>
+                        <label className="text-[10px] font-black text-indigo-300 uppercase tracking-[0.2em] px-1">First Name</label>
                         <div className="relative group">
                             <div
                                 className="absolute flex items-center pointer-events-none z-20"
@@ -99,10 +91,37 @@ const EditProfileScreen = () => {
                             </div>
                             <input
                                 type="text"
-                                defaultValue="John Doe"
+                                value={form.firstName}
+                                onChange={(e) => handleChange('firstName', e.target.value)}
                                 style={{ paddingLeft: '3.5rem' }}
                                 className="w-full pr-4 py-4 bg-[#24283b]/60 border border-white/5 rounded-2xl text-white font-bold placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all backdrop-blur-md"
-                                placeholder="How should we call you?"
+                                placeholder="Enter your first name"
+                            />
+                        </div>
+                    </div>
+
+                    {/* Last Name */}
+                    <div className="space-y-2">
+                        <label className="text-[10px] font-black text-indigo-300 uppercase tracking-[0.2em] px-1">Last Name</label>
+                        <div className="relative group">
+                            <div
+                                className="absolute flex items-center pointer-events-none z-20"
+                                style={{
+                                    left: '1.25rem',
+                                    top: '50%',
+                                    transform: 'translateY(-50%)',
+                                    marginTop: '1px'
+                                }}
+                            >
+                                <User size={18} className="text-slate-500 group-focus-within:text-indigo-400 transition-colors" />
+                            </div>
+                            <input
+                                type="text"
+                                value={form.lastName}
+                                onChange={(e) => handleChange('lastName', e.target.value)}
+                                style={{ paddingLeft: '3.5rem' }}
+                                className="w-full pr-4 py-4 bg-[#24283b]/60 border border-white/5 rounded-2xl text-white font-bold placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all backdrop-blur-md"
+                                placeholder="Enter your last name"
                             />
                         </div>
                     </div>
@@ -124,7 +143,8 @@ const EditProfileScreen = () => {
                             </div>
                             <input
                                 type="text"
-                                defaultValue="johndoe_vault"
+                                value={form.userName}
+                                onChange={(e) => handleChange('userName', e.target.value)}
                                 style={{ paddingLeft: '3.5rem' }}
                                 className="w-full pr-4 py-4 bg-[#24283b]/60 border border-white/5 rounded-2xl text-white font-bold placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all backdrop-blur-md"
                                 placeholder="your_unique_handle"
@@ -147,7 +167,8 @@ const EditProfileScreen = () => {
                             </div>
                             <textarea
                                 rows={3}
-                                defaultValue="Elite Vanguard protecting the vault. Ludo champion and strategy lover."
+                                value={form.bio}
+                                onChange={(e) => handleChange('bio', e.target.value)}
                                 style={{ paddingLeft: '3.5rem' }}
                                 className="w-full pr-4 py-4 bg-[#24283b]/60 border border-white/5 rounded-2xl text-white font-medium placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all backdrop-blur-md resize-none"
                                 placeholder="Tell the world your battle story..."
@@ -161,8 +182,8 @@ const EditProfileScreen = () => {
                     <motion.button
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
-                        onClick={handleSave}
-                        disabled={isSaving}
+                        onClick={handleSubmit}
+                        disabled={loading}
                         style={{
                             background: 'linear-gradient(to right, #4f46e5, #9333ea)',
                             boxShadow: '0 8px 25px rgba(79, 70, 229, 0.4)',
@@ -176,11 +197,11 @@ const EditProfileScreen = () => {
                             position: 'relative',
                             overflow: 'hidden',
                             border: 'none',
-                            cursor: isSaving ? 'default' : 'pointer'
+                            cursor: loading ? 'default' : 'pointer'
                         }}
                     >
                         <AnimatePresence mode="wait">
-                            {isSaving ? (
+                            {loading ? (
                                 <motion.div
                                     key="loader"
                                     initial={{ opacity: 0 }}
@@ -227,3 +248,4 @@ const EditProfileScreen = () => {
 };
 
 export default EditProfileScreen;
+

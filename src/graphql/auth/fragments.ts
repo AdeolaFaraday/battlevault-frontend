@@ -7,7 +7,9 @@ export const USER_FRAGMENT = gql`
 		userName
 		firstName
 		lastName
-    }
+		email
+		bio
+	}
 `;
 
 const USER_RESPONSE_FRAGMENT = gql`
@@ -17,7 +19,12 @@ const USER_RESPONSE_FRAGMENT = gql`
 		success
 		message
 		data {
-			...UserFragment
+			... on AuthPayload {
+				token
+				user {
+					...UserFragment
+				}
+			}
 		}
 	}
 `;
