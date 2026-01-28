@@ -18,6 +18,7 @@ const CreateGameModal: React.FC<CreateGameModalProps> = ({ isOpen, onClose }) =>
 
     const [createGame, { loading, error }] = useMutation(CREATE_FREE_GAME_MUTATION, {
         onCompleted: (data) => {
+            console.log({ data });
             const gameId = data.createFreeGame?.data?._id;
             // Generate link based on current origin
             const origin = window.location.origin;
