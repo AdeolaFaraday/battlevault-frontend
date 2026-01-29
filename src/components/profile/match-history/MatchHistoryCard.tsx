@@ -21,7 +21,7 @@ interface MatchHistoryCardProps {
 
 const MatchHistoryCard = ({
 	game,
-	status,
+	// status,
 	date,
 	time,
 	stake,
