@@ -58,13 +58,13 @@ const LeaderboardCard = ({
             transition={{ delay: Math.min(rank * 0.03, 0.3) }}
             whileHover={{ scale: 1.02, x: 5 }}
             className={cn(
-                "relative flex items-center justify-between p-4 mb-3 rounded-2xl transition-all duration-300",
+                "relative flex items-center justify-between p-4 sm:py-4 sm:px-2 mb-3 rounded-2xl transition-all duration-300",
                 "bg-[#24283b]/60 backdrop-blur-md border border-white/5",
                 isCurrentUser && "border-indigo-500/50 bg-indigo-500/10 shadow-lg shadow-indigo-500/10",
                 "hover:border-white/20 hover:bg-[#2a2e42]/80"
             )}
         >
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
                 {/* Rank Number */}
                 <div className={cn(
                     "w-8 font-black text-sm text-center",
@@ -105,7 +105,7 @@ const LeaderboardCard = ({
                             "font-bold text-slate-200 group-hover:text-white transition-colors",
                             isCurrentUser && "text-indigo-300"
                         )}>
-                            {displayName}
+                            {displayName?.length > 15 ? displayName?.substring(0, 15) + '...' : displayName}
                         </span>
                         {isCurrentUser && (
                             <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-indigo-500/20 text-indigo-400 font-black uppercase tracking-widest">You</span>
