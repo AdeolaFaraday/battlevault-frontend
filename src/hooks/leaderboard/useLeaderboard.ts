@@ -38,8 +38,8 @@ export const useLeaderboard = (options: UseLeaderboardOptions = {}): UseLeaderbo
         const timer = setTimeout(() => {
             setDebouncedSearch(searchQuery);
             setPage(1);
-            setAllPlayers([]);
-            setHasMore(true);
+            // setAllPlayers([]);
+            // setHasMore(true);
         }, 300);
 
         return () => clearTimeout(timer);

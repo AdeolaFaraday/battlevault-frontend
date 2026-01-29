@@ -36,6 +36,8 @@ const LeaderboardScreen = () => {
 
     const topThree = players.slice(0, 3);
 
+    console.log({ players, topThree, loading, hasMore })
+
     return (
         <div className="min-h-screen bg-[#1a1d2e] font-sans pb-32">
             <Header />
@@ -176,7 +178,7 @@ const LeaderboardScreen = () => {
                                 <AnimatePresence mode="popLayout">
                                     {players.map((player, index) => (
                                         // Skip top 3 in list if they are in podium and search is empty
-                                        (!debouncedSearch && index < 3) ? null : (
+                                        (!debouncedSearch && players.length >= 3 && index < 3) ? null : (
                                             <LeaderboardCard
                                                 key={player._id}
                                                 player={player}
