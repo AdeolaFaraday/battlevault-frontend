@@ -4,6 +4,8 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Trophy, TrendingDown, Clock, Wallet } from 'lucide-react';
 import { cn } from '../../../lib/utils';
+import { useAppSelector } from '../../../lib/redux/hooks';
+import { RootState } from '@/src/lib/redux/store';
 
 interface MatchHistoryCardProps {
 	game: string;
@@ -14,6 +16,7 @@ interface MatchHistoryCardProps {
 	earnings?: string;
 	playerCount?: number;
 	delay?: number;
+	winner?: string;
 }
 
 const MatchHistoryCard = ({
@@ -24,9 +27,11 @@ const MatchHistoryCard = ({
 	stake,
 	earnings,
 	playerCount,
-	delay = 0
+	delay = 0,
+	winner
 }: MatchHistoryCardProps) => {
-	const isWin = status === 'WIN';
+	const currentUser = useAppSelector((state: RootState) => state.auth.loggedInUserDetails);
+	const isWin = winner === currentUser?._id;
 
 	return (
 		<motion.div

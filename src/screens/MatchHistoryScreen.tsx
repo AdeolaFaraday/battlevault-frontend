@@ -107,7 +107,7 @@ const MatchHistoryScreen = () => {
 						>
 							<div className="space-y-3">
 								{games.map((game, index) => {
-									const created = new Date(game.createdAt);
+									const created = new Date(+game?.createdAt);
 									const date = created.toLocaleDateString(undefined, {
 										month: 'short',
 										day: '2-digit',
@@ -126,6 +126,7 @@ const MatchHistoryScreen = () => {
 											date={date}
 											time={time}
 											delay={0.1 + index * 0.03}
+											winner={game.winner}
 										/>
 									);
 								})}

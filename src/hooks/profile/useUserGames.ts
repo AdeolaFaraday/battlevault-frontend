@@ -9,6 +9,7 @@ export interface UserGame {
 	name: string;
 	type: string;
 	status: string;
+	winner?: string;
 	startDate?: string | null;
 	createdAt: string;
 	updatedAt: string;
