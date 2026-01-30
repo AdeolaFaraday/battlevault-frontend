@@ -216,7 +216,8 @@ const useBackendLudoAction = ({ color }: { color?: string }) => {
         setActiveDiceConfig: handleSelectDice,
         syncToFirestore,
         findActiveTokens,
-        findBgColor: cellColors.find(c => c.color === color)
+        findBgColor: cellColors.find(c => c.color === color),
+        userColors: gameState.players?.find(p => p.id === currentUser?._id)?.tokens || []
     };
 };
 

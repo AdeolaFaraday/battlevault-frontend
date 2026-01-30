@@ -15,6 +15,8 @@ type LudoPathProps = {
     middlePathNumbers: number[]
     startPathNumber: number
     handleTokenDrop: (token: Token, position?: number) => void
+    canMoveTokens: boolean
+    userColors: string[]
 }
 
 const LudoPath = memo(({
@@ -27,7 +29,9 @@ const LudoPath = memo(({
     middlePathNumbers = [],
     startPathNumber,
     tokensByCell,
-    handleTokenDrop
+    handleTokenDrop,
+    canMoveTokens,
+    userColors
 }: LudoPathProps) => {
     const findBgColor = cellColors?.find((data) => data?.color === color)
 
@@ -42,6 +46,8 @@ const LudoPath = memo(({
                         number={number}
                         style={{ backgroundColor: number === startPathNumber ? findBgColor?.style : "transparent" }}
                         handleTokenDrop={handleTokenDrop}
+                        canMoveTokens={canMoveTokens}
+                        userColors={userColors}
                     />
                 ))}
             </div>
@@ -57,6 +63,8 @@ const LudoPath = memo(({
                             number={number}
                             style={{ backgroundColor: !isEntryCell ? findBgColor?.style : "transparent" }}
                             handleTokenDrop={handleTokenDrop}
+                            canMoveTokens={canMoveTokens}
+                            userColors={userColors}
                         />
                     );
                 })}
@@ -70,6 +78,8 @@ const LudoPath = memo(({
                         number={number}
                         style={{ backgroundColor: number === startPathNumber ? findBgColor?.style : "transparent" }}
                         handleTokenDrop={handleTokenDrop}
+                        canMoveTokens={canMoveTokens}
+                        userColors={userColors}
                     />
                 ))}
             </div>
