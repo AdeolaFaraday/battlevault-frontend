@@ -55,6 +55,7 @@ export const GET_UPCOMING_GAMES = gql`
             currentTurn
             status
             diceValue
+            startDate
             createdAt
           }
         }
