@@ -17,8 +17,8 @@ export interface Game {
     diceValue: number[];
     isRolling: boolean;
     status: string;
-    createdAt?: string;
-    updatedAt?: string;
+    createdAt: string;
+    updatedAt: string;
 }
 
 export interface UseGameSessionProps {

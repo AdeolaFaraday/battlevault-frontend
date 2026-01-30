@@ -28,9 +28,9 @@ const GameCard = ({ game, onClick, className }: GameCardProps) => {
                     </h4>
                     <div className="flex items-center gap-3 text-xs text-slate-400">
                         <span className="bg-indigo-500/10 text-indigo-400 px-2 py-0.5 rounded">
-                            {safeFormat(game.createdAt, 'EEE')}
+                            {safeFormat(+game.createdAt, 'EEE')}
                         </span>
-                        <span>{safeFormat(game.createdAt, 'h:mm a')}</span>
+                        <span>{safeFormat(+game.createdAt, 'h:mm a')}</span>
                     </div>
                 </div>
                 <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-indigo-500 group-hover:text-white transition-all text-slate-500">

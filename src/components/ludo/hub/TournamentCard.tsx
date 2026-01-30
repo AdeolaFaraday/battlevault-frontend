@@ -27,7 +27,7 @@ const TournamentCard = ({ tournament, variant = 'compact', className }: Tourname
     const isRegistered = React.useMemo(() => {
         if (isRegisteredFromAPI) return true;
         if (!currentUser || !tournament.registeredUsers) return false;
-        return tournament.registeredUsers.some(user => user._id === currentUser._id);
+        return tournament.registeredUsers?.some(user => user._id === currentUser._id);
     }, [currentUser, tournament.registeredUsers, isRegisteredFromAPI]);
 
     // Prize pool formatting

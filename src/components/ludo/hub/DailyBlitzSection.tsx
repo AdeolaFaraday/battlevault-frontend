@@ -1,20 +1,52 @@
 "use client";
 
 import React from 'react';
-import { Zap, ArrowRight } from 'lucide-react';
+import { Zap, ArrowRight, CheckCircle2, Trophy, Flame, Target, Star } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const DailyBlitzSection = () => {
-    // Mock data for the Daily Blitz
-    const blitzData = {
-        title: "Daily Blitz Royale",
-        prize: "₦250,000",
-        entryFee: "₦1,000",
-        startTime: "8:00 PM",
-        playersJoined: 245,
-        maxPlayers: 500,
-        description: "High stakes, 2x speed, winner takes all. The ultimate test of your Ludo skills."
+    // Mock data for Daily Missions & Streaks
+    const streakData = {
+        count: 5,
+        nextReward: "500 Coins",
+        progress: 75
     };
+
+    const missions = [
+        {
+            id: 1,
+            title: "Daily Check-in",
+            description: "Log in to claim your daily bonus",
+            reward: "100 Coins",
+            progress: 1,
+            total: 1,
+            completed: true,
+            claimed: true,
+            icon: <Star className="w-5 h-5 text-yellow-500" />
+        },
+        {
+            id: 2,
+            title: "Win 1 Match",
+            description: "Win any Ludo match today",
+            reward: "250 Coins",
+            progress: 0,
+            total: 1,
+            completed: false,
+            claimed: false,
+            icon: <Trophy className="w-5 h-5 text-purple-500" />
+        },
+        {
+            id: 3,
+            title: "Play 3 Matches",
+            description: "Participate in 3 games",
+            reward: "500 Coins",
+            progress: 1,
+            total: 3,
+            completed: false,
+            claimed: false,
+            icon: <Target className="w-5 h-5 text-blue-500" />
+        }
+    ];
 
     return (
         <section className="w-full space-y-4">
@@ -23,68 +55,110 @@ const DailyBlitzSection = () => {
                     <Zap className="w-5 h-5 text-yellow-400 fill-yellow-400" />
                     Daily Blitz
                 </h3>
-                <span className="text-[10px] font-black uppercase tracking-widest text-yellow-500 bg-yellow-500/10 px-2 py-1 rounded-full border border-yellow-500/20 animate-pulse">
-                    Live in 2h 14m
-                </span>
+                <div className="flex items-center gap-2 bg-orange-500/10 border border-orange-500/20 px-3 py-1 rounded-full">
+                    <Flame size={14} className="text-orange-500 fill-orange-500" />
+                    <span className="text-[10px] font-black uppercase tracking-widest text-orange-500">
+                        {streakData.count} Day Streak
+                    </span>
+                </div>
             </div>
 
             <motion.div
-                whileHover={{ scale: 1.01 }}
-                className="relative w-full bg-gradient-to-br from-[#2d1b4e] via-[#1a1d2e] to-[#1a1d2e] border border-purple-500/30 rounded-3xl p-6 overflow-hidden group shadow-2xl shadow-purple-900/20"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="relative w-full bg-gradient-to-br from-[#2d1b4e] via-[#1a1d2e] to-[#1a1d2e] border border-white/5 rounded-3xl p-6 overflow-hidden group shadow-2xl"
             >
-                {/* Background Decorative Elements */}
-                <div className="absolute -right-10 -top-10 w-40 h-40 bg-purple-600/10 blur-[80px] rounded-full group-hover:bg-purple-600/20 transition-all duration-700" />
-                <div className="absolute -left-10 -bottom-10 w-40 h-40 bg-blue-600/10 blur-[80px] rounded-full group-hover:bg-blue-600/20 transition-all duration-700" />
+                {/* Background Glows */}
+                <div className="absolute -right-20 -top-20 w-64 h-64 bg-purple-600/10 blur-[100px] rounded-full group-hover:bg-purple-600/20 transition-all duration-700" />
+                <div className="absolute -left-20 -bottom-20 w-64 h-64 bg-blue-600/10 blur-[100px] rounded-full group-hover:bg-blue-600/20 transition-all duration-700" />
 
-                <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-8">
-                    <div className="space-y-4 max-w-xl">
-                        <div className="flex items-center gap-3">
-                            <div className="w-12 h-12 bg-yellow-500 rounded-2xl flex items-center justify-center shadow-lg shadow-yellow-500/20 group-hover:rotate-12 transition-transform duration-500">
-                                <Zap size={24} className="text-black fill-black" />
+                <div className="relative z-10 grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    {/* Left: Streak & Main Action */}
+                    <div className="lg:col-span-1 space-y-6 flex flex-col justify-center">
+                        <div className="space-y-2">
+                            <h4 className="text-sm font-bold text-slate-400 uppercase tracking-widest">Your Progress</h4>
+                            <div className="flex items-baseline gap-2">
+                                <span className="text-4xl font-black text-white">{streakData.progress}%</span>
+                                <span className="text-xs text-slate-500 font-medium">to next reward</span>
                             </div>
-                            <div>
-                                <h4 className="text-2xl font-black text-white tracking-tight uppercase italic underline decoration-yellow-500/50 underline-offset-4">
-                                    {blitzData.title}
-                                </h4>
-                                <p className="text-slate-400 text-sm font-medium mt-1">
-                                    {blitzData.description}
-                                </p>
-                            </div>
-                        </div>
-
-                        <div className="flex flex-wrap gap-4">
-                            <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl px-4 py-3 min-w-[120px]">
-                                <span className="block text-[10px] text-slate-500 uppercase font-bold tracking-wider mb-1">Prize Pool</span>
-                                <span className="text-xl font-black text-white">{blitzData.prize}</span>
-                            </div>
-                            <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl px-4 py-3 min-w-[100px]">
-                                <span className="block text-[10px] text-slate-500 uppercase font-bold tracking-wider mb-1">Entry Fee</span>
-                                <span className="text-xl font-black text-yellow-500">{blitzData.entryFee}</span>
-                            </div>
-                            <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl px-4 py-3 min-w-[100px]">
-                                <span className="block text-[10px] text-slate-500 uppercase font-bold tracking-wider mb-1">Starts At</span>
-                                <span className="text-xl font-black text-blue-400">{blitzData.startTime}</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="flex flex-col gap-4 min-w-[240px]">
-                        <div className="bg-black/40 rounded-2xl p-4 border border-white/5">
-                            <div className="flex justify-between items-center mb-2">
-                                <span className="text-xs font-bold text-slate-400 uppercase tracking-wide">Capacity</span>
-                                <span className="text-xs font-black text-white">{blitzData.playersJoined}/{blitzData.maxPlayers}</span>
-                            </div>
-                            <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden">
-                                <div
-                                    className="h-full bg-gradient-to-r from-purple-500 to-blue-500 rounded-full"
-                                    style={{ width: `${(blitzData.playersJoined / blitzData.maxPlayers) * 100}%` }}
+                            <div className="w-full h-2.5 bg-white/5 rounded-full overflow-hidden p-0.5 border border-white/5">
+                                <motion.div
+                                    initial={{ width: 0 }}
+                                    animate={{ width: `${streakData.progress}%` }}
+                                    transition={{ duration: 1, ease: "easeOut" }}
+                                    className="h-full bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500 rounded-full shadow-[0_0_15px_rgba(245,158,11,0.5)]"
                                 />
                             </div>
                         </div>
 
-                        <button className="w-full py-4 bg-white text-black font-black rounded-2xl text-sm uppercase tracking-wider hover:bg-yellow-500 hover:text-black transition-all shadow-xl active:scale-95 flex items-center justify-center gap-2">
-                            Join the Blitz <ArrowRight size={18} />
+                        <div className="p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
+                            <p className="text-xs text-slate-400 mb-1">Next Reward</p>
+                            <p className="text-lg font-black text-yellow-500 flex items-center gap-2">
+                                <Star size={18} className="fill-yellow-500" />
+                                {streakData.nextReward}
+                            </p>
+                        </div>
+
+                        <button className="w-full py-4 bg-white text-black font-black rounded-2xl text-sm uppercase tracking-wider hover:bg-yellow-500 transition-all shadow-xl active:scale-95 flex items-center justify-center gap-2 group-button">
+                            Complete Missions <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
                         </button>
+                    </div>
+
+                    {/* Right: Missions List */}
+                    <div className="lg:col-span-2 space-y-3">
+                        {missions.map((mission, index) => (
+                            <motion.div
+                                key={mission.id}
+                                initial={{ opacity: 0, x: 20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: index * 0.1 }}
+                                className={`relative p-4 rounded-2xl border transition-all duration-300 ${mission.completed
+                                        ? 'bg-emerald-500/5 border-emerald-500/20'
+                                        : 'bg-black/20 border-white/5 hover:border-white/10'
+                                    }`}
+                            >
+                                <div className="flex items-center gap-4">
+                                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${mission.completed ? 'bg-emerald-500/20' : 'bg-white/5'
+                                        }`}>
+                                        {mission.completed ? <CheckCircle2 className="text-emerald-500" size={24} /> : mission.icon}
+                                    </div>
+
+                                    <div className="flex-1 min-w-0">
+                                        <div className="flex justify-between items-start mb-1">
+                                            <h5 className={`font-bold text-sm md:text-base truncate ${mission.completed ? 'text-emerald-400' : 'text-white'}`}>
+                                                {mission.title}
+                                            </h5>
+                                            <span className="text-[10px] font-black text-yellow-500 bg-yellow-500/10 px-2 py-0.5 rounded-full border border-yellow-500/20">
+                                                {mission.reward}
+                                            </span>
+                                        </div>
+                                        <p className="text-xs text-slate-500 truncate mb-2">{mission.description}</p>
+
+                                        <div className="flex items-center gap-3">
+                                            <div className="flex-1 h-1 bg-white/5 rounded-full overflow-hidden">
+                                                <div
+                                                    className={`h-full rounded-full ${mission.completed ? 'bg-emerald-500' : 'bg-blue-500'}`}
+                                                    style={{ width: `${(mission.progress / mission.total) * 100}%` }}
+                                                />
+                                            </div>
+                                            <span className="text-[10px] font-bold text-slate-400 whitespace-nowrap">
+                                                {mission.progress}/{mission.total}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    {mission.completed && !mission.claimed ? (
+                                        <button className="px-4 py-2 bg-emerald-500 text-black text-[10px] font-black rounded-lg uppercase hover:bg-emerald-400 transition-colors">
+                                            Claim
+                                        </button>
+                                    ) : mission.claimed ? (
+                                        <div className="px-3 py-1 bg-emerald-500/10 rounded-lg">
+                                            <span className="text-[10px] font-black text-emerald-500 uppercase">Claimed</span>
+                                        </div>
+                                    ) : null}
+                                </div>
+                            </motion.div>
+                        ))}
                     </div>
                 </div>
             </motion.div>
@@ -93,3 +167,4 @@ const DailyBlitzSection = () => {
 };
 
 export default DailyBlitzSection;
+
