@@ -85,7 +85,7 @@ const UpcomingGamesSection = ({
                 <Calendar className="w-5 h-5 text-indigo-400" />
                 Upcoming Games
             </h3>
-            {showViewAll && data?.getUpcomingGames?.data?.games?.length > 2 && (
+            {showViewAll && data?.getUpcomingGames?.data?.games?.length > 1 && (
                 <button
                     onClick={() => router.push('/arena')}
                     className="text-sm text-indigo-400 font-medium hover:text-indigo-300 transition-colors flex items-center gap-1"

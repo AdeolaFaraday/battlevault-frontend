@@ -40,7 +40,7 @@ const GameHubScreen = () => {
                             <TournamentsSection />
                         </section>
                         <section>
-                            <UpcomingGamesSection limit={5} />
+                            <UpcomingGamesSection limit={2} />
                         </section>
                         {/* TODO: Daily Blitz (Coming soon) */}
                         <section>

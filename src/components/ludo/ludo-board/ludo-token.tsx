@@ -8,6 +8,7 @@ type LudoTokenProps = {
     homeActive?: boolean
     onClick?: (e: React.MouseEvent) => void
     disableAnim?: boolean // New prop
+    shouldPulse?: boolean
 } & Token
 
 const LudoToken = memo(({
@@ -18,7 +19,8 @@ const LudoToken = memo(({
     // position,
     isInHomeColumn,
     onClick,
-    disableAnim
+    disableAnim,
+    shouldPulse
 }: LudoTokenProps) => {
     // onClick is passed but not currently used in this component
     const findBgColor = cellColors?.find((data) => data?.color === color)
@@ -37,10 +39,37 @@ const LudoToken = memo(({
                 backgroundColor: findBgColor?.style,
                 willChange: "transform",
             }}
+            animate={shouldPulse ? {
+                scale: [1, 1.15, 1],
+                boxShadow: [
+                    "0 0 0px rgba(255,255,255,0)",
+                    "0 0 20px rgba(255,255,255,0.8)",
+                    "0 0 0px rgba(255,255,255,0)"
+                ]
+            } : {
+                scale: 1,
+                boxShadow: "0 0 0px rgba(255,255,255,0)"
+            }}
             transition={{
-                type: "tween",
-                ease: "linear",
-                duration: 0.2
+                layout: {
+                    type: "tween",
+                    ease: "linear",
+                    duration: 0.2
+                },
+                scale: shouldPulse ? {
+                    duration: 1.5,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                } : {
+                    duration: 0.2
+                },
+                boxShadow: shouldPulse ? {
+                    duration: 1.5,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                } : {
+                    duration: 0.2
+                }
             }}
             onClick={(e) => {
                 e.stopPropagation();

@@ -8,12 +8,16 @@ const LudoHomeColumn = memo(({
     customClassName,
     color,
     token,
-    handleTokenClick
+    handleTokenClick,
+    canMoveTokens,
+    userColors
 }: {
     customClassName?: string
     color: string
     token: Token[]
     handleTokenClick: (token: Token) => void
+    canMoveTokens: boolean
+    userColors: string[]
 }) => {
     return <div className={clsx("ludo-home__column", customClassName)}>
         <div className="ludo-token__container">
@@ -27,6 +31,7 @@ const LudoHomeColumn = memo(({
                         key={`${color}-${data.sn}`}
                         color={color}
                         onClick={() => handleTokenClick(data)}
+                        shouldPulse={canMoveTokens && userColors.includes(color)}
                     />
                 ))}
             </div>
@@ -37,6 +42,8 @@ const LudoHomeColumn = memo(({
         prevProps.color === nextProps.color &&
         prevProps.customClassName === nextProps.customClassName &&
         prevProps.handleTokenClick === nextProps.handleTokenClick &&
+        prevProps.canMoveTokens === nextProps.canMoveTokens &&
+        prevProps.userColors.join(",") === nextProps.userColors.join(",") &&
         prevProps.token?.length === nextProps.token?.length &&
         (prevProps.token || []).every((t, i) =>
             t.color === nextProps.token[i].color &&

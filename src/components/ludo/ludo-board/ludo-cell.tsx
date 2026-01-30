@@ -10,6 +10,8 @@ type LudoCellProps = {
     style?: CSSProperties
     customCellClassName?: string
     handleTokenDrop: (token: Token, position?: number) => void
+    canMoveTokens: boolean
+    userColors: string[]
 }
 
 const LudoCell = memo(({
@@ -18,6 +20,8 @@ const LudoCell = memo(({
     number,
     style,
     handleTokenDrop,
+    canMoveTokens,
+    userColors
 }: LudoCellProps) => {
     const [isSelectorOpen, setIsSelectorOpen] = useState(false);
     const selectorRef = useRef<HTMLDivElement>(null);
@@ -72,6 +76,7 @@ const LudoCell = memo(({
                         if (e) e.stopPropagation();
                         handleCellClick(e as unknown as React.MouseEvent, data);
                     }}
+                    shouldPulse={canMoveTokens && userColors.includes(data.color)}
                 />
             ))}
 
@@ -118,6 +123,8 @@ const LudoCell = memo(({
     return (
         prevProps.number === nextProps.number &&
         prevProps.handleTokenDrop === nextProps.handleTokenDrop &&
+        prevProps.canMoveTokens === nextProps.canMoveTokens &&
+        prevProps.userColors.join(",") === nextProps.userColors.join(",") &&
         prevProps.cellTokens.length === nextProps.cellTokens.length &&
         prevProps.cellTokens.every((t, i) =>
             t.color === nextProps.cellTokens[i].color &&

@@ -34,7 +34,8 @@ const LudoBoard = ({ id }: { id: string }) => {
         handleTokenClick,
         handleDiceRoll,
         currentUserId,
-        recentlyFinishedToken
+        recentlyFinishedToken,
+        userColors
     } = useLudoAction({})
 
     const handleCustomDiceRoll = () => {
@@ -42,6 +43,8 @@ const LudoBoard = ({ id }: { id: string }) => {
             handleDiceRoll();
         }
     };
+
+    const canMoveTokens = isCurrentTurn && gameState.status === "playingToken";
 
     const availableDice = [...(gameState?.diceValue || [])];
     usedDiceValues.forEach(val => {
@@ -105,6 +108,8 @@ const LudoBoard = ({ id }: { id: string }) => {
                             customClassName="column-1"
                             token={tokens.red}
                             handleTokenClick={handleTokenClick}
+                            canMoveTokens={canMoveTokens}
+                            userColors={userColors}
                         />
                         <LudoPath
                             startPathNumbers={generatePathNumberArray(7).reverse()}
@@ -114,12 +119,16 @@ const LudoBoard = ({ id }: { id: string }) => {
                             handleTokenDrop={handleTokenClick}
                             color="green"
                             tokensByCell={tokensByCell}
+                            canMoveTokens={canMoveTokens}
+                            userColors={userColors}
                         />
                         <LudoHomeColumn
                             color="green"
                             customClassName="column-2"
                             token={tokens.green}
                             handleTokenClick={handleTokenClick}
+                            canMoveTokens={canMoveTokens}
+                            userColors={userColors}
                         />
                     </div>
                     <span className="ludo-column__center">
@@ -133,6 +142,8 @@ const LudoBoard = ({ id }: { id: string }) => {
                             customClassName="ludo-cell__vertial"
                             customRowClassName="ludo-row"
                             tokensByCell={tokensByCell}
+                            canMoveTokens={canMoveTokens}
+                            userColors={userColors}
                         />
                         <div className="ludo-center">
                             <div className="clip-triangle-tl" />
@@ -150,6 +161,8 @@ const LudoBoard = ({ id }: { id: string }) => {
                             customClassName="ludo-cell__vertial"
                             customRowClassName="ludo-row"
                             tokensByCell={tokensByCell}
+                            canMoveTokens={canMoveTokens}
+                            userColors={userColors}
                         />
                     </span>
                     <div>
@@ -158,6 +171,8 @@ const LudoBoard = ({ id }: { id: string }) => {
                             customClassName="column-3"
                             token={tokens.blue}
                             handleTokenClick={handleTokenClick}
+                            canMoveTokens={canMoveTokens}
+                            userColors={userColors}
                         />
                         <LudoPath
                             startPathNumbers={generatePathNumberArray(40).reverse()}
@@ -167,12 +182,16 @@ const LudoBoard = ({ id }: { id: string }) => {
                             startPathNumber={41}
                             color="blue"
                             tokensByCell={tokensByCell}
+                            canMoveTokens={canMoveTokens}
+                            userColors={userColors}
                         />
                         <LudoHomeColumn
                             handleTokenClick={handleTokenClick}
                             token={tokens.yellow}
                             color="yellow"
                             customClassName="column-4"
+                            canMoveTokens={canMoveTokens}
+                            userColors={userColors}
                         />
                     </div>
                 </div>
