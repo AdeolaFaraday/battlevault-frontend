@@ -124,3 +124,13 @@ export const CREATE_FREE_GAME_MUTATION = gql`
     }
   }
 `;
+
+export const REGISTER_FOR_TOURNAMENT_MUTATION = gql`
+  mutation RegisterForTournament($tournamentId: ID!) {
+    registerForTournament(tournamentId: $tournamentId) {
+      statusCode
+      success
+      message
+    }
+  }
+`;
