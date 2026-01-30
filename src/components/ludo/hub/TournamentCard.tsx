@@ -5,6 +5,12 @@ import { Trophy, Clock, Users } from 'lucide-react';
 import { safeFormat } from '../../../utils/date-utils';
 import { Tournament } from '@/src/constants/game';
 import { cn } from '../../../lib/utils';
+import { useRegisterForTournament } from '@/src/hooks/ludo/useRegisterForTournament';
+import { useTournamentRegistration } from '@/src/hooks/ludo/useTournamentRegistration';
+import { useAppSelector } from '@/src/lib/redux/hooks';
+import { RootState } from '@/src/lib/redux/store';
+import { Loader2, ExternalLink } from 'lucide-react';
+import Link from 'next/link';
 
 interface TournamentCardProps {
     tournament: Tournament;
@@ -13,10 +19,29 @@ interface TournamentCardProps {
 }
 
 const TournamentCard = ({ tournament, variant = 'compact', className }: TournamentCardProps) => {
+    const { register, loading: registering } = useRegisterForTournament();
+    const { isRegistered: isRegisteredFromAPI, loading: checkingRegistration, refetch } = useTournamentRegistration(tournament._id);
+    const currentUser = useAppSelector((state: RootState) => state.auth.loggedInUserDetails);
+
+    // Prefer API status if available, fallback to local registeredUsers list
+    const isRegistered = React.useMemo(() => {
+        if (isRegisteredFromAPI) return true;
+        if (!currentUser || !tournament.registeredUsers) return false;
+        return tournament.registeredUsers.some(user => user._id === currentUser._id);
+    }, [currentUser, tournament.registeredUsers, isRegisteredFromAPI]);
+
     // Prize pool formatting
     const formattedPrize = typeof tournament.prize === 'number'
         ? `₦${tournament.prize.toLocaleString()}`
         : tournament.prize;
+
+    const handleRegister = async (e: React.MouseEvent) => {
+        e.stopPropagation();
+        if (isRegistered || registering) return;
+        await register(tournament._id);
+        // Refetch registration status after successful registration
+        if (refetch) await refetch();
+    };
 
     if (variant === 'full') {
         const isLive = tournament.status?.toUpperCase() === 'LIVE';
@@ -60,14 +85,36 @@ const TournamentCard = ({ tournament, variant = 'compact', className }: Tourname
                             <div className="flex flex-col items-center">
                                 <span className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
                                     <Clock size={16} className="text-amber-400" />
-                                    {safeFormat(tournament.startDate, 'MMM d, h:mm a')}
+                                    {safeFormat(+tournament.startDate, 'MMM d, h:mm a')}
                                 </span>
                             </div>
                         </div>
 
-                        <button className="w-full py-3 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-white font-bold rounded-xl shadow-lg shadow-orange-500/20 transition-all text-xs uppercase tracking-widest active:scale-95">
-                            Register Now
-                        </button>
+                        <div className="grid grid-cols-2 gap-2">
+                            <button
+                                onClick={handleRegister}
+                                disabled={registering || isRegistered || checkingRegistration}
+                                className={cn(
+                                    "py-3 text-white font-bold rounded-xl shadow-lg transition-all text-[10px] uppercase tracking-widest active:scale-95 flex items-center justify-center gap-2",
+                                    isRegistered
+                                        ? "bg-emerald-600 cursor-default"
+                                        : "bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 shadow-orange-500/20",
+                                    (registering || checkingRegistration) && "opacity-80 cursor-not-allowed"
+                                )}
+                            >
+                                {registering && <Loader2 size={14} className="animate-spin" />}
+                                {isRegistered ? 'Registered' : registering ? 'Joining...' : 'Register'}
+                            </button>
+
+                            <Link
+                                href={`/ludo-hub/tournament/${tournament._id}/bracket`}
+                                className="py-3 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-bold rounded-xl transition-all text-[10px] uppercase tracking-widest active:scale-95 flex items-center justify-center gap-2"
+                                onClick={(e) => e.stopPropagation()}
+                            >
+                                <ExternalLink size={14} />
+                                Bracket
+                            </Link>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -92,9 +139,30 @@ const TournamentCard = ({ tournament, variant = 'compact', className }: Tourname
                     </div>
                 </div>
             </div>
-            <button className="px-4 py-2 border border-blue-500/50 text-blue-400 hover:bg-blue-500 hover:text-white rounded-lg text-xs font-bold transition-all active:scale-95">
-                View
-            </button>
+            <div className="flex items-center gap-2">
+                <Link
+                    href={`/ludo-hub/tournament/${tournament._id}/bracket`}
+                    className="p-2 border border-white/10 text-slate-300 hover:text-white hover:bg-white/5 rounded-lg transition-all"
+                    title="View Bracket"
+                    onClick={(e) => e.stopPropagation()}
+                >
+                    <ExternalLink size={16} />
+                </Link>
+                <button
+                    onClick={handleRegister}
+                    disabled={registering || isRegistered || checkingRegistration}
+                    className={cn(
+                        "px-4 py-2 border rounded-lg text-xs font-bold transition-all active:scale-95 flex items-center justify-center gap-2",
+                        isRegistered
+                            ? "border-emerald-500/50 text-emerald-400 bg-emerald-500/10 cursor-default"
+                            : "border-blue-500/50 text-blue-400 hover:bg-blue-500 hover:text-white",
+                        (registering || checkingRegistration) && "opacity-80 cursor-not-allowed"
+                    )}
+                >
+                    {(registering || checkingRegistration) && <Loader2 size={12} className="animate-spin" />}
+                    {isRegistered ? 'Registered' : registering ? 'Joining...' : 'Register'}
+                </button>
+            </div>
         </div>
     );
 };

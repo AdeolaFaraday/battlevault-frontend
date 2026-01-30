@@ -172,3 +172,54 @@ export const GET_USER_STATS = gql`
     }
   }
 `;
+
+export const GET_TOURNAMENT_BRACKET = gql`
+  query GetTournamentBracket($tournamentId: ID!) {
+    getTournamentBracket(tournamentId: $tournamentId) {
+      statusCode
+      success
+      message
+      data {
+        __typename
+        ... on TournamentBracket {
+          tournament {
+            _id
+            title
+          }
+          stages {
+            _id
+            name
+            index
+            games {
+              _id
+              name
+              status
+              players {
+                id
+                name
+                color
+                tokens
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const IS_USER_REGISTERED = gql`
+  query IsUserRegistered($tournamentId: ID!) {
+    isUserRegistered(tournamentId: $tournamentId) {
+      statusCode
+      success
+      message
+      data {
+        __typename
+        ... on TournamentRegistration {
+          isRegistered
+        }
+      }
+    }
+  }
+`;
