@@ -1,9 +1,9 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAlert } from '../common/useAlert';
 import useUserSignIn from '@/src/api/auth/useUserSignin';
 import { auth, googleAuthProvider } from '@/src/lib/firebase';
-import { signInWithRedirect, getRedirectResult } from 'firebase/auth';
+import { signInWithPopup, UserCredential } from 'firebase/auth';
 import useSocialAuth from '@/src/api/auth/useSocialAuth';
 import { useAppDispatch } from '@/src/lib/redux/hooks';
 import { setLoggedInUserDetails } from '@/src/lib/redux/authSlice';
@@ -75,62 +75,16 @@ const useSignIn = () => {
         }
     );
 
-    const redirectResultProcessed = useRef(false);
-
-    useEffect(() => {
-        const handleRedirectResult = async () => {
-            if (redirectResultProcessed.current) return;
-
-            try {
-                console.log("handleRedirectResult");
-                const result = await getRedirectResult(auth);
-                console.log("handleRedirectResult result", result);
-                if (result) {
-                    redirectResultProcessed.current = true;
-                    console.log("handleRedirectResult result found, processing...");
-                    setGoogleLoading(true);
-                    const token = await result.user.getIdToken();
-                    if (token) {
-                        socialAuth({ token });
-                    }
-                }
-            } catch (error: unknown) {
-                console.log({ googleRedirectError: error });
-                setGoogleLoading(false);
-            }
-        };
-
-        handleRedirectResult();
-    }, [socialAuth]);
-
-    const handGoogleSignIn = async () => {
+    const handGoogleSignIn = () => {
         setGoogleLoading(true);
-        try {
-            // Force Google to re-prompt account chooser by signing out first
-            await auth.signOut();
-
-            googleAuthProvider.setCustomParameters({
-                prompt: "select_account"
+        signInWithPopup(auth, googleAuthProvider).then((data: UserCredential) => {
+            data.user?.getIdToken().then((token) => {
+                socialAuth({ token });
             });
-
-            // Implement sign in with redirect
-            await signInWithRedirect(auth, googleAuthProvider);
-
-            /* 
-            // Previous Popup Implementation
-            signInWithPopup(auth, googleAuthProvider).then((data: UserCredential) => {
-                data.user?.getIdToken().then((token) => {
-                    socialAuth({ token });
-                });
-            }).catch((error) => {
-                console.log({ error });
-                setGoogleLoading(false);
-            });
-            */
-        } catch (error: unknown) {
+        }).catch((error) => {
             console.log({ error });
             setGoogleLoading(false);
-        }
+        });
     };
 
     const { login, loading } = useUserSignIn(
