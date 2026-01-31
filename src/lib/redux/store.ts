@@ -12,9 +12,11 @@ import {
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import authReducer from './authSlice';
+import gameReducer from './slices/gameSlice';
 
 const appReducer = combineReducers({
   auth: authReducer,
+  game: gameReducer,
 })
 
 const rootReducer = (state: ReturnType<typeof appReducer> | undefined, action: AnyAction) => {

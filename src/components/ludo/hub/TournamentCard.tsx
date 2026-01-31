@@ -31,9 +31,9 @@ const TournamentCard = ({ tournament, variant = 'compact', className }: Tourname
     }, [currentUser, tournament.registeredUsers, isRegisteredFromAPI]);
 
     // Prize pool formatting
-    const formattedPrize = typeof tournament.prize === 'number'
-        ? `₦${tournament.prize.toLocaleString()}`
-        : tournament.prize;
+    const formattedPrize = typeof tournament.prize?.amount === 'number'
+        ? `₦${tournament.prize.amount.toLocaleString()}`
+        : tournament.prize?.amount;
 
     const handleRegister = async (e: React.MouseEvent) => {
         e.stopPropagation();

@@ -18,7 +18,13 @@ const GuestNameModal: React.FC<GuestNameModalProps> = ({ isOpen, gameId }) => {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (name.trim()) {
-            dispatch(setGuestUser({ name: name.trim(), gameId }));
+            // Generate or retrieve guest user ID
+            let guestId = localStorage.getItem('ludo_guest_user_id');
+            if (!guestId) {
+                guestId = crypto.randomUUID();
+                localStorage.setItem('ludo_guest_user_id', guestId);
+            }
+            dispatch(setGuestUser({ name: name.trim(), gameId, userId: guestId }));
         }
     };
 
