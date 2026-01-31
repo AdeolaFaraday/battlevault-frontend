@@ -2,9 +2,11 @@
 import React, { useState } from 'react';
 import { Plus, Search } from 'lucide-react';
 import CreateGameModal from './CreateGameModal';
+import JoinGameModal from './JoinGameModal';
 
 const QuickActions = () => {
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+    const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
 
     return (
         <>
@@ -31,13 +33,16 @@ const QuickActions = () => {
                     </div>
                 </button>
 
-                <button className="w-full bg-[#24283b] hover:bg-[#2a2e42] border border-white/5 rounded-2xl p-5 md:p-6 transition-all flex items-center gap-4 group">
+                <button
+                    onClick={() => setIsJoinModalOpen(true)}
+                    className="w-full bg-[#24283b] hover:bg-[#2a2e42] border border-white/5 rounded-2xl p-5 md:p-6 transition-all flex items-center gap-4 group"
+                >
                     <div className="w-12 h-12 rounded-full bg-slate-700/50 flex items-center justify-center text-slate-400 group-hover:text-white transition-colors">
                         <Search size={22} />
                     </div>
                     <div className="text-left">
                         <h4 className="font-bold text-lg text-slate-200 group-hover:text-white transition-colors">Join Game</h4>
-                        <p className="text-sm text-slate-500">Find an open lobby</p>
+                        <p className="text-sm text-slate-500">Enter a game link</p>
                     </div>
                 </button>
             </div>
@@ -46,8 +51,14 @@ const QuickActions = () => {
                 isOpen={isCreateModalOpen}
                 onClose={() => setIsCreateModalOpen(false)}
             />
+
+            <JoinGameModal
+                isOpen={isJoinModalOpen}
+                onClose={() => setIsJoinModalOpen(false)}
+            />
         </>
     );
 };
 
 export default QuickActions;
+
