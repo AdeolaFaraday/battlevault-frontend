@@ -97,9 +97,9 @@ const TournamentCard = ({ tournament, variant = 'compact', className }: Tourname
                                 className={cn(
                                     "py-3 text-white font-bold rounded-xl shadow-lg transition-all text-[10px] uppercase tracking-widest active:scale-95 flex items-center justify-center gap-2",
                                     isRegistered
-                                        ? "bg-emerald-600 cursor-default"
+                                        ? "bg-emerald-600/50 cursor-default"
                                         : "bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 shadow-orange-500/20",
-                                    (registering || checkingRegistration) && "opacity-80 cursor-not-allowed"
+                                    (registering || checkingRegistration) && "opacity-50 cursor-not-allowed"
                                 )}
                             >
                                 {registering && <Loader2 size={14} className="animate-spin" />}
