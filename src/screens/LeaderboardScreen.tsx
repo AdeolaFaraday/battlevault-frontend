@@ -39,12 +39,12 @@ const LeaderboardScreen = () => {
     console.log({ players, topThree, loading, hasMore })
 
     return (
-        <div className="min-h-screen bg-[#1a1d2e] font-sans pb-32">
+        <div className="min-h-screen bg-[#1a1d2e] font-sans pb-32 overflow-x-hidden">
             <Header />
 
             <BottomNav />
 
-            <main className="max-w-xl mx-auto px-4 py-8 space-y-8">
+            <main className="max-w-2xl mx-auto px-4 py-8 space-y-8 min-w-0">
                 {/* Header Section */}
                 <div className="flex items-center justify-between gap-4">
                     <div className="flex items-center gap-4">
@@ -117,12 +117,12 @@ const LeaderboardScreen = () => {
 
                 {/* Podium Layout for Top 3 (Only show if search is empty and enough results) */}
                 {!loading && !debouncedSearch && players.length >= 3 && (
-                    <div className="flex items-end justify-center gap-2 pt-8 pb-4">
+                    <div className="flex items-end justify-center gap-1 sm:gap-3 pt-8 pb-4">
                         {/* Rank 2 */}
                         <PodiumItem
                             player={topThree[1]}
                             rank={2}
-                            height="h-32"
+                            height="h-28 sm:h-32"
                             color="text-slate-400"
                             glow="shadow-slate-500/10"
                             animationDelay={0.1}
@@ -131,7 +131,7 @@ const LeaderboardScreen = () => {
                         <PodiumItem
                             player={topThree[0]}
                             rank={1}
-                            height="h-40"
+                            height="h-36 sm:h-40"
                             color="text-amber-500"
                             glow="shadow-amber-500/20"
                             animationDelay={0}
@@ -140,7 +140,7 @@ const LeaderboardScreen = () => {
                         <PodiumItem
                             player={topThree[2]}
                             rank={3}
-                            height="h-28"
+                            height="h-24 sm:h-28"
                             color="text-orange-500"
                             glow="shadow-orange-500/10"
                             animationDelay={0.2}
@@ -236,6 +236,13 @@ const PodiumItem = ({ player, rank, height, color, glow, animationDelay }: Podiu
             ? `${player.firstName} ${player.lastName}`
             : player.firstName || 'Anonymous');
 
+    // Extract a shorter name for the podium block
+    const shortName = displayName.includes(' ')
+        ? displayName.split(' ')[0]
+        : displayName.includes('@')
+            ? displayName.split('@')[0]
+            : displayName;
+
     const avatarUrl = player.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=random`;
     const winPercentage = player.winPercentage !== undefined ? player.winPercentage.toFixed(1) : '0';
 
@@ -244,13 +251,13 @@ const PodiumItem = ({ player, rank, height, color, glow, animationDelay }: Podiu
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: animationDelay, type: "spring", stiffness: 100 }}
-            className="flex flex-col items-center flex-1"
+            className="flex flex-col items-center flex-1 min-w-0"
         >
             {/* Avatar Container */}
             <div className="relative mb-4 group">
                 <div className={cn(
                     "rounded-full p-1 bg-gradient-to-b shadow-2xl transition-transform duration-500 group-hover:scale-110",
-                    rank === 1 ? "from-amber-400 to-yellow-600 w-20 h-20" : "from-slate-700 to-slate-900 w-16 h-16",
+                    rank === 1 ? "from-amber-400 to-yellow-600 w-16 h-16 sm:w-20 sm:h-20" : "from-slate-700 to-slate-900 w-12 h-12 sm:w-16 sm:h-16",
                     glow
                 )}>
                     <div className="w-full h-full rounded-full overflow-hidden border-2 border-slate-900 relative">
@@ -277,18 +284,20 @@ const PodiumItem = ({ player, rank, height, color, glow, animationDelay }: Podiu
 
             {/* Podium Block */}
             <div className={cn(
-                "w-full rounded-t-3xl flex flex-col items-center justify-between p-4 bg-gradient-to-b from-white/10 to-transparent border-t border-x border-white/5",
+                "w-full rounded-t-3xl flex flex-col items-center justify-between p-2 sm:p-4 bg-gradient-to-b from-white/10 to-transparent border-t border-x border-white/5",
                 height,
                 rank === 1 && "from-white/20"
             )}>
-                <div className="flex flex-col items-center">
-                    <span className={cn("text-2xl font-black italic", color)}>{rank}</span>
-                    <span className="text-[10px] font-black text-slate-300 uppercase truncate w-full text-center px-2">{displayName.split(' ')[0]}</span>
+                <div className="flex flex-col items-center w-full min-w-0">
+                    <span className={cn("text-xl sm:text-2xl font-black italic", color)}>{rank}</span>
+                    <span className="text-[9px] sm:text-[10px] font-black text-slate-300 uppercase truncate w-full text-center px-1">
+                        {shortName}
+                    </span>
                 </div>
 
                 <div className="flex flex-col items-center">
-                    <span className="text-white font-black text-xs italic">{winPercentage}%</span>
-                    <span className="text-[8px] text-slate-500 font-bold uppercase tracking-widest">Win Rate</span>
+                    <span className="text-white font-black text-[10px] sm:text-xs italic">{winPercentage}%</span>
+                    <span className="text-[7px] sm:text-[8px] text-slate-500 font-bold uppercase tracking-tighter sm:tracking-widest">Win Rate</span>
                 </div>
             </div>
         </motion.div>
