@@ -78,11 +78,13 @@ const useSignIn = () => {
     const handGoogleSignIn = () => {
         setGoogleLoading(true);
         signInWithPopup(auth, googleAuthProvider).then((data: UserCredential) => {
+            console.log({ googleData: data });
             data.user?.getIdToken().then((token) => {
+                console.log({ token });
                 socialAuth({ token });
             });
         }).catch((error) => {
-            console.log({ error });
+            console.log({ googleError: error });
             setGoogleLoading(false);
         });
     };
