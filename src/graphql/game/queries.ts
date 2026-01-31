@@ -14,9 +14,10 @@ export const GET_TOURNAMENTS = gql`
             title
             description
             gameType
-            entryFee
-            entryFeeCurrency
-            prize
+            prize {
+              amount
+              currency
+            }
             status
             frequency
             isPrivate

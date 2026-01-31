@@ -1,14 +1,15 @@
 import { gql } from "@apollo/client";
 
 export const JOIN_GAME_MUTATION = gql`
-  mutation JoinGame($gameId: ID!, $name: String!) {
-    joinGame(gameId: $gameId, name: $name) {
+  mutation JoinGame($gameId: ID!, $name: String!, $userId: ID) {
+    joinGame(gameId: $gameId, name: $name, userId: $userId) {
       statusCode
       success
       message
       data {
         ... on LudoGameState {
           _id
+          sessionToken
           players {
             id
             name

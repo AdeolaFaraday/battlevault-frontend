@@ -4,6 +4,8 @@ import { doc, onSnapshot } from 'firebase/firestore';
 import { firestore } from '@/src/lib/firebase';
 import { JOIN_GAME_MUTATION } from '@/src/graphql/game/mutations';
 import { LudoPlayer } from '../types/ludo';
+import { useAppDispatch } from '@/src/lib/redux/hooks';
+import { setSessionId } from '@/src/lib/redux/slices/gameSlice';
 
 export interface Game {
     _id: string;
@@ -33,7 +35,24 @@ export interface UseGameSessionProps {
 
 export const useGameSession = ({ gameId, player }: UseGameSessionProps) => {
     const [gameState, setGameState] = useState<Game | null>(null);
-    const [joinGame, { loading: joining, error: joinError }] = useMutation(JOIN_GAME_MUTATION);
+    const dispatch = useAppDispatch();
+
+    const [joinGame, { loading: joining, error: joinError }] = useMutation(JOIN_GAME_MUTATION, {
+        onCompleted: (data) => {
+            if (data?.joinGame?.success && data.joinGame.data) {
+                const gameData = data.joinGame.data;
+                // Store session token if available
+                if (gameData.sessionToken) {
+                    dispatch(setSessionId(gameData.sessionToken));
+                    // Also store in localStorage for Apollo Link access
+                    if (typeof window !== 'undefined') {
+                        localStorage.setItem('game_session_id', gameData.sessionToken);
+                    }
+                }
+                setGameState(gameData);
+            }
+        }
+    });
 
     // Use a ref to track if we've attempted to join to prevent double calling in React 18 strict mode
     const hasJoinedRef = useRef(false);
@@ -48,6 +67,7 @@ export const useGameSession = ({ gameId, player }: UseGameSessionProps) => {
                     variables: {
                         gameId,
                         name: player.name,
+                        userId: player.id // Pass the ID (UUID for guest, Auth ID for user)
                     }
                 });
 

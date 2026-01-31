@@ -32,7 +32,7 @@ export type Tournament = {
     gameType?: string;
     entryFee: number;
     entryFeeCurrency?: string;
-    prize: string | number;
+    prize: { amount: number; currency: string };
     status: string;
     frequency?: string;
     isPrivate?: boolean;
@@ -108,7 +108,7 @@ export const UpcomingTournaments: Tournament[] = [
         startDate: "2025-02-20T18:00:00Z",
         maxUsers: 32,
         entryFee: 500,
-        prize: 50000,
+        prize: { amount: 50000, currency: "NGN" },
         status: "Upcoming"
     },
     {
@@ -118,7 +118,7 @@ export const UpcomingTournaments: Tournament[] = [
         startDate: "2025-02-25T19:00:00Z",
         maxUsers: 16,
         entryFee: 1000,
-        prize: 100000,
+        prize: { amount: 100000, currency: "NGN" },
         status: "Upcoming"
     },
 ];
