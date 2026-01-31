@@ -22,17 +22,17 @@ const TournamentBracketView: React.FC<TournamentBracketViewProps> = ({ bracket, 
     return (
         <div className={cn("w-full min-h-screen bg-[#0f111a] text-white p-6 md:p-10", className)}>
             <header className="max-w-7xl mx-auto mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
-                <div className="space-y-2">
+                <div className="space-y-2 mt-16">
                     <div className="flex items-center gap-2 mb-4">
                         <div className="bg-amber-500/20 p-2 rounded-lg border border-amber-500/30">
                             <Trophy className="text-amber-500" size={24} />
                         </div>
                         <span className="text-amber-500 font-black tracking-widest text-xs uppercase">Tournament Arena</span>
                     </div>
-                    <h1 className="text-4xl md:text-6xl font-black text-white leading-tight uppercase tracking-tight">
+                    <h1 className="lg:text-4xl md:text-6xl sm:text-2xl font-black text-white leading-tight uppercase tracking-tight">
                         {bracket.tournament.title}
                     </h1>
-                    <p className="text-slate-400 font-medium max-w-2xl">
+                    <p className="text-slate-400 lg:text-base md:text-sm sm:text-xs font-medium max-w-2xl">
                         Explore the road to the championship. Track every move, every win, and see who rises to the top of the vault.
                     </p>
                 </div>

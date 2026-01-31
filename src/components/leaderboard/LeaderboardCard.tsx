@@ -64,7 +64,7 @@ const LeaderboardCard = ({
                 "hover:border-white/20 hover:bg-[#2a2e42]/80"
             )}
         >
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 min-w-0">
                 {/* Rank Number */}
                 <div className={cn(
                     "w-8 font-black text-sm text-center",
@@ -99,16 +99,16 @@ const LeaderboardCard = ({
                 </div>
 
                 {/* User Info */}
-                <div className="flex flex-col">
+                <div className="flex flex-col min-w-0">
                     <div className="flex items-center gap-2">
                         <span className={cn(
-                            "font-bold text-slate-200 group-hover:text-white transition-colors",
+                            "font-bold text-slate-200 group-hover:text-white transition-colors truncate max-w-[100px] sm:max-w-[200px]",
                             isCurrentUser && "text-indigo-300"
                         )}>
-                            {displayName?.length > 15 ? displayName?.substring(0, 15) + '...' : displayName}
+                            {displayName}
                         </span>
                         {isCurrentUser && (
-                            <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-indigo-500/20 text-indigo-400 font-black uppercase tracking-widest">You</span>
+                            <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-indigo-500/20 text-indigo-400 font-black uppercase tracking-widest flex-shrink-0">You</span>
                         )}
                     </div>
                     <span className="text-xs text-slate-500 font-medium">
