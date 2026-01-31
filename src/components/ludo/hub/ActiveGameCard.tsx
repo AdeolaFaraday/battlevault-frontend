@@ -115,7 +115,7 @@ const ActiveGameCard = () => {
                 {/* Right: Action */}
                 <div className="w-full md:w-auto mt-2 md:mt-0">
                     <button
-                        onClick={() => router.push(`/ludo/${activeGame._id}`)}
+                        onClick={() => router.push(`/ludo-lobby/${activeGame._id}`)}
                         className="w-full md:w-auto px-8 py-4 bg-emerald-500 hover:bg-emerald-400 active:bg-emerald-600 text-white rounded-xl font-bold text-lg shadow-lg shadow-emerald-500/25 flex items-center justify-center gap-2 transition-all group"
                     >
                         <span>Resume Game</span>
