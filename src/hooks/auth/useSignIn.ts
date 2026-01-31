@@ -75,8 +75,12 @@ const useSignIn = () => {
         }
     );
 
-    const handGoogleSignIn = () => {
+    const handGoogleSignIn = async () => {
         setGoogleLoading(true);
+        await auth.signOut();
+        googleAuthProvider.setCustomParameters({
+            prompt: 'select_account' // Forces account selection
+        });
         signInWithPopup(auth, googleAuthProvider).then((data: UserCredential) => {
             data.user?.getIdToken().then((token) => {
                 socialAuth({ token });
