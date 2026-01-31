@@ -75,16 +75,15 @@ const useSignIn = () => {
         }
     );
 
-    const handGoogleSignIn = () => {
+    const handGoogleSignIn = async () => {
+        await auth.signOut();
         setGoogleLoading(true);
         signInWithPopup(auth, googleAuthProvider).then((data: UserCredential) => {
-            console.log({ googleData: data });
             data.user?.getIdToken().then((token) => {
-                console.log({ token });
                 socialAuth({ token });
             });
         }).catch((error) => {
-            console.log({ googleError: error });
+            console.log({ error });
             setGoogleLoading(false);
         });
     };
