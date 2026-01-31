@@ -1,7 +1,7 @@
 "use client";
 // ^ this file needs the "use client" pragma
 
-import { ApolloLink, HttpLink, from } from "@apollo/client";
+import { HttpLink, from } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import {
   ApolloNextAppProvider,
@@ -46,33 +46,33 @@ function makeClient() {
     };
   });
 
-  const unauthorizedLink = new ApolloLink((operation, forward) => {
-    return forward(operation).map((response) => {
-      const data = response.data;
+  // const unauthorizedLink = new ApolloLink((operation, forward) => {
+  //   return forward(operation).map((response) => {
+  //     const data = response.data;
 
-      const unauthorized =
-        data &&
-        Object.values(data).some(
-          (v) =>
-            v?.statusCode === 401 ||
-            v?.message === "Unauthorized"
-        );
+  //     const unauthorized =
+  //       data &&
+  //       Object.values(data).some(
+  //         (v) =>
+  //           v?.statusCode === 401 ||
+  //           v?.message === "Unauthorized"
+  //       );
 
-      if (unauthorized && typeof window !== "undefined") {
-        authTokenStorage.clear();
-        localStorage.removeItem("bv_auth_token");
-        localStorage.removeItem("persist:root");
-      }
+  //     if (unauthorized && typeof window !== "undefined") {
+  //       authTokenStorage.clear();
+  //       localStorage.removeItem("bv_auth_token");
+  //       localStorage.removeItem("persist:root");
+  //     }
 
-      return response;
-    });
-  });
+  //     return response;
+  //   });
+  // });
 
   // use the `ApolloClient` from "@apollo/experimental-nextjs-app-support"
   return new ApolloClient({
     // use the `InMemoryCache` from "@apollo/experimental-nextjs-app-support"
     cache: new InMemoryCache(),
-    link: from([unauthorizedLink, authLink, sessionLink, httpLink]),
+    link: from([authLink, sessionLink, httpLink]),
   });
 }
 
