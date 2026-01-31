@@ -121,6 +121,7 @@ const LudoBoard = ({ id }: { id: string }) => {
                             tokensByCell={tokensByCell}
                             canMoveTokens={canMoveTokens}
                             userColors={userColors}
+                            selectorPosition="below"
                         />
                         <LudoHomeColumn
                             color="green"

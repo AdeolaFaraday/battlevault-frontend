@@ -12,6 +12,7 @@ type LudoCellProps = {
     handleTokenDrop: (token: Token, position?: number) => void
     canMoveTokens: boolean
     userColors: string[]
+    selectorPosition?: 'above' | 'below'
 }
 
 const LudoCell = memo(({
@@ -21,7 +22,8 @@ const LudoCell = memo(({
     style,
     handleTokenDrop,
     canMoveTokens,
-    userColors
+    userColors,
+    selectorPosition = 'above'
 }: LudoCellProps) => {
     const [isSelectorOpen, setIsSelectorOpen] = useState(false);
     const selectorRef = useRef<HTMLDivElement>(null);
@@ -85,11 +87,11 @@ const LudoCell = memo(({
                 isStacked && isSelectorOpen && (
                     <div
                         ref={selectorRef}
-                        className="token-selector-popup"
+                        className={clsx("token-selector-popup", selectorPosition === 'below' && "token-selector-popup--below")}
                         onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside
                     >
                         {/* Arrow */}
-                        <div className="token-selector-arrow" />
+                        <div className={clsx("token-selector-arrow", selectorPosition === 'below' && "token-selector-arrow--below")} />
 
                         {cellTokens.map((token) => (
                             <div

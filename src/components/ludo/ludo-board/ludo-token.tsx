@@ -40,11 +40,11 @@ const LudoToken = memo(({
                 willChange: "transform",
             }}
             animate={shouldPulse ? {
-                scale: [1, 1.15, 1],
+                scale: [1, 1.25, 1],
                 boxShadow: [
-                    "0 0 0px rgba(255,255,255,0)",
-                    "0 0 20px rgba(255,255,255,0.8)",
-                    "0 0 0px rgba(255,255,255,0)"
+                    "0 0 0px rgba(255,215,0,0)",
+                    "0 0 25px rgba(255,215,0,0.9)",
+                    "0 0 0px rgba(255,215,0,0)"
                 ]
             } : {
                 scale: 1,
@@ -57,14 +57,14 @@ const LudoToken = memo(({
                     duration: 0.2
                 },
                 scale: shouldPulse ? {
-                    duration: 1.5,
+                    duration: 1.0,
                     repeat: Infinity,
                     ease: "easeInOut"
                 } : {
                     duration: 0.2
                 },
                 boxShadow: shouldPulse ? {
-                    duration: 1.5,
+                    duration: 1.0,
                     repeat: Infinity,
                     ease: "easeInOut"
                 } : {
