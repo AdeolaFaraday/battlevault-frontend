@@ -61,9 +61,17 @@ const TournamentCard = ({ tournament, variant = 'compact', className }: Tourname
                             )}>
                                 {isLive ? 'LIVE NOW' : tournament.status || 'Upcoming'}
                             </span>
-                            {tournament.frequency && (
-                                <span className="text-amber-200/60 text-xs font-medium">{tournament.frequency}</span>
-                            )}
+                            <div className="flex items-center gap-3 bg-black/20 px-2 py-0.5 rounded-full border border-white/5">
+                                <div className="w-16 h-1.5 bg-amber-900/40 rounded-full overflow-hidden border border-white/5">
+                                    <div
+                                        className="h-full bg-gradient-to-r from-amber-500 to-orange-500 shadow-[0_0_8px_rgba(245,158,11,0.5)] transition-all duration-500"
+                                        style={{ width: `${Math.min(((tournament.registeredUsers?.length || 0) / (tournament.maxUsers || 1)) * 100, 100)}%` }}
+                                    />
+                                </div>
+                                <span className="text-[10px] font-black text-amber-200/80 tracking-tighter">
+                                    {tournament.registeredUsers?.length || 0}/{tournament.maxUsers}
+                                </span>
+                            </div>
                         </div>
                         <div>
                             <h4 className="text-2xl font-black text-amber-100 leading-none mb-1">
