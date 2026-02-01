@@ -1,6 +1,7 @@
 import React from 'react';
 import { BracketGame as BracketGameType } from '@/src/types/tournament';
 import { cn } from '@/src/lib/utils';
+import { Trophy } from 'lucide-react';
 
 interface BracketGameProps {
     game: BracketGameType;
@@ -30,19 +31,36 @@ const BracketGame: React.FC<BracketGameProps> = ({ game, className }) => {
                 </div>
 
                 <div className="space-y-1 md:space-y-1.5">
-                    {game.players.map((player, idx) => (
-                        <div key={player.id || idx} className="flex items-center justify-between bg-white/5 rounded-md md:rounded-lg px-1.5 md:px-2 py-0.5 md:py-1.5 border border-white/5 group-hover:border-white/10 transition-colors">
-                            <div className="flex items-center gap-1.5 md:gap-2 overflow-hidden">
-                                <div
-                                    className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full shrink-0"
-                                    style={{ backgroundColor: player.color }}
-                                />
-                                <span className="text-[10px] md:text-xs font-semibold text-slate-200 truncate max-w-[80px] md:max-w-none">
-                                    {player.name || 'TBD'}
-                                </span>
+                    {game.players.map((player, idx) => {
+                        const isWinner = game.winner === player.id;
+                        return (
+                            <div
+                                key={player.id || idx}
+                                className={cn(
+                                    "flex items-center justify-between bg-white/5 rounded-md md:rounded-lg px-1.5 md:px-2 py-0.5 md:py-1.5 border transition-all",
+                                    isWinner ? "border-amber-500/50 bg-amber-500/5 shadow-[0_0_10px_rgba(245,158,11,0.1)]" : "border-white/5 group-hover:border-white/10"
+                                )}
+                            >
+                                <div className="flex items-center gap-1.5 md:gap-2 overflow-hidden">
+                                    <div
+                                        className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full shrink-0"
+                                        style={{ backgroundColor: player.color }}
+                                    />
+                                    <span className={cn(
+                                        "text-[10px] md:text-xs font-semibold truncate max-w-[80px] md:max-w-none",
+                                        isWinner ? "text-amber-200" : "text-slate-200"
+                                    )}>
+                                        {player.name || 'TBD'}
+                                    </span>
+                                </div>
+                                {isWinner && (
+                                    <div className="bg-amber-500/20 p-0.5 rounded shadow-sm">
+                                        <Trophy size={10} className="text-amber-500" strokeWidth={3} />
+                                    </div>
+                                )}
                             </div>
-                        </div>
-                    ))}
+                        );
+                    })}
 
                     {game.players.length < 2 && (
                         <div className="flex items-center gap-1.5 md:gap-2 bg-white/5 rounded-md md:rounded-lg px-1.5 md:px-2 py-0.5 md:py-1.5 border border-white/5 opacity-40">

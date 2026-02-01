@@ -10,6 +10,7 @@ export interface BracketGame {
     name: string;
     status: string;
     players: BracketPlayer[];
+    winner?: string;
 }
 
 export interface BracketStage {

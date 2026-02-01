@@ -13,10 +13,12 @@ import {
 import storage from 'redux-persist/lib/storage';
 import authReducer from './authSlice';
 import gameReducer from './slices/gameSlice';
+import walletReducer from './slices/walletSlice';
 
 const appReducer = combineReducers({
   auth: authReducer,
   game: gameReducer,
+  wallet: walletReducer,
 })
 
 const rootReducer = (state: ReturnType<typeof appReducer> | undefined, action: AnyAction) => {
