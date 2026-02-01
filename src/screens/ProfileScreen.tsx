@@ -16,12 +16,22 @@ import { AppLayout } from '../components/common/layout';
 import { useAppSelector } from '../lib/redux/hooks';
 import { RootState } from '@/src/lib/redux/store';
 import { useLogout } from '../hooks/auth/useLogout';
+import useGetWallet from '../api/wallet/useGetWallet';
+import { useEffect } from 'react';
 
 const ProfileScreen = () => {
     const router = useRouter();
 
     const currentUser = useAppSelector((state: RootState) => state.auth.loggedInUserDetails);
+    const { withdrawable, pending, currency } = useAppSelector((state: RootState) => state.wallet);
     const { logout } = useLogout();
+    const { getWallet } = useGetWallet();
+
+    useEffect(() => {
+        if (currentUser) {
+            getWallet();
+        }
+    }, [getWallet, currentUser]);
 
     const menuItems = [
         { id: 'edit-profile', label: 'Edit Profile', icon: User, color: 'text-indigo-400' },
@@ -50,6 +60,11 @@ const ProfileScreen = () => {
         router.push('/signin');
     };
 
+    const formatCurrency = (amount: number) => {
+        const symbol = currency === 'NGN' ? '₦' : currency || '₦';
+        return `${symbol}${amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    };
+
     return (
         <AppLayout>
             {/* User Profile Header */}
@@ -71,18 +86,34 @@ const ProfileScreen = () => {
                 </div>
 
                 {/* Wallet Quick View */}
-                <div className="w-full bg-gradient-to-br from-indigo-600 to-purple-700 rounded-3xl p-6 shadow-2xl relative overflow-hidden group">
-                    <div className="relative z-10 flex items-center justify-between">
-                        <div className="space-y-1">
-                            <span className="text-white/90 text-[10px] font-black uppercase tracking-widest block mb-1">Total Balance</span>
-                            <h2 className="text-3xl font-black text-white italic">₦0.00</h2>
+                <div className="w-full bg-gradient-to-br from-slate-800 to-slate-900 rounded-3xl p-6 shadow-2xl relative overflow-hidden group border border-white/5">
+                    <div className="relative z-10 flex items-start justify-between">
+                        <div className="space-y-4">
+                            <div className="space-y-1">
+                                <span className="text-white/50 text-[9px] font-black uppercase tracking-[0.2em] block">Available Funds</span>
+                                <h2 className="text-4xl font-black text-emerald-400 italic tracking-tighter">{formatCurrency(withdrawable)}</h2>
+                            </div>
+
+                            <div className="flex items-center gap-6">
+                                <div className="space-y-0.5">
+                                    <span className="text-white/30 text-[8px] font-black uppercase tracking-widest block">Pending</span>
+                                    <p className="text-sm font-bold" style={{ color: "#FFC107" }}>{formatCurrency(pending)}</p>
+                                </div>
+                                <div className="h-4 w-px bg-white/10" />
+                                <div className="space-y-0.5">
+                                    <span className="text-white/30 text-[8px] font-black uppercase tracking-widest block">Total</span>
+                                    <p className="text-sm font-bold text-white/50">{formatCurrency(withdrawable + pending)}</p>
+                                </div>
+                            </div>
                         </div>
-                        <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center border border-white/10 backdrop-blur-md">
-                            <Wallet size={24} className="text-white" />
+                        <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center border border-white/10 backdrop-blur-md">
+                            <Wallet size={24} className="text-emerald-400" />
                         </div>
                     </div>
-                    <div style={{ bottom: '-3rem' }} className="absolute -left-6 opacity-10 group-hover:scale-110 transition-transform duration-700">
-                        <Wallet size={120} className="text-white" />
+
+                    {/* Background patterns */}
+                    <div style={{ top: '-1rem', right: '-1rem' }} className="absolute opacity-[0.03] rotate-12 transition-transform duration-1000 group-hover:scale-110">
+                        <Wallet size={180} className="text-white" />
                     </div>
                 </div>
             </section>

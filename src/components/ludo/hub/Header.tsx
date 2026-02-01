@@ -12,11 +12,17 @@ import { useRouter } from 'next/navigation';
 
 const Header = () => {
     const currentUser = useAppSelector((state: RootState) => state.auth.loggedInUserDetails);
+    const { withdrawable, currency } = useAppSelector((state: RootState) => state.wallet);
     const { logout } = useLogout();
     const router = useRouter();
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
     const isAuthenticated = !!currentUser;
+
+    const formatCurrency = (amount: number) => {
+        const symbol = currency === 'NGN' ? '₦' : currency || '₦';
+        return `${symbol}${amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    };
 
     // Close dropdown when clicking outside
     useEffect(() => {
@@ -53,7 +59,7 @@ const Header = () => {
                     {/* Balance - Hidden on small mobile */}
                     <div className="hidden md:flex items-center gap-2 bg-slate-800/50 px-3 py-1.5 rounded-full border border-white/5">
                         <Wallet className="w-4 h-4 text-emerald-400" />
-                        <span className="text-emerald-400 font-bold text-sm">0.00</span>
+                        <span className="text-emerald-400 font-bold text-sm">{formatCurrency(withdrawable)}</span>
                     </div>
 
                     {/* Notifications */}

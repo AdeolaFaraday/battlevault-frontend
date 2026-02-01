@@ -46,6 +46,7 @@ function makeClient() {
     };
   });
 
+  let unauthorizedCount = 0;
   const unauthorizedLink = new ApolloLink((operation, forward) => {
     return forward(operation).map((response) => {
       const data = response.data;
@@ -58,7 +59,8 @@ function makeClient() {
             v?.message === "Unauthorized"
         );
 
-      if (unauthorized && typeof window !== "undefined") {
+      if (unauthorized && unauthorizedCount < 2 && typeof window !== "undefined") {
+        unauthorizedCount++;
         authTokenStorage.clear();
         localStorage.removeItem("bv_auth_token");
         localStorage.removeItem("persist:root");

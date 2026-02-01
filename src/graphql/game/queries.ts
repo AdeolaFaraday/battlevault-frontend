@@ -196,6 +196,7 @@ export const GET_TOURNAMENT_BRACKET = gql`
               _id
               name
               status
+              winner
               players {
                 id
                 name
