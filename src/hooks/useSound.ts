@@ -72,8 +72,36 @@ export const useSound = () => {
         }
     }, []);
 
+    const playYourTurn = useCallback(() => {
+        const ctx = audioContextRef.current;
+        if (!ctx) return;
+
+        if (ctx.state === 'suspended') {
+            ctx.resume();
+        }
+
+        const oscillator = ctx.createOscillator();
+        const gainNode = ctx.createGain();
+
+        // Nice dual-tone "ding"
+        oscillator.type = 'sine';
+        oscillator.frequency.setValueAtTime(587.33, ctx.currentTime); // D5
+        oscillator.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.1); // A5
+
+        gainNode.gain.setValueAtTime(0, ctx.currentTime);
+        gainNode.gain.linearRampToValueAtTime(0.1, ctx.currentTime + 0.05);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
+
+        oscillator.connect(gainNode);
+        gainNode.connect(ctx.destination);
+
+        oscillator.start();
+        oscillator.stop(ctx.currentTime + 0.4);
+    }, []);
+
     return {
         playRoll,
         playMove,
+        playYourTurn,
     };
 };

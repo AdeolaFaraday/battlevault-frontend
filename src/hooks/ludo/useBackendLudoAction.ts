@@ -42,7 +42,7 @@ const useBackendLudoAction = ({ color }: { color?: string }) => {
     });
 
     const [isRolling, setIsRolling] = useState(false);
-    const { playRoll, playMove } = useSound();
+    const { playRoll, playMove, playYourTurn } = useSound();
 
     const [rollDiceMutation] = useMutation(ROLL_DICE_MUTATION, {
         onCompleted: (data) => {
@@ -171,6 +171,14 @@ const useBackendLudoAction = ({ color }: { color?: string }) => {
 
     const [recentlyFinishedToken, setRecentlyFinishedToken] = useState<string | null>(null);
     const prevPlayersRef = useRef<LudoPlayer[]>([]);
+    const prevTurnRef = useRef<string>("");
+
+    useEffect(() => {
+        if (gameState.currentTurn && gameState.currentTurn === currentUser?._id && prevTurnRef.current !== currentUser?._id) {
+            playYourTurn();
+        }
+        prevTurnRef.current = gameState.currentTurn || "";
+    }, [gameState.currentTurn, currentUser?._id, playYourTurn]);
 
     useEffect(() => {
         if (!gameState.players) return;
