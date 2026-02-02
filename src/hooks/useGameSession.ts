@@ -6,6 +6,7 @@ import { JOIN_GAME_MUTATION } from '@/src/graphql/game/mutations';
 import { LudoPlayer } from '../types/ludo';
 import { useAppDispatch } from '@/src/lib/redux/hooks';
 import { setSessionId } from '@/src/lib/redux/slices/gameSlice';
+import { useAlert } from './common/useAlert';
 
 export interface Game {
     _id: string;
@@ -36,6 +37,7 @@ export interface UseGameSessionProps {
 export const useGameSession = ({ gameId, player }: UseGameSessionProps) => {
     const [gameState, setGameState] = useState<Game | null>(null);
     const dispatch = useAppDispatch();
+    const { showAlert } = useAlert()
 
     const [joinGame, { loading: joining, error: joinError }] = useMutation(JOIN_GAME_MUTATION, {
         onCompleted: (data) => {
@@ -50,6 +52,12 @@ export const useGameSession = ({ gameId, player }: UseGameSessionProps) => {
                     }
                 }
                 setGameState(gameData);
+            } else {
+                showAlert({
+                    title: 'Error',
+                    message: data?.joinGame?.message,
+                    type: 'error'
+                });
             }
         }
     });

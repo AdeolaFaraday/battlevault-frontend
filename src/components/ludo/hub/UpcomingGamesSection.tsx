@@ -24,8 +24,9 @@ const UpcomingGamesSection = ({
     enableInfiniteScroll = false
 }: UpcomingGamesSectionProps) => {
     const { data, loading, error, fetchMore } = useQuery(GET_UPCOMING_GAMES, {
-        variables: { page: 1, limit },
+        variables: { page: 1, limit, },
         notifyOnNetworkStatusChange: true,
+        fetchPolicy: 'network-only',
     });
     const [isFetchingMore, setIsFetchingMore] = React.useState(false);
     const [hasMore, setHasMore] = React.useState(true);

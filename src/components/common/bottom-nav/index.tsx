@@ -6,21 +6,28 @@ import { Gamepad2, Swords, Trophy, UserCircle } from 'lucide-react';
 import { useRouter, usePathname } from 'next/navigation';
 import BottomNavItem from './BottomNavItem';
 import './styles.css';
+import { useAppSelector } from '@/src/lib/redux/hooks';
+import { RootState } from '@/src/lib/redux/store';
 
-const navItems = [
-    { id: 'play', label: 'Play', icon: Gamepad2, activeColor: '#493D9E', path: '/' },
-    { id: 'arena', label: 'Arena', icon: Swords, activeColor: '#D72638', path: '/arena' },
-    { id: 'leaderboard', label: 'Leaderboard', icon: Trophy, activeColor: '#F9A602', path: '/leaderboard' },
-    { id: 'profile', label: 'Profile', icon: UserCircle, activeColor: '#008F5A', path: '/profile' },
-];
+const getNavItems = (isUserLoggedIn: boolean | string) => {
+    return [
+        { id: 'play', label: 'Play', icon: Gamepad2, activeColor: '#493D9E', path: '/' },
+        { id: 'arena', label: 'Arena', icon: Swords, activeColor: '#D72638', path: '/arena' },
+        { id: 'leaderboard', label: 'Leaderboard', icon: Trophy, activeColor: '#F9A602', path: '/leaderboard' },
+        ...(isUserLoggedIn ? [{ id: 'profile', label: 'Profile', icon: UserCircle, activeColor: '#008F5A', path: '/profile' }] : []),
+    ];
+};
 
 const BottomNav = () => {
     const router = useRouter();
     const pathname = usePathname();
     const [activeTab, setActiveTab] = useState('play');
 
+
+    const { isUserLoggedIn } = useAppSelector((state: RootState) => state.auth);
+
     useEffect(() => {
-        const currentItem = navItems.find(item => item.path === pathname);
+        const currentItem = getNavItems(isUserLoggedIn === true).find(item => item.path === pathname);
         if (currentItem) {
             setActiveTab(currentItem.id);
         }
@@ -39,7 +46,7 @@ const BottomNav = () => {
                 transition={{ type: "spring", stiffness: 260, damping: 20 }}
                 className="relative flex items-center justify-between px-4 py-2 bg-[#1a1d2e]/80 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.5)] overflow-hidden"
             >
-                {navItems.map((item) => (
+                {getNavItems(isUserLoggedIn === true).map((item) => (
                     <BottomNavItem
                         key={item.id}
                         label={item.label}
