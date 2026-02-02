@@ -8,10 +8,12 @@ import { GameService, GameSessionData } from "@/src/services/ludo/game.service";
 import { RootState } from "@/src/lib/redux/store";
 import { Timestamp } from "firebase/firestore";
 import { LudoPlayer, Token } from "@/src/types/ludo";
+import { useSound } from "../useSound";
 
 const useLudoAction = ({ color }: { color?: string }) => {
     const { id: gameId } = useParams<{ id: string }>();
     const currentUser = useAppSelector((state: RootState) => state.auth.loggedInUserDetails);
+    const { playYourTurn } = useSound();
 
     const generateDefaultTokenStates = (color: string) => {
         return Array(4).fill(0).map((_, i) => ({
@@ -45,6 +47,14 @@ const useLudoAction = ({ color }: { color?: string }) => {
 
     const isInternalUpdate = useRef(false);
     const findActiveTokens = Object.values(gameState.tokens).flat().filter(t => t.active);
+    const prevTurnRef = useRef<string>("");
+
+    useEffect(() => {
+        if (gameState.currentTurn && gameState.currentTurn === currentUser?._id && prevTurnRef.current !== currentUser?._id) {
+            playYourTurn();
+        }
+        prevTurnRef.current = gameState.currentTurn || "";
+    }, [gameState.currentTurn, currentUser?._id, playYourTurn]);
 
     // 1. Subscribe to Firestore (SOURCE OF TRUTH)
     useEffect(() => {
