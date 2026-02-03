@@ -3,11 +3,12 @@ import { useRouter } from 'next/navigation';
 import { useAlert } from '../common/useAlert';
 import useUserSignIn from '@/src/api/auth/useUserSignin';
 import { auth, googleAuthProvider } from '@/src/lib/firebase';
-import { signInWithPopup, UserCredential } from 'firebase/auth';
+import { getRedirectResult, signInWithPopup, signInWithRedirect, UserCredential } from 'firebase/auth';
 import useSocialAuth from '@/src/api/auth/useSocialAuth';
 import { useAppDispatch } from '@/src/lib/redux/hooks';
 import { setLoggedInUserDetails } from '@/src/lib/redux/authSlice';
 import { authTokenStorage } from '@/src/lib/authToken';
+import { useEffect } from 'react';
 
 const mapAuthPayloadToCommon = (payload: unknown): TCommonResponseData => {
     if (!payload) {
@@ -75,20 +76,40 @@ const useSignIn = () => {
         }
     );
 
+    useEffect(() => {
+        getRedirectResult(auth).then((result) => {
+            console.log("REDIRECT_RESULT", result);
+            if (result) {
+                setGoogleLoading(true);
+                result.user.getIdToken().then((token) => {
+                    console.log("GOOGLE_ID_TOKEN_REDIRECT", token);
+                    socialAuth({ token });
+                }).catch(() => setGoogleLoading(false));
+            }
+        }).catch((err) => {
+            console.error("Redirect Sign In Error", err);
+            setGoogleLoading(false);
+        });
+    }, [socialAuth]);
+
     const handGoogleSignIn = async () => {
         setGoogleLoading(true);
         await auth.signOut();
-        googleAuthProvider.setCustomParameters({
-            prompt: 'select_account' // Forces account selection
-        });
         signInWithPopup(auth, googleAuthProvider).then((data: UserCredential) => {
             data.user?.getIdToken().then((token) => {
+                console.log("GOOGLE_ID_TOKEN_POPUP", token);
                 socialAuth({ token });
             });
         }).catch((error) => {
             console.log({ error });
             setGoogleLoading(false);
         });
+    };
+
+    const handGoogleSignInRedirect = async () => {
+        setGoogleLoading(true);
+        await auth.signOut();
+        signInWithRedirect(auth, googleAuthProvider);
     };
 
     const { login, loading } = useUserSignIn(
@@ -107,6 +128,7 @@ const useSignIn = () => {
         loading,
         isGoogleLoading: googleLoading || socialAuthLoading,
         handGoogleSignIn,
+        handGoogleSignInRedirect,
         handleUserSignIn
     };
 };
