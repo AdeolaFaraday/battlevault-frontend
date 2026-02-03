@@ -50,7 +50,7 @@ const WinLossChart = () => {
                         transition={{ delay: 0.5 }}
                         className="text-4xl font-black text-white italic"
                     >
-                        {loading ? '...' : `${winRate}%`}
+                        {loading ? '...' : `${winRate.toFixed(2)}%`}
                     </motion.span>
                     <span className="text-[10px] font-black text-emerald-500 uppercase tracking-widest">Win Rate</span>
                 </div>

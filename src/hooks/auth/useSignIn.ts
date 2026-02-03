@@ -97,7 +97,7 @@ const useSignIn = () => {
         await auth.signOut();
         signInWithPopup(auth, googleAuthProvider).then((data: UserCredential) => {
             data.user?.getIdToken().then((token) => {
-                console.log("GOOGLE_ID_TOKEN_POPUP", token);
+                // console.log("GOOGLE_ID_TOKEN_POPUP", token);
                 socialAuth({ token });
             });
         }).catch((error) => {

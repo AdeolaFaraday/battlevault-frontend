@@ -140,6 +140,7 @@ export const GET_USER_GAMES = gql`
             name
             type
             status
+            winner
             startDate
             createdAt
             updatedAt
