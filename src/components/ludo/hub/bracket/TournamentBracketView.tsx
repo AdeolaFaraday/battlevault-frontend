@@ -26,7 +26,7 @@ const TournamentBracketView: React.FC<TournamentBracketViewProps> = ({ bracket, 
     const finalGame = React.useMemo(() => {
         // Look for the "Final" match in any stage (usually the last one)
         for (const stage of sortedStages) {
-            const final = stage.games.find(g => g.name.toLowerCase().includes('final'));
+            const final = stage.games.find(g => g.name.toLowerCase().startsWith('Final'));
             if (final) return final;
         }
         return null;
