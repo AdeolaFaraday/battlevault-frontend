@@ -37,6 +37,7 @@ const ProfileScreen = () => {
         { id: 'edit-profile', label: 'Edit Profile', icon: User, color: 'text-indigo-400' },
         { id: 'match-history', label: 'Match History', icon: History, color: 'text-indigo-400' },
         { id: 'stats', label: 'Win / Loss Stats', icon: BarChart3, color: 'text-indigo-400' },
+        { id: 'withdraw', label: 'Withdraw', icon: Wallet, color: 'text-indigo-400' },
     ];
 
     const handleMenuClick = (id: string) => {
