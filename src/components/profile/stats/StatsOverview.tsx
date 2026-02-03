@@ -11,7 +11,7 @@ const StatsOverview = () => {
     const mainStats = [
         {
             label: 'Overall Win Rate',
-            value: loading ? '...' : `${stats?.winPercentage ?? 0}%`,
+            value: loading ? '...' : `${stats?.winPercentage?.toFixed(2) ?? 0}%`,
             icon: TrendingUp,
             color: 'text-emerald-400',
             bg: 'bg-emerald-400/10'
