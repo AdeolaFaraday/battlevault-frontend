@@ -2,8 +2,10 @@
 
 import React from "react";
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 
 const ModernAuthWrapper = ({ children }: { children: React.ReactNode }) => {
+    const router = useRouter();
     return (
         <div className="min-h-screen w-full bg-[#0f111a] flex items-center justify-center p-4 relative overflow-hidden">
             {/* Background Decorative Elements */}
@@ -51,8 +53,8 @@ const ModernAuthWrapper = ({ children }: { children: React.ReactNode }) => {
                     transition={{ delay: 0.8 }}
                     className="mt-8 flex justify-center gap-8 text-white/30 text-xs font-medium tracking-widest uppercase"
                 >
-                    <span className="hover:text-white/60 cursor-pointer transition-colors">Privacy Policy</span>
-                    <span className="hover:text-white/60 cursor-pointer transition-colors">Terms of Service</span>
+                    <span onClick={() => router.push('/privacy')} className="hover:text-white/60 cursor-pointer transition-colors">Privacy Policy</span>
+                    <span onClick={() => router.push('/terms')} className="hover:text-white/60 cursor-pointer transition-colors">Terms of Service</span>
                 </motion.div>
             </motion.div>
         </div>
