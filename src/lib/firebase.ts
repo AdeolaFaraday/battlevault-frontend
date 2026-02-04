@@ -2,6 +2,7 @@ import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
+console.log("Existing Firebase apps:", getApps().map(app => app.name));
 
 const firebaseConfig = {
     apiKey: process.env.NEXT_PUBLIC_API_KEY,
@@ -15,10 +16,20 @@ const firebaseConfig = {
 
 const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
 
+console.log("Firebase initialized:", {
+    authDomain: firebaseConfig.authDomain,
+    projectId: firebaseConfig.projectId,
+    hasApp: getApps().length > 0
+});
+
 const googleAuthProvider = new GoogleAuthProvider();
 
 const auth = getAuth(app);
 const firestore = getFirestore(app);
+
+auth.onAuthStateChanged((user) => {
+    console.log("Auth state changed:", user ? user.email : "No user");
+});
 
 export {
     auth,
