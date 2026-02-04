@@ -23,13 +23,12 @@ console.log("Firebase initialized:", {
 });
 
 const googleAuthProvider = new GoogleAuthProvider();
+googleAuthProvider.setCustomParameters({
+    prompt: 'select_account'
+});
 
 const auth = getAuth(app);
 const firestore = getFirestore(app);
-
-auth.onAuthStateChanged((user) => {
-    console.log("Auth state changed:", user ? user.email : "No user");
-});
 
 export {
     auth,
