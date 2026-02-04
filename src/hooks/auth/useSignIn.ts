@@ -45,7 +45,11 @@ const useSignIn = () => {
     );
 
     useEffect(() => {
-        //TODO: BUG(minor): this fires when on signin page even without clicking the button as long as the user token is present
+        // Check for pending social auth flag
+        const pendingAuth = typeof window !== 'undefined' ? sessionStorage.getItem('pendingSocialAuth') : null;
+
+        if (!pendingAuth) return; // Exit if no pending auth flag
+
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             console.log("Auth state changed:", user ? user : "No user");
             if (user && isUserLoggedIn !== true) {
@@ -59,9 +63,13 @@ const useSignIn = () => {
                 const token = (user as unknown as { accessToken: string }).accessToken;
 
                 if (token) {
+                    console.log("Token found:", token);
+                    sessionStorage.removeItem('pendingSocialAuth'); // Clear flag
                     socialAuth({ token });
                 } else {
                     user.getIdToken().then((idToken) => {
+                        console.log("idToken found:", idToken);
+                        sessionStorage.removeItem('pendingSocialAuth'); // Clear flag
                         socialAuth({ token: idToken });
                     }).catch(() => {
                         authProcessingRef.current = null;
@@ -70,6 +78,7 @@ const useSignIn = () => {
                 }
             } else if (!user) {
                 authProcessingRef.current = null;
+                // Don't clear flag here, user might not be loaded yet
             }
         });
 
@@ -93,6 +102,7 @@ const useSignIn = () => {
 
     const handGoogleSignInRedirect = () => {
         setGoogleLoading(true);
+        sessionStorage.setItem('pendingSocialAuth', 'true');
         signInWithRedirect(auth, googleAuthProvider);
     };
 
