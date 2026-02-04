@@ -8,7 +8,7 @@ import useSocialAuth from '@/src/api/auth/useSocialAuth';
 import { useAppDispatch, useAppSelector } from '@/src/lib/redux/hooks';
 import { setLoggedInUserDetails } from '@/src/lib/redux/authSlice';
 import { mapAuthPayloadToCommon } from '@/src/utils/auth-utils';
-import { useRef, useEffect } from 'react';
+import { useEffect } from 'react';
 
 
 const useSignIn = () => {
@@ -17,7 +17,6 @@ const useSignIn = () => {
     const { success, error } = useAlert();
     const [googleLoading, setGoogleLoading] = useState(false);
     const isUserLoggedIn = useAppSelector((state) => state.auth.isUserLoggedIn);
-    const authProcessingRef = useRef<string | null>(null);
 
     const onCompleted = (data: TCommonResponseData, successStatus: boolean, message: string) => {
         if (successStatus) {
@@ -55,7 +54,7 @@ const useSignIn = () => {
         const unsub = onAuthStateChanged(auth, async (user) => {
             console.log("Auth state changed:", user ? user.uid : "No user");
 
-            if (!user) return;
+            if (!user || isUserLoggedIn) return;
 
             sessionStorage.removeItem("pendingSocialAuth");
 
