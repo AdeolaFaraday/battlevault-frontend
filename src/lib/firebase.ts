@@ -1,8 +1,6 @@
 import { initializeApp, getApps, getApp } from 'firebase/app';
-import { getAuth, GoogleAuthProvider } from 'firebase/auth';
+import { browserSessionPersistence, getAuth, GoogleAuthProvider, setPersistence } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
-
-console.log("Existing Firebase apps:", getApps().map(app => app.name));
 
 const firebaseConfig = {
     apiKey: process.env.NEXT_PUBLIC_API_KEY,
@@ -16,18 +14,19 @@ const firebaseConfig = {
 
 const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
 
-console.log("Firebase initialized:", {
-    authDomain: firebaseConfig.authDomain,
-    projectId: firebaseConfig.projectId,
-    hasApp: getApps().length > 0
-});
-
 const googleAuthProvider = new GoogleAuthProvider();
 googleAuthProvider.setCustomParameters({
     prompt: 'select_account'
 });
 
 const auth = getAuth(app);
+
+setPersistence(auth, browserSessionPersistence)
+    .then(() => {
+        console.log("✅ Auth persistence ready");
+    })
+    .catch(console.error);
+
 const firestore = getFirestore(app);
 
 export {

@@ -45,45 +45,30 @@ const useSignIn = () => {
     );
 
     useEffect(() => {
-        // Check for pending social auth flag
-        const pendingAuth = typeof window !== 'undefined' ? sessionStorage.getItem('pendingSocialAuth') : null;
+        const pendingAuth =
+            typeof window !== "undefined"
+                ? sessionStorage.getItem("pendingSocialAuth")
+                : null;
 
-        if (!pendingAuth) return; // Exit if no pending auth flag
+        if (!pendingAuth) return;
 
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
-            console.log("Auth state changed:", user ? user : "No user");
-            if (user && isUserLoggedIn !== true) {
-                // Prevent duplicate processing for same user if already in progress
-                if (authProcessingRef.current === user.uid) return;
+        const unsub = onAuthStateChanged(auth, async (user) => {
+            console.log("Auth state changed:", user ? user.uid : "No user");
 
-                authProcessingRef.current = user.uid;
-                setGoogleLoading(true);
+            if (!user) return;
 
-                // Using (user as any).accessToken as requested by the user
-                const token = (user as unknown as { accessToken: string }).accessToken;
+            sessionStorage.removeItem("pendingSocialAuth");
 
-                if (token) {
-                    console.log("Token found:", token);
-                    sessionStorage.removeItem('pendingSocialAuth'); // Clear flag
-                    socialAuth({ token });
-                } else {
-                    user.getIdToken().then((idToken) => {
-                        console.log("idToken found:", idToken);
-                        sessionStorage.removeItem('pendingSocialAuth'); // Clear flag
-                        socialAuth({ token: idToken });
-                    }).catch(() => {
-                        authProcessingRef.current = null;
-                        setGoogleLoading(false);
-                    });
-                }
-            } else if (!user) {
-                authProcessingRef.current = null;
-                // Don't clear flag here, user might not be loaded yet
-            }
+            const idToken = await user.getIdToken();
+            console.log("ID token obtained");
+
+            await socialAuth({ token: idToken });
+            router.replace("/dashboard");
         });
 
-        return () => unsubscribe();
+        return () => unsub();
     }, []);
+
 
 
     const handGoogleSignIn = async () => {
