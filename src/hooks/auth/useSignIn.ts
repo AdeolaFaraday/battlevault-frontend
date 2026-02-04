@@ -90,7 +90,7 @@ const useSignIn = () => {
             console.error("Redirect Sign In Error", err);
             setGoogleLoading(false);
         });
-    }, [socialAuth]);
+    }, []);
 
     const handGoogleSignIn = async () => {
         setGoogleLoading(true);
@@ -106,9 +106,8 @@ const useSignIn = () => {
         });
     };
 
-    const handGoogleSignInRedirect = async () => {
+    const handGoogleSignInRedirect = () => {
         setGoogleLoading(true);
-        await auth.signOut();
         signInWithRedirect(auth, googleAuthProvider);
     };
 
