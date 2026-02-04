@@ -106,9 +106,15 @@ const useSignIn = () => {
         });
     };
 
-    const handGoogleSignInRedirect = () => {
+    const handGoogleSignInRedirect = async () => {
+        console.log("Starting redirect flow...");
         setGoogleLoading(true);
-        signInWithRedirect(auth, googleAuthProvider);
+        try {
+            await signInWithRedirect(auth, googleAuthProvider);
+        } catch (error) {
+            console.error("Error initiating redirect:", error);
+            setGoogleLoading(false);
+        }
     };
 
     const { login, loading } = useUserSignIn(
