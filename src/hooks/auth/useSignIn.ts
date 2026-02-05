@@ -3,12 +3,11 @@ import { useRouter } from 'next/navigation';
 import { useAlert } from '../common/useAlert';
 import useUserSignIn from '@/src/api/auth/useUserSignin';
 import { auth, googleAuthProvider } from '@/src/lib/firebase';
-import { signInWithPopup, signInWithRedirect, UserCredential, onAuthStateChanged } from 'firebase/auth';
+import { signInWithPopup, UserCredential } from 'firebase/auth';
 import useSocialAuth from '@/src/api/auth/useSocialAuth';
-import { useAppDispatch, useAppSelector } from '@/src/lib/redux/hooks';
+import { useAppDispatch } from '@/src/lib/redux/hooks';
 import { setLoggedInUserDetails } from '@/src/lib/redux/authSlice';
 import { mapAuthPayloadToCommon } from '@/src/utils/auth-utils';
-import { useEffect } from 'react';
 
 
 const useSignIn = () => {
@@ -16,7 +15,6 @@ const useSignIn = () => {
     const router = useRouter();
     const { success, error } = useAlert();
     const [googleLoading, setGoogleLoading] = useState(false);
-    const isUserLoggedIn = useAppSelector((state) => state.auth.isUserLoggedIn);
 
     const onCompleted = (data: TCommonResponseData, successStatus: boolean, message: string) => {
         if (successStatus) {
@@ -43,30 +41,6 @@ const useSignIn = () => {
         }
     );
 
-    useEffect(() => {
-        const pendingAuth =
-            typeof window !== "undefined"
-                ? sessionStorage.getItem("pendingSocialAuth")
-                : null;
-
-        if (!pendingAuth) return;
-
-        const unsub = onAuthStateChanged(auth, async (user) => {
-            console.log("Auth state changed:", user ? user.uid : "No user");
-
-            if (!user || isUserLoggedIn) return;
-
-            sessionStorage.removeItem("pendingSocialAuth");
-
-            const idToken = await user.getIdToken();
-            console.log("ID token obtained");
-
-            await socialAuth({ token: idToken });
-            router.replace("/dashboard");
-        });
-
-        return () => unsub();
-    }, []);
 
 
 
@@ -85,9 +59,13 @@ const useSignIn = () => {
     };
 
     const handGoogleSignInRedirect = () => {
-        setGoogleLoading(true);
-        sessionStorage.setItem('pendingSocialAuth', 'true');
-        signInWithRedirect(auth, googleAuthProvider);
+        const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+        const redirectUri = `${process.env.NEXT_PUBLIC_BASE_URL}/auth/google/callback`;
+        const scope = encodeURIComponent('profile email');
+        const responseType = 'code';
+        const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=${responseType}&scope=${scope}&access_type=offline&prompt=select_account`;
+
+        window.location.href = authUrl;
     };
 
     const { login, loading } = useUserSignIn(
