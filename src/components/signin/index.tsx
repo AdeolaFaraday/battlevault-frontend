@@ -79,7 +79,7 @@ const SignInComponent = () => {
                     <button
                         type="button"
                         disabled={isGoogleLoading}
-                        onClick={handGoogleSignIn}
+                        onClick={handGoogleSignInRedirect}
                         className={clsx(
                             "w-full flex items-center justify-center gap-4 bg-white hover:bg-white/90 text-black py-4 px-6 rounded-2xl font-bold transition-all active:scale-[0.98] shadow-lg shadow-white/5 group",
                             isGoogleLoading && "opacity-70 cursor-not-allowed"
