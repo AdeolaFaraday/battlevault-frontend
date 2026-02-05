@@ -26,7 +26,6 @@ const SignInComponent = () => {
     const {
         loading,
         isGoogleLoading,
-        handGoogleSignIn,
         handGoogleSignInRedirect,
         handleUserSignIn
     } = useSignIn();
