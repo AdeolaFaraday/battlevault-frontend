@@ -1,4 +1,4 @@
-import { authTokenStorage } from "@/src/lib/authToken";
+// import { authTokenStorage } from "@/src/lib/authToken";
 
 export const mapAuthPayloadToCommon = (payload: unknown): TCommonResponseData => {
     if (!payload) {
@@ -11,8 +11,7 @@ export const mapAuthPayloadToCommon = (payload: unknown): TCommonResponseData =>
         };
     }
 
-    const { token, user } = payload as {
-        token?: string;
+    const { user } = payload as {
         user?: Partial<TCommonResponseData>;
     };
 
@@ -24,13 +23,13 @@ export const mapAuthPayloadToCommon = (payload: unknown): TCommonResponseData =>
         userName: user?.userName,
         bio: user?.bio,
         role: user?.role,
-        token,
+        // token,
     };
 
     // Persist token if present
-    if (token) {
-        authTokenStorage.set(token);
-    }
+    // if (token) {
+    //     authTokenStorage.set(token);
+    // }
 
     return result;
 };
