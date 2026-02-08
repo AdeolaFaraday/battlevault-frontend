@@ -132,8 +132,8 @@ const SignInComponent = () => {
                             placeholder='••••••••'
                             label='Password'
                         />
-                        <div className="flex justify-end pr-1" onClick={handGoogleSignInRedirect}>
-                            <Link href="#" className="text-[10px] font-bold text-indigo-400/60 hover:text-indigo-400 uppercase tracking-wider transition-colors">
+                        <div className="flex justify-end pr-1">
+                            <Link href="/forgot-password" className="text-[10px] font-bold text-indigo-400/60 hover:text-indigo-400 uppercase tracking-wider transition-colors">
                                 Forgot password?
                             </Link>
                         </div>

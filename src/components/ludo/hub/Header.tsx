@@ -76,11 +76,18 @@ const Header = () => {
                         >
                             <div className="relative">
                                 <div className="w-9 h-9 md:w-10 md:h-10 rounded-full border-2 border-indigo-500/30 p-0.5 group-hover:border-indigo-500 transition-colors">
-                                    <div className="w-full h-full rounded-full bg-slate-700 overflow-hidden relative">
-                                        {/* Placeholder Avatar */}
-                                        <div className="absolute inset-0 bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-xs font-bold text-white">
-                                            {`${currentUser?.firstName?.charAt(0).toUpperCase() || 'B'} ${currentUser?.lastName?.charAt(0).toUpperCase() || 'V'}`}
-                                        </div>
+                                    <div className="w-full h-full rounded-full bg-slate-700 overflow-hidden relative flex items-center justify-center">
+                                        {currentUser?.avatar ? (
+                                            <img
+                                                src={currentUser.avatar}
+                                                alt={`${currentUser.firstName} ${currentUser.lastName}`}
+                                                className="w-full h-full object-cover"
+                                            />
+                                        ) : (
+                                            <div className="absolute inset-0 bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-xs font-bold text-white uppercase">
+                                                {`${currentUser?.firstName?.charAt(0) || 'B'}${currentUser?.lastName?.charAt(0) || 'V'}`}
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                                 <div className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 rounded-full border-2 border-[#1a1d2e]" />

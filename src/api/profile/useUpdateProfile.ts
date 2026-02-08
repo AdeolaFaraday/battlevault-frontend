@@ -6,6 +6,7 @@ type UpdateProfileInput = {
 	lastName: string;
 	userName: string;
 	bio?: string;
+	avatar?: string;
 };
 
 type UpdateProfileVariables = {

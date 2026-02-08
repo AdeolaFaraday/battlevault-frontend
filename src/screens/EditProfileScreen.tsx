@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { useRef } from 'react';
 import {
     ArrowLeft,
     Camera,
@@ -17,12 +17,20 @@ import useEditProfile from '../hooks/profile/useEditProfile';
 const EditProfileScreen = () => {
     const {
         form,
+        previewUrl,
         loading,
         showSuccess,
         handleChange,
         handleSubmit,
+        handleFileChange,
         goBack,
     } = useEditProfile();
+
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const handleAvatarClick = () => {
+        fileInputRef.current?.click();
+    };
 
     return (
         <AppLayout showBottomNav={false}>
@@ -42,13 +50,24 @@ const EditProfileScreen = () => {
 
             {/* Profile Photo Edit Section */}
             <section className="flex flex-col items-center py-6">
-                <div className="relative group cursor-pointer">
+                <input
+                    type="file"
+                    ref={fileInputRef}
+                    className="hidden"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                />
+                <div className="relative group cursor-pointer" onClick={handleAvatarClick}>
                     <motion.div
                         whileHover={{ scale: 1.05 }}
                         className="w-32 h-32 rounded-full p-1.5 bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 shadow-[0_0_30px_rgba(99,102,241,0.3)]"
                     >
                         <div className="w-full h-full rounded-full bg-[#24283b] flex items-center justify-center overflow-hidden border-4 border-[#1a1d2e] relative">
-                            <User size={64} className="text-white opacity-40" />
+                            {previewUrl || form.avatar ? (
+                                <img src={previewUrl || form.avatar} alt="Profile" className="w-full h-full object-cover" />
+                            ) : (
+                                <User size={64} className="text-white opacity-40" />
+                            )}
                             <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                                 <Camera size={32} className="text-white" />
                             </div>

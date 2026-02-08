@@ -61,5 +61,27 @@ export {
 	SOCIAL_LOGIN_USER_MUTATION,
 	VERIFY_EMAIL_MUTATION,
 	LOGOUT_MUTATION,
-	UPDATE_PROFILE_MUTATION
+	UPDATE_PROFILE_MUTATION,
+	REQUEST_PASSWORD_RESET_MUTATION,
+	RESET_PASSWORD_MUTATION
 }
+
+const REQUEST_PASSWORD_RESET_MUTATION = gql`
+	mutation RequestPasswordReset($email: String!) {
+		requestPasswordReset(email: $email) {
+			statusCode
+			success
+			message
+		}
+	}
+`;
+
+const RESET_PASSWORD_MUTATION = gql`
+	mutation ResetPassword($token: String!, $newPassword: String!) {
+		resetPassword(token: $token, newPassword: $newPassword) {
+			statusCode
+			success
+			message
+		}
+	}
+`;

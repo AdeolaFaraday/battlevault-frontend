@@ -1,12 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAppDispatch, useAppSelector } from '@/src/lib/redux/hooks';
 import { setLoggedInUserDetails } from '@/src/lib/redux/authSlice';
 import { useAlert } from '../common/useAlert';
 import useUpdateProfileApi from '@/src/api/profile/useUpdateProfile';
 import useUploadFile from '@/src/api/common/useUploadFile';
-import useMe from '@/src/api/auth/useMe';
-import { mapAuthPayloadToCommon } from '@/src/utils/auth-utils';
 
 export type EditProfileFormState = {
 	firstName: string;
@@ -37,63 +35,45 @@ const useEditProfile = () => {
 	);
 	const [showSuccess, setShowSuccess] = useState(false);
 
-	// Local file states
-	const [localFile, setLocalFile] = useState<File | null>(null);
-	const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-
 	const handleChange = (field: keyof EditProfileFormState, value: string) => {
 		setForm(prev => ({ ...prev, [field]: value }));
 	};
 
-	// Clean up preview URL
-	useEffect(() => {
-		return () => {
-			if (previewUrl) URL.revokeObjectURL(previewUrl);
-		};
-	}, [previewUrl]);
+	const onCompleted = (response: TAPIResponse<TCommonResponseData, 'updateUserProfile'>) => {
+		const { success: ok, message, data } = response.updateUserProfile;
 
-	const { getMe } = useMe((data) => {
-		if (data.me.success && data.me.data) {
-			const commonData = mapAuthPayloadToCommon(data.me.data);
-			dispatch(
-				setLoggedInUserDetails({
-					...(loggedInUserDetails ?? {}),
-					...commonData,
-					isUserLoggedIn: true,
-				})
-			);
-		}
-	});
-
-	// 2. Hook for updating profile
-	const { updateProfile, loading: updateLoading } = useUpdateProfileApi((response) => {
-		const { success: ok, message } = response.updateUserProfile;
-
-		if (!ok) {
+		if (!ok || !data) {
 			error('Profile Update Failed', message ?? 'Something went wrong updating your profile.');
 			return;
 		}
 
-		// Success!
+		// Keep existing auth data (token etc.), update with latest user fields
+		dispatch(
+			setLoggedInUserDetails({
+				...(loggedInUserDetails ?? {}),
+				...data,
+				isUserLoggedIn: true,
+			})
+		);
+
 		success('Profile Updated', message ?? 'Your profile has been updated.');
-
-		// 3. Re-fetch user data to sync store (as requested)
-		getMe();
-
 		setShowSuccess(true);
+
 		setTimeout(() => {
 			setShowSuccess(false);
 			router.back();
 		}, 2000);
-	});
+	};
 
-	// 4. Hook for uploading file
+	const { updateProfile, loading: updateLoading } = useUpdateProfileApi(onCompleted);
+
 	const { uploadFile, loading: uploadLoading } = useUploadFile(
 		(data) => {
+			// REST response format: { statusCode, success, message, data: { url, fileName } }
 			const url = data.data?.url;
 			if (url) {
-				// Once uploaded, perform the actual profile update
-				performUpdate(url);
+				setForm(prev => ({ ...prev, avatar: url }));
+				success('Avatar Uploaded', 'Your profile picture has been updated. Don\'t forget to save.');
 			}
 		},
 		(err) => {
@@ -104,22 +84,8 @@ const useEditProfile = () => {
 	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0];
 		if (file) {
-			setLocalFile(file);
-			const url = URL.createObjectURL(file);
-			setPreviewUrl(url);
+			uploadFile({ file, folder: 'avatars' });
 		}
-	};
-
-	const performUpdate = (avatarUrl?: string) => {
-		if (!loggedInUserDetails) return;
-
-		updateProfile({
-			firstName: form.firstName || loggedInUserDetails.firstName,
-			lastName: form.lastName || loggedInUserDetails.lastName,
-			userName: form.userName || loggedInUserDetails.userName || '',
-			bio: form.bio,
-			avatar: avatarUrl || form.avatar,
-		});
 	};
 
 	const handleSubmit = () => {
@@ -128,18 +94,18 @@ const useEditProfile = () => {
 			return;
 		}
 
-		// If there's a local file, upload it first
-		if (localFile) {
-			uploadFile({ file: localFile, folder: 'avatars' });
-		} else {
-			// Otherwise just update the profile
-			performUpdate();
-		}
+		updateProfile({
+			firstName: form.firstName || loggedInUserDetails.firstName,
+			lastName: form.lastName || loggedInUserDetails.lastName,
+			userName: form.userName || loggedInUserDetails.userName || '',
+
+			bio: form.bio,
+			avatar: form.avatar,
+		});
 	};
 
 	return {
 		form,
-		previewUrl, // Return the preview URL for the UI
 		loading: updateLoading || uploadLoading,
 		showSuccess,
 		handleChange,
@@ -150,3 +116,4 @@ const useEditProfile = () => {
 };
 
 export default useEditProfile;
+
