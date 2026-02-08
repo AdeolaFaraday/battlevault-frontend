@@ -14,7 +14,7 @@ const PrivacyContent = () => {
                 <h2 className="text-xl font-bold text-white mb-3">2. Information We Collect</h2>
                 <p className="mb-2">We collect information that identifies you personally, as well as other data regarding your use of the Platform.</p>
                 <ul className="list-disc pl-5 space-y-2">
-                    <li><strong>Account Information:</strong> Name, email address, phone number, date of birth, and identification documents provided during verification.</li>
+                    <li><strong>Account Information:</strong> Name, email address, phone number, and country</li>
                     <li><strong>Gameplay Data:</strong> Records of games played, scores, competition history, and invite lists.</li>
                     <li><strong>Financial Information:</strong> Bank account details (for withdrawals) and transaction history. Note that we do not store your credit card numbers; these are processed securely by our payment partners.</li>
                     <li><strong>Device and Usage Data:</strong> IP address, browser type, device identifiers, and operating system info collected automatically via cookies and analytics tools.</li>
@@ -26,7 +26,7 @@ const PrivacyContent = () => {
                 <p className="mb-2">We use the collected data for the following purposes:</p>
                 <ul className="list-disc pl-5 space-y-2">
                     <li>To operate and maintain the Platform and its features.</li>
-                    <li>To verify your identity and age in compliance with our Terms of Service.</li>
+                    {/* <li>To verify your identity and age in compliance with our Terms of Service.</li> */}
                     <li>To process payments and withdrawals via our third-party providers (e.g., Paystack).</li>
                     <li>To prevent fraud, cheating, and unauthorized access.</li>
                     <li>To communicate with you regarding updates, support, and promotional offers.</li>
@@ -38,7 +38,7 @@ const PrivacyContent = () => {
                 <h2 className="text-xl font-bold text-white mb-3">4. Disclosure of Your Information</h2>
                 <p className="mb-2">We may share your information with:</p>
                 <ul className="list-disc pl-5 space-y-2">
-                    <li><strong>Service Providers:</strong> Third-party vendors who perform services on our behalf, such as payment processing (Paystack), data hosting (AWS/Google Cloud), and analytics.</li>
+                    <li><strong>Service Providers:</strong> Third-party vendors who perform services on our behalf, such as payment processing (Paystack), data hosting (Google Cloud), and analytics.</li>
                     <li><strong>Legal Requirements:</strong> If required to do so by law or in response to valid requests by public authorities (e.g., a court or government agency).</li>
                     <li><strong>Business Transfers:</strong> In connection with any merger, sale of company assets, financing, or acquisition.</li>
                 </ul>
@@ -47,7 +47,8 @@ const PrivacyContent = () => {
             <section>
                 <h2 className="text-xl font-bold text-white mb-3">5. Data Retention and Security</h2>
                 <p>
-                    We implement appropriate technical and organizational security measures to protect your personal information. We retain your personal data only for as long as necessary to fulfill the purposes set out in this policy or as required by law (e.g., for tax and accounting purposes).
+                    We implement appropriate technical and organizational security measures to protect your personal information. We retain your personal data only for as long as necessary to fulfill the purposes set out in this policy or as required by law.
+                    {/* (e.g., for tax and accounting purposes). */}
                 </p>
             </section>
 
@@ -77,24 +78,24 @@ const PrivacyContent = () => {
                 </p>
             </section>
 
-            <section>
+            {/* <section>
                 <h2 className="text-xl font-bold text-white mb-3">9. Children&apos;s Privacy</h2>
                 <p>
                     Our Service does not address anyone under the age of 18. We do not knowingly collect personally identifiable information from anyone under the age of 18. If we become aware that we have collected such data without verification of parental consent, we take steps to remove that information from our servers.
                 </p>
-            </section>
+            </section> */}
 
             <section>
-                <h2 className="text-xl font-bold text-white mb-3">10. Changes to This Privacy Policy</h2>
+                <h2 className="text-xl font-bold text-white mb-3">9. Changes to This Privacy Policy</h2>
                 <p>
                     We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page. You are advised to review this Privacy Policy periodically for any changes.
                 </p>
             </section>
 
             <section>
-                <h2 className="text-xl font-bold text-white mb-3">11. Contact Us</h2>
+                <h2 className="text-xl font-bold text-white mb-3">10. Contact Us</h2>
                 <p>
-                    If you have any questions about this Privacy Policy or wish to exercise your data rights, please contact our Data Protection Officer at: <a href="mailto:privacy@battlevault.com" className="text-indigo-400 hover:underline">privacy@battlevault.com</a>.
+                    If you have any questions about this Privacy Policy or wish to exercise your data rights, please contact our Data Protection Officer at: <a href="mailto:adeolaafaraday@gmail.com" className="text-indigo-400 hover:underline">adeolaafaraday@gmail.com</a>.
                 </p>
             </section>
         </div>

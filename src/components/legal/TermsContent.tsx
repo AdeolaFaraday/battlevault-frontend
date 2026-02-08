@@ -13,7 +13,7 @@ const TermsContent = () => {
             <section>
                 <h2 className="text-xl font-bold text-white mb-3">2. Eligibility and Account Requirements</h2>
                 <ul className="list-disc pl-5 space-y-2">
-                    <li>You must be at least 18 years of age (or the age of majority in your jurisdiction) to use Battlevault.</li>
+                    {/* <li>You must be at least 18 years of age (or the age of majority in your jurisdiction) to use Battlevault.</li> */}
                     <li>You must provide accurate, current, and complete information during the registration process.</li>
                     <li>You represent that you are not prohibited from using the Platform under any applicable laws or regulations.</li>
                 </ul>
@@ -34,7 +34,7 @@ const TermsContent = () => {
             <section>
                 <h2 className="text-xl font-bold text-white mb-3">4. Rewards and Incentives</h2>
                 <p>
-                    Any monetary rewards, prizes, or payouts available on the Platform are strictly limited to private, invite-only competitions. These rewards are funded by the Platform or third-party sponsors as incentives for participation and performance. Users do not stake their own funds against other public users in an open market.
+                    Any monetary rewards, prizes, or payouts available on the Platform are strictly limited to the founder friends and family, invite-only competitions. These rewards are funded by the Platform or third-party sponsors as incentives for participation and performance. Users do not stake their own funds against other public users in an open market.
                 </p>
             </section>
 
@@ -102,7 +102,7 @@ const TermsContent = () => {
             <section>
                 <h2 className="text-xl font-bold text-white mb-3">12. Contact Information</h2>
                 <p>
-                    If you have any questions about these Terms, please contact us at: <a href="mailto:legal@battlevault.com" className="text-indigo-400 hover:underline">legal@battlevault.com</a>.
+                    If you have any questions about these Terms, please contact us at: <a href="mailto:adeolafaraday@gmail.com" className="text-indigo-400 hover:underline">adeolaafaraday@gmail.com</a>.
                 </p>
             </section>
         </div>
