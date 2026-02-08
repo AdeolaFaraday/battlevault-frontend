@@ -20,6 +20,7 @@ type TCommonResponseData = {
     lastName: string;
     email: string;
     bio?: string;
+    avatar?: string;
     role?: string;
 }
 
@@ -38,4 +39,20 @@ type TCreateUserArgs = {
 type TSignInSchema = {
     email: string
     password: string
+}
+
+type TRequestPasswordResetResponse = {
+    requestPasswordReset: {
+        statusCode: number;
+        success: boolean;
+        message: string;
+    }
+}
+
+type TResetPasswordResponse = {
+    resetPassword: {
+        statusCode: number;
+        success: boolean;
+        message: string;
+    }
 }

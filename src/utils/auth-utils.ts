@@ -23,6 +23,7 @@ export const mapAuthPayloadToCommon = (payload: unknown): TCommonResponseData =>
         userName: user?.userName,
         bio: user?.bio,
         role: user?.role,
+        avatar: user?.avatar,
         // token,
     };
 
