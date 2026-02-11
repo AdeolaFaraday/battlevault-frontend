@@ -5,7 +5,7 @@ import { useMutation } from '@apollo/client';
 import { useRouter } from 'next/navigation';
 import { CREATE_FREE_GAME_MUTATION, CREATE_AI_GAME_MUTATION } from '../../../graphql/game/mutations';
 import Modal from '../../common/Modal';
-import { Copy, Check, Gamepad2, Loader2, Link as LinkIcon, Bot, User, ArrowRight } from 'lucide-react';
+import { Copy, Check, Gamepad2, Loader2, Link as LinkIcon, Bot, User } from 'lucide-react';
 
 interface CreateGameModalProps {
     isOpen: boolean;
