@@ -135,3 +135,18 @@ export const REGISTER_FOR_TOURNAMENT_MUTATION = gql`
     }
   }
 `;
+
+export const CREATE_AI_GAME_MUTATION = gql`
+  mutation CreateAIGame($name: String!) {
+    createAIGame(name: $name) {
+      statusCode
+      success
+      message
+      data {
+        ... on LudoGameState {
+          _id
+        }
+      }
+    }
+  }
+`;
