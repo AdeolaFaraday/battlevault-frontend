@@ -25,16 +25,16 @@ function makeClient() {
     // const { data } = useSuspenseQuery(MY_QUERY, { context: { fetchOptions: { cache: "force-cache" }}});
   });
 
-  // const authLink = setContext((_, { headers }) => {
-  //   const token = authTokenStorage.get();
+  const authLink = setContext((_, { headers }) => {
+    const token = authTokenStorage.get();
 
-  //   return {
-  //     headers: {
-  //       ...headers,
-  //       ...(token ? { Authorization: `Bearer ${token}` } : {}),
-  //     },
-  //   };
-  // });
+    return {
+      headers: {
+        ...headers,
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+    };
+  });
 
   const sessionLink = setContext((_, { headers }) => {
     const sessionToken = typeof window !== 'undefined' ? localStorage.getItem('game_session_id') : null;
@@ -74,7 +74,7 @@ function makeClient() {
   return new ApolloClient({
     // use the `InMemoryCache` from "@apollo/experimental-nextjs-app-support"
     cache: new InMemoryCache(),
-    link: from([unauthorizedLink, sessionLink, httpLink]),
+    link: from([unauthorizedLink, authLink, sessionLink, httpLink]),
   });
 }
 

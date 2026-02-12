@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAppDispatch } from "@/src/lib/redux/hooks";
 import { setLoggedInUserDetails } from "@/src/lib/redux/authSlice";
 import { mapAuthPayloadToCommon } from "@/src/utils/auth-utils";
-// import { authTokenStorage } from "@/src/lib/authToken";
+import { authTokenStorage } from "@/src/lib/authToken";
 import useMe from "@/src/api/auth/useMe";
 
 export default function AuthCallback() {
@@ -35,7 +35,7 @@ export default function AuthCallback() {
         if (fetchRef.current) return;
 
         const params = new URLSearchParams(window.location.search);
-        // const token = params.get("token");
+        const token = params.get("token");
         const error = params.get("error");
 
         if (error) {
@@ -43,15 +43,15 @@ export default function AuthCallback() {
             return;
         }
 
-        // if (!token) {
-        //     router.replace("/signin");
-        //     return;
-        // }
+        if (!token) {
+            router.replace("/signin");
+            return;
+        }
 
         fetchRef.current = true;
 
         // 1. Store token immediately so authLink can pick it up
-        // authTokenStorage.set(token);
+        authTokenStorage.set(token);
 
         // 2. Fetch user data via GraphQL
         getMe();
