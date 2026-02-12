@@ -5,7 +5,8 @@ import { useMutation } from '@apollo/client';
 import { useRouter } from 'next/navigation';
 import { CREATE_FREE_GAME_MUTATION, CREATE_AI_GAME_MUTATION } from '../../../graphql/game/mutations';
 import Modal from '../../common/Modal';
-import { Copy, Check, Gamepad2, Loader2, Link as LinkIcon, Bot, User } from 'lucide-react';
+import { Copy, Check, Gamepad2, Loader2, Link as LinkIcon, Bot, User, Lock } from 'lucide-react';
+import { useAlert } from '@/src/hooks/common/useAlert';
 
 interface CreateGameModalProps {
     isOpen: boolean;
@@ -18,6 +19,7 @@ const CreateGameModal: React.FC<CreateGameModalProps> = ({ isOpen, onClose }) =>
     const [generatedLink, setGeneratedLink] = useState('');
     const [isCopied, setIsCopied] = useState(false);
     const [opponentType, setOpponentType] = useState<'human' | 'ai'>('human');
+    const { warning } = useAlert();
 
     const [createFreeGame, { loading: freeGameLoading, error: freeGameError }] = useMutation(CREATE_FREE_GAME_MUTATION, {
         onCompleted: (data) => {
@@ -96,14 +98,15 @@ const CreateGameModal: React.FC<CreateGameModalProps> = ({ isOpen, onClose }) =>
                             <span className="text-sm font-medium">Versus Human</span>
                         </button>
                         <button
-                            onClick={() => setOpponentType('ai')}
-                            className={`flex items-center justify-center gap-2 py-2.5 rounded-lg transition-all duration-200 ${opponentType === 'ai'
-                                ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/10'
-                                : 'text-slate-400 hover:text-slate-200 hover:bg-white/5'
-                                }`}
+                            type="button"
+                            onClick={() => {
+                                warning('Coming Soon', 'Versus AI mode is currently under development. Stay tuned!');
+                            }}
+                            className="flex items-center justify-center gap-2 py-2.5 rounded-lg transition-all duration-200 text-slate-500 bg-white/5 cursor-not-allowed opacity-60 relative group"
                         >
                             <Bot className="w-4 h-4" />
                             <span className="text-sm font-medium">Versus AI</span>
+                            <Lock className="w-3 h-3 absolute top-1 right-2 opacity-40 group-hover:opacity-100 transition-opacity" />
                         </button>
                     </div>
 
