@@ -2,9 +2,11 @@
 
 import React, { useState } from 'react';
 import { useMutation } from '@apollo/client';
-import { CREATE_FREE_GAME_MUTATION } from '../../../graphql/game/mutations';
+import { useRouter } from 'next/navigation';
+import { CREATE_FREE_GAME_MUTATION, CREATE_AI_GAME_MUTATION } from '../../../graphql/game/mutations';
 import Modal from '../../common/Modal';
-import { Copy, Check, Gamepad2, Loader2, Link as LinkIcon } from 'lucide-react';
+import { Copy, Check, Gamepad2, Loader2, Link as LinkIcon, Bot, User, Lock } from 'lucide-react';
+import { useAlert } from '@/src/hooks/common/useAlert';
 
 interface CreateGameModalProps {
     isOpen: boolean;
@@ -12,11 +14,14 @@ interface CreateGameModalProps {
 }
 
 const CreateGameModal: React.FC<CreateGameModalProps> = ({ isOpen, onClose }) => {
+    const router = useRouter();
     const [gameName, setGameName] = useState('');
     const [generatedLink, setGeneratedLink] = useState('');
     const [isCopied, setIsCopied] = useState(false);
+    const [opponentType, setOpponentType] = useState<'human' | 'ai'>('human');
+    const { warning } = useAlert();
 
-    const [createGame, { loading, error }] = useMutation(CREATE_FREE_GAME_MUTATION, {
+    const [createFreeGame, { loading: freeGameLoading, error: freeGameError }] = useMutation(CREATE_FREE_GAME_MUTATION, {
         onCompleted: (data) => {
             console.log({ data });
             const gameId = data.createFreeGame?.data?._id;
@@ -26,16 +31,37 @@ const CreateGameModal: React.FC<CreateGameModalProps> = ({ isOpen, onClose }) =>
         }
     });
 
+    const [createAIGame, { loading: aiGameLoading, error: aiGameError }] = useMutation(CREATE_AI_GAME_MUTATION, {
+        onCompleted: (data) => {
+            const gameId = data.createAIGame?.data?._id;
+            if (gameId) {
+                router.push(`/ludo-lobby/${gameId}`);
+                onClose();
+            }
+        }
+    });
+
+    const loading = freeGameLoading || aiGameLoading;
+    const error = freeGameError || aiGameError;
+
     const handleCreateGame = async () => {
         if (!gameName.trim()) return;
 
         try {
-            await createGame({
-                variables: {
-                    name: gameName,
-                    type: 'Ludo' // Default type
-                }
-            });
+            if (opponentType === 'ai') {
+                await createAIGame({
+                    variables: {
+                        name: gameName
+                    }
+                });
+            } else {
+                await createFreeGame({
+                    variables: {
+                        name: gameName,
+                        type: 'Ludo' // Default type
+                    }
+                });
+            }
         } catch (err) {
             console.error('Error creating game:', err);
         }
@@ -51,6 +77,7 @@ const CreateGameModal: React.FC<CreateGameModalProps> = ({ isOpen, onClose }) =>
         setGameName('');
         setGeneratedLink('');
         setIsCopied(false);
+        setOpponentType('human');
         onClose();
     };
 
@@ -58,6 +85,31 @@ const CreateGameModal: React.FC<CreateGameModalProps> = ({ isOpen, onClose }) =>
         <Modal isOpen={isOpen} onClose={handleClose} title="Create Free Game">
             {!generatedLink ? (
                 <div className="space-y-6">
+                    {/* Opponent Selection */}
+                    <div className="grid grid-cols-2 gap-3 p-1 bg-[#131620] border border-white/5 rounded-xl">
+                        <button
+                            onClick={() => setOpponentType('human')}
+                            className={`flex items-center justify-center gap-2 py-2.5 rounded-lg transition-all duration-200 ${opponentType === 'human'
+                                ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/10'
+                                : 'text-slate-400 hover:text-slate-200 hover:bg-white/5'
+                                }`}
+                        >
+                            <User className="w-4 h-4" />
+                            <span className="text-sm font-medium">Versus Human</span>
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => {
+                                warning('Coming Soon', 'Versus AI mode is currently under development. Stay tuned!');
+                            }}
+                            className="flex items-center justify-center gap-2 py-2.5 rounded-lg transition-all duration-200 text-slate-500 bg-white/5 cursor-not-allowed opacity-60 relative group"
+                        >
+                            <Bot className="w-4 h-4" />
+                            <span className="text-sm font-medium">Versus AI</span>
+                            <Lock className="w-3 h-3 absolute top-1 right-2 opacity-40 group-hover:opacity-100 transition-opacity" />
+                        </button>
+                    </div>
+
                     <div className="space-y-2">
                         <label className="text-sm font-medium text-slate-300">Game Name</label>
                         <div className="relative">
@@ -86,18 +138,29 @@ const CreateGameModal: React.FC<CreateGameModalProps> = ({ isOpen, onClose }) =>
                         {loading ? (
                             <>
                                 <Loader2 className="w-5 h-5 animate-spin" />
-                                Creating...
+                                {opponentType === 'ai' ? 'Starting AI Game...' : 'Creating...'}
                             </>
                         ) : (
                             <>
-                                <LinkIcon className="w-5 h-5" />
-                                Generate Game Link
+                                {opponentType === 'ai' ? (
+                                    <>
+                                        <Gamepad2 className="w-5 h-5" />
+                                        Start AI Game
+                                    </>
+                                ) : (
+                                    <>
+                                        <LinkIcon className="w-5 h-5" />
+                                        Generate Game Link
+                                    </>
+                                )}
                             </>
                         )}
                     </button>
 
                     <p className="text-xs text-center text-slate-500">
-                        Create a game link to share with friends and play instantly.
+                        {opponentType === 'ai'
+                            ? "Practice your skills against our AI. You'll be redirected to the game lobby instantly."
+                            : "Create a game link to share with friends and play instantly."}
                     </p>
                 </div>
             ) : (
