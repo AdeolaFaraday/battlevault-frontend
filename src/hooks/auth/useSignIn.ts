@@ -8,7 +8,7 @@ import useSocialAuth from '@/src/api/auth/useSocialAuth';
 import { useAppDispatch } from '@/src/lib/redux/hooks';
 import { setLoggedInUserDetails } from '@/src/lib/redux/authSlice';
 import { mapAuthPayloadToCommon } from '@/src/utils/auth-utils';
-
+import { authTokenStorage } from '@/src/lib/authToken';
 
 const useSignIn = () => {
     const dispatch = useAppDispatch();
@@ -72,6 +72,7 @@ const useSignIn = () => {
         (data) => {
             const payload = data?.login?.data;
             const common = mapAuthPayloadToCommon(payload);
+            authTokenStorage.set(payload?.token as string);
             onCompleted(common, data?.login?.success, data?.login?.message);
         },
     );

@@ -4,7 +4,7 @@ import { useAppDispatch } from '../../lib/redux/hooks';
 import { resetState } from '../../lib/redux/authSlice';
 import { useRouter } from 'next/navigation';
 import { useAlert } from '../common/useAlert';
-import { auth } from '@/src/lib/firebase';
+import { authTokenStorage } from '@/src/lib/authToken';
 
 export const useLogout = () => {
     const dispatch = useAppDispatch();
@@ -13,9 +13,11 @@ export const useLogout = () => {
 
     const handleCleanup = async () => {
         try {
-            await auth.signOut();
+            // await auth.signOut();
             // Clear Redux state
             dispatch(resetState());
+            // clear local storage
+            authTokenStorage.clear();
             // Clear Apollo store
             await client.clearStore();
             // Redirect to signin
