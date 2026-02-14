@@ -227,3 +227,29 @@ export const IS_USER_REGISTERED = gql`
     }
   }
 `;
+export const GET_DAILY_BLITZ = gql`
+  query GetDailyBlitz {
+    getDailyBlitz {
+      statusCode
+      success
+      message
+      data {
+        __typename
+        ... on DailyBlitz {
+          id
+          winsToday
+          loginRewardClaimed
+          win1RewardClaimed
+          win3RewardClaimed
+          nextReward {
+            description
+            amount
+            target
+            current
+            percentage
+          }
+        }
+      }
+    }
+  }
+`;
