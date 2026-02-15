@@ -158,7 +158,8 @@ const useBackendLudoAction = ({ color }: { color?: string }) => {
             });
         } catch (error) {
             console.error("Move failed:", error);
-            // Clear moving state on error
+        } finally {
+            // Clear moving state after request completes
             setMovingToken(null);
         }
     }, [gameState.currentTurn, currentUser?._id, playMove, processMoveMutation, gameId, playerName, alerts]);
