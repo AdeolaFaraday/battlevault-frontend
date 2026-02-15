@@ -89,7 +89,7 @@ const DailyBlitzSection = () => {
                         <div className="space-y-2">
                             <h4 className="text-sm font-bold text-slate-400 uppercase tracking-widest">Your Progress</h4>
                             <div className="flex items-baseline gap-2">
-                                <span className="text-4xl font-black text-white">{nextReward?.percentage || 0}%</span>
+                                <span className="text-4xl font-black text-white">{nextReward?.percentage?.toFixed(2) || 0}%</span>
                                 <span className="text-xs text-slate-500 font-medium">to next reward</span>
                             </div>
                             <div className="w-full h-2.5 bg-white/5 rounded-full overflow-hidden p-0.5 border border-white/5">
