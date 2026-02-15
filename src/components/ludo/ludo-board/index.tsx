@@ -35,7 +35,8 @@ const LudoBoard = ({ id }: { id: string }) => {
         handleDiceRoll,
         currentUserId,
         recentlyFinishedToken,
-        userColors
+        userColors,
+        movingToken
     } = useLudoAction({})
 
     const handleCustomDiceRoll = () => {
@@ -110,6 +111,7 @@ const LudoBoard = ({ id }: { id: string }) => {
                             handleTokenClick={handleTokenClick}
                             canMoveTokens={canMoveTokens}
                             userColors={userColors}
+                            movingToken={movingToken}
                         />
                         <LudoPath
                             startPathNumbers={generatePathNumberArray(7).reverse()}
@@ -122,6 +124,7 @@ const LudoBoard = ({ id }: { id: string }) => {
                             canMoveTokens={canMoveTokens}
                             userColors={userColors}
                             selectorPosition="below"
+                            movingToken={movingToken}
                         />
                         <LudoHomeColumn
                             color="green"
@@ -130,6 +133,7 @@ const LudoBoard = ({ id }: { id: string }) => {
                             handleTokenClick={handleTokenClick}
                             canMoveTokens={canMoveTokens}
                             userColors={userColors}
+                            movingToken={movingToken}
                         />
                     </div>
                     <span className="ludo-column__center">
@@ -145,6 +149,7 @@ const LudoBoard = ({ id }: { id: string }) => {
                             tokensByCell={tokensByCell}
                             canMoveTokens={canMoveTokens}
                             userColors={userColors}
+                            movingToken={movingToken}
                         />
                         <div className="ludo-center">
                             <div className="clip-triangle-tl" />
@@ -164,6 +169,7 @@ const LudoBoard = ({ id }: { id: string }) => {
                             tokensByCell={tokensByCell}
                             canMoveTokens={canMoveTokens}
                             userColors={userColors}
+                            movingToken={movingToken}
                         />
                     </span>
                     <div>
@@ -174,6 +180,7 @@ const LudoBoard = ({ id }: { id: string }) => {
                             handleTokenClick={handleTokenClick}
                             canMoveTokens={canMoveTokens}
                             userColors={userColors}
+                            movingToken={movingToken}
                         />
                         <LudoPath
                             startPathNumbers={generatePathNumberArray(40).reverse()}
@@ -185,6 +192,7 @@ const LudoBoard = ({ id }: { id: string }) => {
                             tokensByCell={tokensByCell}
                             canMoveTokens={canMoveTokens}
                             userColors={userColors}
+                            movingToken={movingToken}
                         />
                         <LudoHomeColumn
                             handleTokenClick={handleTokenClick}
@@ -193,6 +201,7 @@ const LudoBoard = ({ id }: { id: string }) => {
                             customClassName="column-4"
                             canMoveTokens={canMoveTokens}
                             userColors={userColors}
+                            movingToken={movingToken}
                         />
                     </div>
                 </div>

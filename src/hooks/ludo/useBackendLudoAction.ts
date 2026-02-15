@@ -133,23 +133,34 @@ const useBackendLudoAction = ({ color }: { color?: string }) => {
         });
     }, [gameState.currentTurn, currentUser?._id, playRoll, rollDiceMutation, gameId, playerName, alerts]);
 
+    const [movingToken, setMovingToken] = useState<{ id: number, color: string } | null>(null);
+
     const handleTokenMove = React.useCallback(async (moveData: { token: Token, position: number, playerId: string }) => {
         if (gameState.currentTurn !== currentUser?._id) {
             alerts.warning("Action Denied", "You cannot move tokens right now.");
             return;
         }
 
+        // Set moving token state immediately for UI feedback
+        setMovingToken({ id: moveData.token.sn, color: moveData.token.color });
         playMove();
-        await processMoveMutation({
-            variables: {
-                gameId,
-                input: {
-                    tokenId: moveData.token.sn,
-                    color: moveData.token.color
-                },
-                name: playerName
-            }
-        });
+
+        try {
+            await processMoveMutation({
+                variables: {
+                    gameId,
+                    input: {
+                        tokenId: moveData.token.sn,
+                        color: moveData.token.color
+                    },
+                    name: playerName
+                }
+            });
+        } catch (error) {
+            console.error("Move failed:", error);
+            // Clear moving state on error
+            setMovingToken(null);
+        }
     }, [gameState.currentTurn, currentUser?._id, playMove, processMoveMutation, gameId, playerName, alerts]);
 
     const handleSelectDice = React.useCallback(async (val: number[] | null | ((prev: number[] | null) => number[] | null)) => {
@@ -205,6 +216,12 @@ const useBackendLudoAction = ({ color }: { color?: string }) => {
         prevPlayersRef.current = gameState.players;
     }, [gameState.players, gameState.tokens]);
 
+    useEffect(() => {
+        if (movingToken && gameState.currentTurn !== currentUser?._id) {
+            setMovingToken(null);
+        }
+    }, [gameState.currentTurn, currentUser?._id, movingToken]);
+
     return {
         gameState,
         tokens: gameState.tokens,
@@ -212,6 +229,7 @@ const useBackendLudoAction = ({ color }: { color?: string }) => {
         isCurrentTurn: gameState.currentTurn === currentUser?._id,
         currentUserId: currentUser?._id,
         isRolling,
+        movingToken,
         recentlyFinishedToken,
         handleDiceRoll,
         handleTokenClick: React.useCallback((token: Token, pos?: number) => handleTokenMove({

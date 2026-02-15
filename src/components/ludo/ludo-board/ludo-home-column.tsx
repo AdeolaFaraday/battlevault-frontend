@@ -10,7 +10,8 @@ const LudoHomeColumn = memo(({
     token,
     handleTokenClick,
     canMoveTokens,
-    userColors
+    userColors,
+    movingToken
 }: {
     customClassName?: string
     color: string
@@ -18,6 +19,7 @@ const LudoHomeColumn = memo(({
     handleTokenClick: (token: Token) => void
     canMoveTokens: boolean
     userColors: string[]
+    movingToken?: { id: number, color: string } | null
 }) => {
     return <div className={clsx("ludo-home__column", customClassName)}>
         <div className="ludo-token__container">
@@ -30,8 +32,13 @@ const LudoHomeColumn = memo(({
                         active={data?.active}
                         key={`${color}-${data.sn}`}
                         color={color}
-                        onClick={() => handleTokenClick(data)}
+                        onClick={() => {
+                            if (!movingToken) {
+                                handleTokenClick(data)
+                            }
+                        }}
                         shouldPulse={canMoveTokens && userColors.includes(color)}
+                        isMoving={movingToken?.id === data.sn && movingToken?.color === data.color}
                     />
                 ))}
             </div>
@@ -49,8 +56,11 @@ const LudoHomeColumn = memo(({
             t.color === nextProps.token[i].color &&
             t.sn === nextProps.token[i].sn &&
             t.position === nextProps.token[i].position &&
-            t.active === nextProps.token[i].active
-        )
+            t.active === nextProps.token[i].active &&
+            (prevProps.movingToken?.id === t.sn && prevProps.movingToken?.color === t.color) ===
+            (nextProps.movingToken?.id === t.sn && nextProps.movingToken?.color === t.color)
+        ) &&
+        prevProps.movingToken === nextProps.movingToken
     );
 });
 
