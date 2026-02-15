@@ -1,5 +1,6 @@
 import React, { memo } from "react";
 import { motion } from "framer-motion";
+import clsx from "clsx";
 import { cellColors } from "@/src/constants";
 import { Token } from "@/src/types/ludo";
 
@@ -8,6 +9,7 @@ type LudoTokenProps = {
     homeActive?: boolean
     onClick?: (e: React.MouseEvent) => void
     disableAnim?: boolean // New prop
+    isMoving?: boolean
     shouldPulse?: boolean
 } & Token
 
@@ -20,7 +22,8 @@ const LudoToken = memo(({
     isInHomeColumn,
     onClick,
     disableAnim,
-    shouldPulse
+    shouldPulse,
+    isMoving
 }: LudoTokenProps) => {
     // onClick is passed but not currently used in this component
     const findBgColor = cellColors?.find((data) => data?.color === color)
@@ -29,7 +32,7 @@ const LudoToken = memo(({
         <motion.div
             layoutId={disableAnim ? undefined : `${color}-${sn}`}
             layout={disableAnim ? undefined : "position"}
-            className="ludo-token"
+            className={clsx("ludo-token", isMoving && "cursor-wait")}
             style={{
                 // width: size,
                 // height: size,
@@ -39,7 +42,7 @@ const LudoToken = memo(({
                 backgroundColor: findBgColor?.style,
                 willChange: "transform",
             }}
-            animate={shouldPulse ? {
+            animate={shouldPulse && !isMoving ? {
                 scale: [1, 1.25, 1],
                 boxShadow: [
                     "0 0 0px rgba(255,215,0,0)",
@@ -56,14 +59,14 @@ const LudoToken = memo(({
                     ease: "linear",
                     duration: 0.2
                 },
-                scale: shouldPulse ? {
+                scale: shouldPulse && !isMoving ? {
                     duration: 1.0,
                     repeat: Infinity,
                     ease: "easeInOut"
                 } : {
                     duration: 0.2
                 },
-                boxShadow: shouldPulse ? {
+                boxShadow: shouldPulse && !isMoving ? {
                     duration: 1.0,
                     repeat: Infinity,
                     ease: "easeInOut"
@@ -73,9 +76,14 @@ const LudoToken = memo(({
             }}
             onClick={(e) => {
                 e.stopPropagation();
-                onClick?.(e);
+                if (!isMoving) onClick?.(e);
             }}
         >
+            {isMoving && (
+                <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-3/4 h-3/4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+                </div>
+            )}
         </motion.div>
     );
 });

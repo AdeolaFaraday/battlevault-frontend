@@ -273,7 +273,7 @@ div.column-4 {
 }
 
 .dice.rolling {
-    animation: roll 0.5s ease-in-out;
+    animation: roll 0.5s linear infinite;
 }
 
 .dice-container {

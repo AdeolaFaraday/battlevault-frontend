@@ -18,6 +18,7 @@ type LudoPathProps = {
     canMoveTokens: boolean
     userColors: string[]
     selectorPosition?: 'above' | 'below'
+    movingToken?: { id: number, color: string } | null
 }
 
 const LudoPath = memo(({
@@ -33,7 +34,8 @@ const LudoPath = memo(({
     handleTokenDrop,
     canMoveTokens,
     userColors,
-    selectorPosition = 'above'
+    selectorPosition = 'above',
+    movingToken
 }: LudoPathProps) => {
     const findBgColor = cellColors?.find((data) => data?.color === color)
 
@@ -51,6 +53,7 @@ const LudoPath = memo(({
                         canMoveTokens={canMoveTokens}
                         userColors={userColors}
                         selectorPosition={selectorPosition}
+                        movingToken={movingToken}
                     />
                 ))}
             </div>
@@ -69,6 +72,7 @@ const LudoPath = memo(({
                             canMoveTokens={canMoveTokens}
                             userColors={userColors}
                             selectorPosition={selectorPosition}
+                            movingToken={movingToken}
                         />
                     );
                 })}
@@ -85,6 +89,7 @@ const LudoPath = memo(({
                         canMoveTokens={canMoveTokens}
                         userColors={userColors}
                         selectorPosition={selectorPosition}
+                        movingToken={movingToken}
                     />
                 ))}
             </div>

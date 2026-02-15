@@ -2,7 +2,6 @@ import { CSSProperties, memo, useState, useEffect, useRef } from "react"
 import LudoToken from "./ludo-token"
 import clsx from "clsx"
 import { Token } from "@/src/types/ludo"
-import { cellColors } from "@/src/constants"
 
 type LudoCellProps = {
     number: number
@@ -13,6 +12,7 @@ type LudoCellProps = {
     canMoveTokens: boolean
     userColors: string[]
     selectorPosition?: 'above' | 'below'
+    movingToken?: { id: number, color: string } | null
 }
 
 const LudoCell = memo(({
@@ -23,7 +23,8 @@ const LudoCell = memo(({
     handleTokenDrop,
     canMoveTokens,
     userColors,
-    selectorPosition = 'above'
+    selectorPosition = 'above',
+    movingToken
 }: LudoCellProps) => {
     const [isSelectorOpen, setIsSelectorOpen] = useState(false);
     const selectorRef = useRef<HTMLDivElement>(null);
@@ -54,7 +55,9 @@ const LudoCell = memo(({
             // If the user clicks the token specifically:
             setIsSelectorOpen(prev => !prev);
         } else {
-            handleTokenDrop(token, number);
+            if (!movingToken) {
+                handleTokenDrop(token, number);
+            }
         }
     };
 
@@ -70,6 +73,7 @@ const LudoCell = memo(({
                 }
             }}
         >
+            {/* ... (rest of the code) */}
             {cellTokens.length > 0 && cellTokens.map((data) => (
                 <LudoToken
                     key={`${data?.color}-${data?.sn}`}
@@ -79,6 +83,7 @@ const LudoCell = memo(({
                         handleCellClick(e as unknown as React.MouseEvent, data);
                     }}
                     shouldPulse={canMoveTokens && userColors.includes(data.color)}
+                    isMoving={movingToken?.id === data.sn && movingToken?.color === data.color}
                 />
             ))}
 
@@ -99,15 +104,18 @@ const LudoCell = memo(({
                                 className="token-selector-item"
                                 onClick={(e) => {
                                     e.stopPropagation();
-                                    handleTokenDrop(token, number);
-                                    setIsSelectorOpen(false);
+                                    if (!movingToken) {
+                                        handleTokenDrop(token, number);
+                                        setIsSelectorOpen(false);
+                                    }
                                 }}
                             >
-                                <div
-                                    className="token-selector-token"
-                                    style={{
-                                        backgroundColor: cellColors.find(c => c.color === token.color)?.style
-                                    }}
+                                <LudoToken
+                                    {...token}
+                                    active={false}
+                                    disableAnim
+                                    shouldPulse={false}
+                                    isMoving={movingToken?.id === token.sn && movingToken?.color === token.color}
                                 />
                                 {/* Token identifier */}
                                 <div className="token-selector-label">
@@ -118,7 +126,7 @@ const LudoCell = memo(({
                     </div>
                 )
             }
-        </div >
+        </div>
     );
 }, (prevProps, nextProps) => {
     // Custom comparison to ensure we only re-render if tokens, style or handler change
@@ -130,9 +138,12 @@ const LudoCell = memo(({
         prevProps.cellTokens.length === nextProps.cellTokens.length &&
         prevProps.cellTokens.every((t, i) =>
             t.color === nextProps.cellTokens[i].color &&
-            t.sn === nextProps.cellTokens[i].sn
+            t.sn === nextProps.cellTokens[i].sn &&
+            (prevProps.movingToken?.id === t.sn && prevProps.movingToken?.color === t.color) ===
+            (nextProps.movingToken?.id === t.sn && nextProps.movingToken?.color === t.color)
         ) &&
-        prevProps.style?.backgroundColor === nextProps.style?.backgroundColor
+        prevProps.style?.backgroundColor === nextProps.style?.backgroundColor &&
+        prevProps.movingToken === nextProps.movingToken
     );
 });
 
