@@ -95,7 +95,7 @@ const DailyBlitzSection = () => {
                             <div className="w-full h-2.5 bg-white/5 rounded-full overflow-hidden p-0.5 border border-white/5">
                                 <motion.div
                                     initial={{ width: 0 }}
-                                    animate={{ width: `${nextReward?.percentage || 0}%` }}
+                                    animate={{ width: `${nextReward?.percentage?.toFixed(2) || 0}%` }}
                                     transition={{ duration: 1, ease: "easeOut" }}
                                     className="h-full bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500 rounded-full shadow-[0_0_15px_rgba(245,158,11,0.5)]"
                                 />

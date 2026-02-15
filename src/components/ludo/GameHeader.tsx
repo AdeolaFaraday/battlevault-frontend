@@ -27,7 +27,7 @@ export const GameStats = () => {
             {/* Right: Prize/Coins */}
             <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 shadow-[0_0_10px_rgba(245,158,11,0.2)]">
                 <div className="w-3 h-3 rounded-full bg-gradient-to-br from-amber-300 to-amber-600 border border-amber-200 shadow-sm" />
-                <span className="text-[10px] font-black text-amber-200 tracking-wide">$500</span>
+                <span className="text-[10px] font-black text-amber-200 tracking-wide">100</span>
             </div>
         </div>
     )
