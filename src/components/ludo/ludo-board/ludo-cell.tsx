@@ -110,13 +110,21 @@ const LudoCell = memo(({
                                     }
                                 }}
                             >
-                                <LudoToken
-                                    {...token}
-                                    active={false}
-                                    disableAnim
-                                    shouldPulse={false}
-                                    isMoving={movingToken?.id === token.sn && movingToken?.color === token.color}
-                                />
+                                <div className="token-selector-token flex items-center justify-center">
+                                    <LudoToken
+                                        {...token}
+                                        active={false}
+                                        disableAnim
+                                        shouldPulse={false}
+                                        isMoving={movingToken?.id === token.sn && movingToken?.color === token.color}
+                                        onClick={() => {
+                                            if (!movingToken) {
+                                                handleTokenDrop(token, number);
+                                                setIsSelectorOpen(false);
+                                            }
+                                        }}
+                                    />
+                                </div>
                                 {/* Token identifier */}
                                 <div className="token-selector-label">
                                     #{token.sn}
