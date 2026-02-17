@@ -27,6 +27,7 @@ export type LudoPlayer = {
     rank?: number; // For UI
     capturedCount?: number;
     finishedCount?: number;
+    lastSeen?: string | number;
 };
 
 export type LudoGameState = {
