@@ -1,12 +1,13 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useParams } from "next/navigation";
 import { useAlert } from "../common/useAlert";
 import { useAppSelector } from "@/src/lib/redux/hooks";
 import { cellColors } from "@/src/constants";
 import { GameService, GameSessionData } from "@/src/services/ludo/game.service";
 import { RootState } from "@/src/lib/redux/store";
-import { useMutation } from "@apollo/client";
-import { ROLL_DICE_MUTATION, PROCESS_MOVE_MUTATION, SELECT_DICE_MUTATION, VALIDATE_TURN_MUTATION } from "@/src/graphql/game/mutations";
+import { useMutation, useQuery } from "@apollo/client";
+import { ROLL_DICE_MUTATION, PROCESS_MOVE_MUTATION, SELECT_DICE_MUTATION, VALIDATE_TURN_MUTATION, RENEW_TURN_TIME_MUTATION } from "@/src/graphql/game/mutations";
+import { GET_WALLET_QUERY } from "@/src/graphql/wallet/queries";
 import { useSound } from "../useSound";
 import { Token, LudoPlayer } from "@/src/types/ludo";
 
@@ -14,6 +15,12 @@ const useBackendLudoAction = ({ color }: { color?: string }) => {
     const { id: gameId } = useParams<{ id: string }>();
     const currentUser = useAppSelector((state: RootState) => state.auth.loggedInUserDetails);
     const alerts = useAlert();
+
+    const { data: walletData, refetch: refetchWallet } = useQuery(GET_WALLET_QUERY, {
+        skip: !currentUser?._id
+    });
+
+    const rewardPoints = walletData?.getWallet?.data?.rewards || 0;
 
     console.log({ currentUser })
 
@@ -82,14 +89,18 @@ const useBackendLudoAction = ({ color }: { color?: string }) => {
         }
     });
 
-    const [validateTurnMutation] = useMutation(VALIDATE_TURN_MUTATION, {
+    const [validateTurnMutation] = useMutation(VALIDATE_TURN_MUTATION);
+    const [renewTurnTimeMutation] = useMutation(RENEW_TURN_TIME_MUTATION, {
         onCompleted: (data) => {
-            if (data?.validateTurn && !data.validateTurn.success) {
-                console.warn("Turn validation failed:", data.validateTurn.message);
+            if (data?.renewTurnTime?.success) {
+                alerts.success("Time Extended", "Your turn time has been renewed.");
+                refetchWallet();
+            } else {
+                alerts.error("Action Failed", data?.renewTurnTime?.message || "Could not renew turn time.");
             }
         },
         onError: (err) => {
-            console.error("Turn validation error:", err);
+            alerts.error("Error", err.message || "Failed to renew turn time");
         }
     });
 
@@ -260,12 +271,19 @@ const useBackendLudoAction = ({ color }: { color?: string }) => {
         userColors: gameState.players?.find(p => p.id === currentUser?._id)?.tokens || [],
         turnStartedAt: gameState.turnStartedAt,
         turnDuration: gameState.turnDuration,
-        handleValidateTurn: React.useCallback(async () => {
+        handleValidateTurn: useCallback(async () => {
             if (!gameId) return;
             await validateTurnMutation({
                 variables: { gameId }
             });
-        }, [gameId, validateTurnMutation])
+        }, [gameId, validateTurnMutation]),
+        handleRenewTurnTime: useCallback(async () => {
+            if (!gameId) return;
+            await renewTurnTimeMutation({
+                variables: { gameId }
+            });
+        }, [gameId, renewTurnTimeMutation]),
+        rewardPoints
     };
 };
 

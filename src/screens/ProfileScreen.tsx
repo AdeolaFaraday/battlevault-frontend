@@ -23,7 +23,7 @@ const ProfileScreen = () => {
     const router = useRouter();
 
     const currentUser = useAppSelector((state: RootState) => state.auth.loggedInUserDetails);
-    const { withdrawable, pending, currency } = useAppSelector((state: RootState) => state.wallet);
+    const { withdrawable, pending, rewards, currency } = useAppSelector((state: RootState) => state.wallet);
     const { logout } = useLogout();
     const { getWallet } = useGetWallet();
 
@@ -98,7 +98,12 @@ const ProfileScreen = () => {
                             <div className="flex items-center gap-6">
                                 <div className="space-y-0.5">
                                     <span className="text-white/30 text-[8px] font-black uppercase tracking-widest block">Pending</span>
-                                    <p className="text-sm font-bold" style={{ color: "#FFC107" }}>{formatCurrency(pending)}</p>
+                                    <p className="text-sm font-bold text-amber-500">{formatCurrency(pending)}</p>
+                                </div>
+                                <div className="h-4 w-px bg-white/10" />
+                                <div className="space-y-0.5">
+                                    <span className="text-white/30 text-[8px] font-black uppercase tracking-widest block">Blitz Coins</span>
+                                    <p className="text-sm font-bold text-indigo-400">{rewards.toLocaleString()} BVC</p>
                                 </div>
                                 <div className="h-4 w-px bg-white/10" />
                                 <div className="space-y-0.5">

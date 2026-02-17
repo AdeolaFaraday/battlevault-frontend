@@ -52,6 +52,7 @@ export const GET_UPCOMING_GAMES = gql`
               name
               avatarUrl
               color
+              lastSeen
             }
             currentTurn
             status
@@ -83,6 +84,7 @@ export const GET_ACTIVE_GAMES = gql`
             players {
               id
               name
+              lastSeen
             }
             createdAt
             updatedAt

@@ -74,7 +74,7 @@ const LudoCell = memo(({
             }}
         >
             {/* ... (rest of the code) */}
-            {cellTokens.length > 0 && cellTokens.map((data) => (
+            {cellTokens.length > 0 && cellTokens.map((data, index) => (
                 <LudoToken
                     key={`${data?.color}-${data?.sn}`}
                     {...data}
@@ -84,6 +84,8 @@ const LudoCell = memo(({
                     }}
                     shouldPulse={canMoveTokens && userColors.includes(data.color)}
                     isMoving={movingToken?.id === data.sn && movingToken?.color === data.color}
+                    stackedIndex={index}
+                    isStacked={isStacked}
                 />
             ))}
 

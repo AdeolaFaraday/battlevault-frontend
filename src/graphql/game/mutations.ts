@@ -64,6 +64,7 @@ export const PROCESS_MOVE_MUTATION = gql`
             color
             capturedCount
             finishedCount
+            lastSeen
           }
           currentTurn
           diceValue
@@ -165,6 +166,7 @@ export const VALIDATE_TURN_MUTATION = gql`
             color
             capturedCount
             finishedCount
+            lastSeen
           }
           currentTurn
           diceValue
@@ -184,6 +186,26 @@ export const VALIDATE_TURN_MUTATION = gql`
           lastMoverId
         }
       }
+    }
+  }
+`;
+
+export const UPDATE_LAST_SEEN_MUTATION = gql`
+  mutation UpdateLastSeen($gameId: ID!) {
+    updateLastSeen(gameId: $gameId) {
+      statusCode
+      success
+      message
+    }
+  }
+`;
+
+export const RENEW_TURN_TIME_MUTATION = gql`
+  mutation RenewTurnTime($gameId: ID!) {
+    renewTurnTime(gameId: $gameId) {
+      statusCode
+      success
+      message
     }
   }
 `;
