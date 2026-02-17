@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import { generatePathNumberArray } from "@/src/utils/ludo-board";
 import LudoPath from "./ludo-path";
 import LudoHomeColumn from "./ludo-home-column";
-import useLudoAction from "@/src/hooks/ludo";
+import useLudoAction, { usePresenceTracking } from "@/src/hooks/ludo";
 import DiceComponent from "../dice-component";
 import DiceSelector from "../dice-selector";
 import { useRouter } from "next/navigation";
@@ -18,10 +18,11 @@ import { LudoPlayer, Token } from "@/src/types/ludo";
 import GameStats from "../GameHeader";
 import PlayerCard from "../PlayerCard";
 import TokenFlyingAnimation from "./TokenFlyingAnimation";
+import { motion } from "framer-motion";
 
 const LudoBoard = ({ id }: { id: string }) => {
     const router = useRouter();
-    console.log({ id });
+    usePresenceTracking(id);
     const {
         findActiveTokens,
         tokens,
@@ -39,8 +40,20 @@ const LudoBoard = ({ id }: { id: string }) => {
         movingToken,
         turnStartedAt,
         turnDuration,
-        handleValidateTurn
+        handleValidateTurn,
+        handleRenewTurnTime,
+        rewardPoints
     } = useLudoAction({})
+
+    const rotationAngle = useMemo(() => {
+        if (!userColors || userColors.length === 0) return 0;
+        // The current layout has:
+        // Top: Green/Red (TL/TR)
+        // Bottom: Blue/Yellow (BL/BR)
+        // If user has Red or Green, we want to rotate 180 to bring them to the bottom.
+        if (userColors.includes("red") || userColors.includes("green")) return 180;
+        return 0;
+    }, [userColors]);
 
     const handleCustomDiceRoll = () => {
         if (handleDiceRoll) {
@@ -94,127 +107,147 @@ const LudoBoard = ({ id }: { id: string }) => {
             <div className="flex-1 flex flex-col items-center justify-start mt-5 relative z-10 w-full max-w-[500px] mx-auto pb-4">
                 <GameStats />
 
-                {/* Top Opponent Card (Green or Red) */}
+                {/* Dynamic Player Cards Positioning */}
                 <div className="w-full flex justify-center mb-4 px-4">
                     <PlayerCard
-                        player={getPlayer("green") || getPlayer("red")}
-                        color={getPlayer("green") ? "green" : "red"}
-                        isCurrentTurn={(getPlayer("green") || getPlayer("red"))?.id === currentTurnId}
-                        isCurrentUser={(getPlayer("green") || getPlayer("red"))?.id === currentUserId}
+                        player={rotationAngle === 180
+                            ? (getPlayer("blue") || getPlayer("yellow"))
+                            : (getPlayer("green") || getPlayer("red"))}
+                        color={rotationAngle === 180
+                            ? (getPlayer("blue") ? "blue" : "yellow")
+                            : (getPlayer("green") ? "green" : "red")}
+                        isCurrentTurn={(rotationAngle === 180
+                            ? (getPlayer("blue") || getPlayer("yellow"))
+                            : (getPlayer("green") || getPlayer("red")))?.id === currentTurnId}
+                        isCurrentUser={(rotationAngle === 180
+                            ? (getPlayer("blue") || getPlayer("yellow"))
+                            : (getPlayer("green") || getPlayer("red")))?.id === currentUserId}
                         position="top-right"
                         tokenData={gameState.tokens}
                         turnStartedAt={turnStartedAt}
                         turnDuration={turnDuration}
                         onTimeUp={handleValidateTurn}
+                        rewardPoints={rewardPoints}
+                        onRenewTime={handleRenewTurnTime}
                     />
                 </div>
 
                 {/* The Board Itself */}
-                <div className='ludo-board transform scale-90 sm:scale-100 shadow-2xl shadow-black/50 bg-white'>
-                    <div>
-                        <LudoHomeColumn
-                            color="red"
-                            customClassName="column-1"
-                            token={tokens.red}
-                            handleTokenClick={handleTokenClick}
-                            canMoveTokens={canMoveTokens}
-                            userColors={userColors}
-                            movingToken={movingToken}
-                        />
-                        <LudoPath
-                            startPathNumbers={generatePathNumberArray(7).reverse()}
-                            middlePathNumbers={generatePathNumberArray(13)}
-                            endPathNumbers={generatePathNumberArray(14)}
-                            startPathNumber={15}
-                            handleTokenDrop={handleTokenClick}
-                            color="green"
-                            tokensByCell={tokensByCell}
-                            canMoveTokens={canMoveTokens}
-                            userColors={userColors}
-                            selectorPosition="below"
-                            movingToken={movingToken}
-                        />
-                        <LudoHomeColumn
-                            color="green"
-                            customClassName="column-2"
-                            token={tokens.green}
-                            handleTokenClick={handleTokenClick}
-                            canMoveTokens={canMoveTokens}
-                            userColors={userColors}
-                            movingToken={movingToken}
-                        />
-                    </div>
-                    <span className="ludo-column__center">
-                        <LudoPath
-                            startPathNumbers={generatePathNumberArray(1)}
-                            middlePathNumbers={generatePathNumberArray(52)}
-                            endPathNumbers={generatePathNumberArray(46).reverse()}
-                            handleTokenDrop={handleTokenClick}
-                            startPathNumber={2}
-                            color="red"
-                            customClassName="ludo-cell__vertial"
-                            customRowClassName="ludo-row"
-                            tokensByCell={tokensByCell}
-                            canMoveTokens={canMoveTokens}
-                            userColors={userColors}
-                            movingToken={movingToken}
-                        />
-                        <div className="ludo-center">
-                            <div className="clip-triangle-tl" />
-                            <div className="clip-triangle-tr" />
-                            <div className="clip-triangle-bl" />
-                            <div className="clip-triangle-br" />
+                <motion.div
+                    className='ludo-board transform scale-90 sm:scale-100 shadow-2xl shadow-black/50 bg-white'
+                    animate={{ rotate: rotationAngle }}
+                    transition={{ duration: 1, ease: "easeInOut" }}
+                    style={{
+                        transform: `scale(var(--tw-scale-x))`,
+                        '--token-rotation': `${-rotationAngle}deg`
+                    } as unknown as object}
+                >
+                    <div className="flex flex-col h-full w-full">
+                        <div className="flex w-full">
+                            <LudoHomeColumn
+                                color="red"
+                                customClassName="column-1"
+                                token={tokens.red}
+                                handleTokenClick={handleTokenClick}
+                                canMoveTokens={canMoveTokens}
+                                userColors={userColors}
+                                movingToken={movingToken}
+                            />
+                            <LudoPath
+                                startPathNumbers={generatePathNumberArray(7).reverse()}
+                                middlePathNumbers={generatePathNumberArray(13)}
+                                endPathNumbers={generatePathNumberArray(14)}
+                                startPathNumber={15}
+                                handleTokenDrop={handleTokenClick}
+                                color="green"
+                                tokensByCell={tokensByCell}
+                                canMoveTokens={canMoveTokens}
+                                userColors={userColors}
+                                selectorPosition="below"
+                                movingToken={movingToken}
+                            />
+                            <LudoHomeColumn
+                                color="green"
+                                customClassName="column-2"
+                                token={tokens.green}
+                                handleTokenClick={handleTokenClick}
+                                canMoveTokens={canMoveTokens}
+                                userColors={userColors}
+                                movingToken={movingToken}
+                            />
                         </div>
-                        <LudoPath
-                            startPathNumbers={generatePathNumberArray(20)}
-                            middlePathNumbers={generatePathNumberArray(26).reverse()}
-                            endPathNumbers={generatePathNumberArray(27).reverse()}
-                            startPathNumber={28}
-                            handleTokenDrop={handleTokenClick}
-                            color="yellow"
-                            customClassName="ludo-cell__vertial"
-                            customRowClassName="ludo-row"
-                            tokensByCell={tokensByCell}
-                            canMoveTokens={canMoveTokens}
-                            userColors={userColors}
-                            movingToken={movingToken}
-                        />
-                    </span>
-                    <div>
-                        <LudoHomeColumn
-                            color="blue"
-                            customClassName="column-3"
-                            token={tokens.blue}
-                            handleTokenClick={handleTokenClick}
-                            canMoveTokens={canMoveTokens}
-                            userColors={userColors}
-                            movingToken={movingToken}
-                        />
-                        <LudoPath
-                            startPathNumbers={generatePathNumberArray(40).reverse()}
-                            middlePathNumbers={generatePathNumberArray(39).reverse()}
-                            endPathNumbers={generatePathNumberArray(33)}
-                            handleTokenDrop={handleTokenClick}
-                            startPathNumber={41}
-                            color="blue"
-                            tokensByCell={tokensByCell}
-                            canMoveTokens={canMoveTokens}
-                            userColors={userColors}
-                            movingToken={movingToken}
-                        />
-                        <LudoHomeColumn
-                            handleTokenClick={handleTokenClick}
-                            token={tokens.yellow}
-                            color="yellow"
-                            customClassName="column-4"
-                            canMoveTokens={canMoveTokens}
-                            userColors={userColors}
-                            movingToken={movingToken}
-                        />
+                        <span className="ludo-column__center shrink-0">
+                            <LudoPath
+                                startPathNumbers={generatePathNumberArray(1)}
+                                middlePathNumbers={generatePathNumberArray(52)}
+                                endPathNumbers={generatePathNumberArray(46).reverse()}
+                                handleTokenDrop={handleTokenClick}
+                                startPathNumber={2}
+                                color="red"
+                                customClassName="ludo-cell__vertial"
+                                customRowClassName="ludo-row"
+                                tokensByCell={tokensByCell}
+                                canMoveTokens={canMoveTokens}
+                                userColors={userColors}
+                                movingToken={movingToken}
+                            />
+                            <div className="ludo-center">
+                                <div className="clip-triangle-tl" />
+                                <div className="clip-triangle-tr" />
+                                <div className="clip-triangle-bl" />
+                                <div className="clip-triangle-br" />
+                            </div>
+                            <LudoPath
+                                startPathNumbers={generatePathNumberArray(20)}
+                                middlePathNumbers={generatePathNumberArray(26).reverse()}
+                                endPathNumbers={generatePathNumberArray(27).reverse()}
+                                startPathNumber={28}
+                                handleTokenDrop={handleTokenClick}
+                                color="yellow"
+                                customClassName="ludo-cell__vertial"
+                                customRowClassName="ludo-row"
+                                tokensByCell={tokensByCell}
+                                canMoveTokens={canMoveTokens}
+                                userColors={userColors}
+                                movingToken={movingToken}
+                            />
+                        </span>
+                        <div className="flex w-full overflow-hidden">
+                            <LudoHomeColumn
+                                color="blue"
+                                customClassName="column-3"
+                                token={tokens.blue}
+                                handleTokenClick={handleTokenClick}
+                                canMoveTokens={canMoveTokens}
+                                userColors={userColors}
+                                movingToken={movingToken}
+                            />
+                            <LudoPath
+                                startPathNumbers={generatePathNumberArray(40).reverse()}
+                                middlePathNumbers={generatePathNumberArray(39).reverse()}
+                                endPathNumbers={generatePathNumberArray(33)}
+                                handleTokenDrop={handleTokenClick}
+                                startPathNumber={41}
+                                color="blue"
+                                tokensByCell={tokensByCell}
+                                canMoveTokens={canMoveTokens}
+                                userColors={userColors}
+                                movingToken={movingToken}
+                            />
+                            <LudoHomeColumn
+                                handleTokenClick={handleTokenClick}
+                                token={tokens.yellow}
+                                color="yellow"
+                                customClassName="column-4"
+                                canMoveTokens={canMoveTokens}
+                                userColors={userColors}
+                                movingToken={movingToken}
+                            />
+                        </div>
                     </div>
-                </div>
+                </motion.div>
 
-                {/* Dice Controls (Moved Outside to Bottom) */}
+                {/* Dice Controls */}
                 <div className="dice-wrapper w-full flex justify-center items-center relative min-h-[80px]">
                     <DiceComponent
                         onRollComplete={handleCustomDiceRoll}
@@ -222,34 +255,35 @@ const LudoBoard = ({ id }: { id: string }) => {
                         showRollButton={isCurrentTurn && gameState.status === "playingDice"}
                         isRolling={isRolling}
                     />
-
-                    {showDiceSelector && (
-                        <DiceSelector
-                            availableDice={availableDice}
-                            activeDiceConfig={activeDiceConfig}
-                            onSelect={setActiveDiceConfig}
-                            disabled={!isCurrentTurn}
-                        />
-                    )}
                 </div>
 
-                {/* Bottom User Card (Blue or Yellow) */}
+                {/* Bottom User Card */}
                 <div className="w-full flex justify-center px-4">
                     <PlayerCard
-                        player={getPlayer("blue") || getPlayer("yellow")}
-                        color={getPlayer("blue") ? "blue" : "yellow"}
-                        isCurrentTurn={(getPlayer("blue") || getPlayer("yellow"))?.id === currentTurnId}
-                        isCurrentUser={(getPlayer("blue") || getPlayer("yellow"))?.id === currentUserId}
+                        player={rotationAngle === 180
+                            ? (getPlayer("green") || getPlayer("red"))
+                            : (getPlayer("blue") || getPlayer("yellow"))}
+                        color={rotationAngle === 180
+                            ? (getPlayer("green") ? "green" : "red")
+                            : (getPlayer("blue") ? "blue" : "yellow")}
+                        isCurrentTurn={(rotationAngle === 180
+                            ? (getPlayer("green") || getPlayer("red"))
+                            : (getPlayer("blue") || getPlayer("yellow")))?.id === currentTurnId}
+                        isCurrentUser={(rotationAngle === 180
+                            ? (getPlayer("green") || getPlayer("red"))
+                            : (getPlayer("blue") || getPlayer("yellow")))?.id === currentUserId}
                         position="bottom-left"
                         tokenData={gameState.tokens}
                         turnStartedAt={turnStartedAt}
                         turnDuration={turnDuration}
                         onTimeUp={handleValidateTurn}
+                        rewardPoints={rewardPoints}
+                        onRenewTime={handleRenewTurnTime}
                     />
                 </div>
             </div>
 
-            {/* Token Finish Animation */}
+            {/* Portals and Overlays */}
             {recentlyFinishedToken && (
                 <TokenFlyingAnimation
                     color={recentlyFinishedToken}
@@ -257,8 +291,17 @@ const LudoBoard = ({ id }: { id: string }) => {
                     onComplete={() => { }}
                 />
             )}
+
+            {showDiceSelector && (
+                <DiceSelector
+                    availableDice={availableDice}
+                    activeDiceConfig={activeDiceConfig}
+                    onSelect={setActiveDiceConfig}
+                    disabled={!isCurrentTurn}
+                />
+            )}
         </div>
     );
-}
+};
 
 export default LudoBoard;

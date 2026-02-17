@@ -60,30 +60,10 @@ div.column-4 {
 }
 
 .ludo-cell.stacked .ludo-token {
-    width: 70% !important;
-    height: 70% !important;
+    width: 95% !important;
+    height: 95% !important;
     position: absolute;
     border-width: 2px;
-}
-
-.ludo-cell.stacked .ludo-token:nth-child(1) {
-    transform: translate(-30%, -30%) !important;
-    z-index: 10;
-}
-
-.ludo-cell.stacked .ludo-token:nth-child(2) {
-    transform: translate(30%, 30%) !important;
-    z-index: 20;
-}
-
-.ludo-cell.stacked .ludo-token:nth-child(3) {
-    transform: translate(-30%, 30%) !important;
-    z-index: 30;
-}
-
-.ludo-cell.stacked .ludo-token:nth-child(4) {
-    transform: translate(30%, -30%) !important;
-    z-index: 40;
 }
 
 /* Token Selector Popup Styles */
@@ -104,6 +84,7 @@ div.column-4 {
     gap: 0.4rem;
     min-width: max-content;
     animation: fadeInScale 0.2s ease-out;
+    /* transform: translateX(-50%) rotate(var(--token-rotation, 0deg)); */
 }
 
 /* Below position variant */
@@ -197,6 +178,7 @@ div.column-4 {
     color: #475569;
     white-space: nowrap;
     margin-top: 0.15rem;
+    /* transform: rotate(var(--token-rotation, 0deg)); */
 }
 
 .ludo-column__center {
@@ -236,7 +218,19 @@ div.column-4 {
 }
 
 .ludo-token {
-    @apply w-full h-full cursor-pointer relative flex items-center justify-center rounded-full shadow border-4 border-white;
+    @apply w-full h-full cursor-pointer relative flex items-center justify-center;
+}
+
+.ludo-token-inner {
+    width: 100%;
+    height: 100%;
+    border-radius: 9999px;
+    border: 4px solid white;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    transform: rotate(var(--token-rotation, 0deg));
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /* .dice-wrapper {
@@ -387,10 +381,17 @@ div.column-4 {
     @apply flex flex-col items-center gap-3 p-4 rounded-[2rem] bg-slate-950/80 backdrop-blur-3xl border border-white/10;
     box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
     position: fixed;
-    top: 8px;
+    top: 40px;
+    left: 38%;
     transform: translateX(-50%);
-    z-index: 100;
+    z-index: 9999;
     min-width: 300px;
+}
+
+@media (max-width: 768px) {
+    .dice-selector__wrapper {
+        left: 3%;
+    }
 }
 
 .dice-selector__label {
