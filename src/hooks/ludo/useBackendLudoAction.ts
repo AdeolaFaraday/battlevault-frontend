@@ -6,7 +6,7 @@ import { cellColors } from "@/src/constants";
 import { GameService, GameSessionData } from "@/src/services/ludo/game.service";
 import { RootState } from "@/src/lib/redux/store";
 import { useMutation } from "@apollo/client";
-import { ROLL_DICE_MUTATION, PROCESS_MOVE_MUTATION, SELECT_DICE_MUTATION } from "@/src/graphql/game/mutations";
+import { ROLL_DICE_MUTATION, PROCESS_MOVE_MUTATION, SELECT_DICE_MUTATION, VALIDATE_TURN_MUTATION } from "@/src/graphql/game/mutations";
 import { useSound } from "../useSound";
 import { Token, LudoPlayer } from "@/src/types/ludo";
 
@@ -14,6 +14,8 @@ const useBackendLudoAction = ({ color }: { color?: string }) => {
     const { id: gameId } = useParams<{ id: string }>();
     const currentUser = useAppSelector((state: RootState) => state.auth.loggedInUserDetails);
     const alerts = useAlert();
+
+    console.log({ currentUser })
 
     const generateDefaultTokenStates = (color: string) => {
         return Array(4).fill(0).map((_, i) => ({
@@ -77,6 +79,17 @@ const useBackendLudoAction = ({ color }: { color?: string }) => {
         onError: (err) => {
             console.error("Dice selection failed:", err);
             alerts.error("Selection Error", err.message || "Failed to select dice");
+        }
+    });
+
+    const [validateTurnMutation] = useMutation(VALIDATE_TURN_MUTATION, {
+        onCompleted: (data) => {
+            if (data?.validateTurn && !data.validateTurn.success) {
+                console.warn("Turn validation failed:", data.validateTurn.message);
+            }
+        },
+        onError: (err) => {
+            console.error("Turn validation error:", err);
         }
     });
 
@@ -244,7 +257,15 @@ const useBackendLudoAction = ({ color }: { color?: string }) => {
         syncToFirestore,
         findActiveTokens,
         findBgColor: cellColors.find(c => c.color === color),
-        userColors: gameState.players?.find(p => p.id === currentUser?._id)?.tokens || []
+        userColors: gameState.players?.find(p => p.id === currentUser?._id)?.tokens || [],
+        turnStartedAt: gameState.turnStartedAt,
+        turnDuration: gameState.turnDuration,
+        handleValidateTurn: React.useCallback(async () => {
+            if (!gameId) return;
+            await validateTurnMutation({
+                variables: { gameId }
+            });
+        }, [gameId, validateTurnMutation])
     };
 };
 

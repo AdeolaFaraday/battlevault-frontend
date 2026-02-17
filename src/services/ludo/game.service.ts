@@ -18,6 +18,8 @@ export interface GameSessionData {
     lastUpdated?: Timestamp;
     createdAt?: string;
     updatedAt?: string;
+    turnStartedAt?: number;
+    turnDuration?: number;
 }
 
 export const GameService = {

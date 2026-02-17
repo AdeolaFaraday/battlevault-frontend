@@ -36,7 +36,10 @@ const LudoBoard = ({ id }: { id: string }) => {
         currentUserId,
         recentlyFinishedToken,
         userColors,
-        movingToken
+        movingToken,
+        turnStartedAt,
+        turnDuration,
+        handleValidateTurn
     } = useLudoAction({})
 
     const handleCustomDiceRoll = () => {
@@ -71,6 +74,8 @@ const LudoBoard = ({ id }: { id: string }) => {
     const currentTurnId = gameState.currentTurn;
     const winner = gameState.players?.find(p => p.id === gameState.winner);
 
+    console.log("Game State", { gameState, currentTurnId, currentUserId });
+
     return (
         <div className="flex flex-col h-screen w-full bg-[#1e293b] overflow-hidden relative">
             <GameCelebration
@@ -98,6 +103,9 @@ const LudoBoard = ({ id }: { id: string }) => {
                         isCurrentUser={(getPlayer("green") || getPlayer("red"))?.id === currentUserId}
                         position="top-right"
                         tokenData={gameState.tokens}
+                        turnStartedAt={turnStartedAt}
+                        turnDuration={turnDuration}
+                        onTimeUp={handleValidateTurn}
                     />
                 </div>
 
@@ -234,6 +242,9 @@ const LudoBoard = ({ id }: { id: string }) => {
                         isCurrentUser={(getPlayer("blue") || getPlayer("yellow"))?.id === currentUserId}
                         position="bottom-left"
                         tokenData={gameState.tokens}
+                        turnStartedAt={turnStartedAt}
+                        turnDuration={turnDuration}
+                        onTimeUp={handleValidateTurn}
                     />
                 </div>
             </div>
