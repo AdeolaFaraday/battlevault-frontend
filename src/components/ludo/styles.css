@@ -96,12 +96,12 @@ div.column-4 {
     z-index: 9999;
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
-    padding: 0.75rem;
-    border-radius: 0.75rem;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    padding: 0.4rem;
+    border-radius: 0.6rem;
+    box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.4);
     border: 1px solid rgba(255, 255, 255, 0.2);
     display: flex;
-    gap: 0.75rem;
+    gap: 0.4rem;
     min-width: max-content;
     animation: fadeInScale 0.2s ease-out;
 }
@@ -172,22 +172,31 @@ div.column-4 {
 }
 
 .token-selector-item:hover {
-    transform: scale(1.1);
+    transform: scale(1.05);
 }
 
 .token-selector-token {
-    width: 2rem;
-    height: 2rem;
-    border-radius: 50%;
-    border: 3px solid white;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    width: 2rem !important;
+    height: 2rem !important;
+}
+
+/* Ensure LudoToken inside the selector is reset from cell stacking styles */
+.token-selector-item .ludo-token {
+    width: 2rem !important;
+    height: 2rem !important;
+    position: relative !important;
+    transform: none !important;
+    border-width: 3px !important;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2) !important;
+    z-index: 1 !important;
 }
 
 .token-selector-label {
-    font-size: 0.625rem;
+    font-size: 0.7rem;
     font-weight: 700;
     color: #475569;
     white-space: nowrap;
+    margin-top: 0.15rem;
 }
 
 .ludo-column__center {
