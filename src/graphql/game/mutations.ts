@@ -150,3 +150,40 @@ export const CREATE_AI_GAME_MUTATION = gql`
     }
   }
 `;
+
+export const VALIDATE_TURN_MUTATION = gql`
+  mutation ValidateTurn($gameId: ID!) {
+    validateTurn(gameId: $gameId) {
+      statusCode
+      success
+      message
+      data {
+        ... on LudoGameState {
+          players {
+            id
+            name
+            color
+            capturedCount
+            finishedCount
+          }
+          currentTurn
+          diceValue
+          isRolling
+          status
+          usedDiceValues
+          activeDiceConfig
+          tokens {
+            blue { sn color active position isSafePath isFinished }
+            yellow { sn color active position isSafePath isFinished }
+            green { sn color active position isSafePath isFinished }
+            red { sn color active position isSafePath isFinished }
+          }
+          turnStartedAt
+          turnDuration
+          winner
+          lastMoverId
+        }
+      }
+    }
+  }
+`;
