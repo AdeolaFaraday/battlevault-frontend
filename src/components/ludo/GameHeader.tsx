@@ -21,7 +21,7 @@ export const GameStats = () => {
                     <div className="w-6 h-6 rounded-full bg-indigo-500 border-2 border-slate-900 shadow-sm" />
                     <div className="w-6 h-6 rounded-full bg-emerald-500 border-2 border-slate-900 shadow-sm" />
                 </div>
-                <span className="text-white font-bold text-xs pl-1 font-mono tracking-tight">10:34</span>
+                <span className="text-white font-bold text-xs pl-1 font-mono tracking-tight">00:00</span>
             </div>
 
             {/* Right: Prize/Coins */}

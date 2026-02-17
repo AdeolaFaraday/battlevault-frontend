@@ -521,3 +521,45 @@ div.column-4 {
         @apply p-3;
     }
 }
+
+/* Tour Guide Styles */
+.tour-guide__finger {
+    position: fixed;
+    pointer-events: none;
+    z-index: 10000;
+    filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.4));
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.tour-guide__finger-inner {
+    font-size: 3rem;
+    animation: finger-bounce 1s infinite;
+}
+
+@keyframes finger-bounce {
+
+    0%,
+    100% {
+        transform: translateY(0) scale(1);
+    }
+
+    50% {
+        transform: translateY(-20px) scale(1.1);
+    }
+}
+
+.tour-guide__hint {
+    position: fixed;
+    background: rgba(79, 70, 229, 0.95);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 1rem;
+    font-weight: 800;
+    font-size: 0.9rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    z-index: 10001;
+    white-space: nowrap;
+    pointer-events: none;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
