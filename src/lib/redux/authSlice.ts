@@ -42,6 +42,7 @@ const authSlice = createSlice({
 				email: '',
 				role: 'guest',
 			} as TCommonResponseData;
+			state.isUserLoggedIn = false;
 		}
 	},
 });

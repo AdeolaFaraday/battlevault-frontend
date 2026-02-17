@@ -83,7 +83,6 @@ export const GET_ACTIVE_GAMES = gql`
             players {
               id
               name
-              color
             }
             createdAt
             updatedAt

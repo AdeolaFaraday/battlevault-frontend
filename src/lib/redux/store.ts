@@ -38,8 +38,7 @@ const persistConfig = {
   ],
   key: 'root',
   version: 1,
-
-  // whitelist: ['ui', 'tags', 'auth'],
+  whitelist: ['auth', 'game', 'wallet'],
   storage,
 };
 
