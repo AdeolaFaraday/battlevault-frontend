@@ -139,9 +139,8 @@ const LudoBoard = ({ id }: { id: string }) => {
                     transition={{ duration: 1, ease: "easeInOut" }}
                     style={{
                         transform: `scale(var(--tw-scale-x))`,
-                        // @ts-ignore
                         '--token-rotation': `${-rotationAngle}deg`
-                    } as any}
+                    } as unknown as object}
                 >
                     <div className="flex flex-col h-full w-full">
                         <div className="flex w-full">
