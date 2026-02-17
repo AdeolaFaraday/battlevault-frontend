@@ -18,6 +18,7 @@ import { LudoPlayer, Token } from "@/src/types/ludo";
 import GameStats from "../GameHeader";
 import PlayerCard from "../PlayerCard";
 import TokenFlyingAnimation from "./TokenFlyingAnimation";
+import LudoTourGuide from "./LudoTourGuide";
 import { motion } from "framer-motion";
 
 const LudoBoard = ({ id }: { id: string }) => {
@@ -300,6 +301,14 @@ const LudoBoard = ({ id }: { id: string }) => {
                     disabled={!isCurrentTurn}
                 />
             )}
+
+            <LudoTourGuide
+                isCurrentTurn={isCurrentTurn}
+                status={gameState.status}
+                diceValue={gameState.diceValue || []}
+                tokens={tokens}
+                userColors={userColors}
+            />
         </div>
     );
 };

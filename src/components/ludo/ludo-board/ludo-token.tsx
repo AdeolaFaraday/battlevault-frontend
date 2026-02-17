@@ -42,6 +42,7 @@ const LudoToken = memo(({
 
     return (
         <motion.div
+            id={`token-${color}-${sn}`}
             layoutId={disableAnim ? undefined : `${color}-${sn}`}
             layout={disableAnim ? undefined : "position"}
             className={clsx("ludo-token", isMoving && "cursor-wait")}
