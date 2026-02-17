@@ -22,8 +22,6 @@ const useBackendLudoAction = ({ color }: { color?: string }) => {
 
     const rewardPoints = walletData?.getWallet?.data?.rewards || 0;
 
-    console.log({ currentUser })
-
     const generateDefaultTokenStates = (color: string) => {
         return Array(4).fill(0).map((_, i) => ({
             sn: i + 1,

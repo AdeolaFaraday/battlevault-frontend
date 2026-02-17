@@ -53,6 +53,7 @@ const DiceComponent = ({ onRollComplete, diceValues, showRollButton = true, isRo
 
             {showRollButton && (
                 <button
+                    id="dice-roll-button"
                     onClick={handleRollClick}
                     className="px-8 py-4 bg-gradient-to-br from-indigo-500 to-indigo-700 text-white font-black text-lg tracking-wider rounded-2xl shadow-[0_10px_20px_rgba(79,70,229,0.4)] hover:shadow-[0_15px_30px_rgba(79,70,229,0.5)] border-t border-white/20 hover:-translate-y-1 active:translate-y-0 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                     disabled={isRolling}
