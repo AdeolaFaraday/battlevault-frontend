@@ -532,7 +532,7 @@ div.column-4 {
 }
 
 .tour-guide__finger-inner {
-    font-size: 3rem;
+    font-size: 1.5rem;
     animation: finger-bounce 1s infinite;
 }
 
@@ -544,7 +544,7 @@ div.column-4 {
     }
 
     50% {
-        transform: translateY(-20px) scale(1.1);
+        transform: translateY(-10px) scale(1.1);
     }
 }
 
@@ -552,14 +552,14 @@ div.column-4 {
     position: fixed;
     background: rgba(79, 70, 229, 0.95);
     color: white;
-    padding: 0.75rem 1.5rem;
-    border-radius: 1rem;
+    padding: 0.3rem 0.6rem;
+    border-radius: 0.75rem;
     font-weight: 800;
-    font-size: 0.9rem;
+    font-size: 0.7rem;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
     z-index: 10001;
     white-space: nowrap;
-    pointer-events: none;
+    pointer-events: auto;
     transition: all 0.3s ease;
     border: 1px solid rgba(255, 255, 255, 0.2);
 }
