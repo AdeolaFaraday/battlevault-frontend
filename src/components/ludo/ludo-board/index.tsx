@@ -303,6 +303,7 @@ const LudoBoard = ({ id }: { id: string }) => {
             )}
 
             <LudoTourGuide
+                currentUserId={currentUserId}
                 isCurrentTurn={isCurrentTurn}
                 status={gameState.status}
                 diceValue={gameState.diceValue || []}
