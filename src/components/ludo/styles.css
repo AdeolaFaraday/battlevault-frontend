@@ -381,7 +381,7 @@ div.column-4 {
     @apply flex flex-col items-center gap-3 p-4 rounded-[2rem] bg-slate-950/80 backdrop-blur-3xl border border-white/10;
     box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
     position: fixed;
-    top: 40px;
+    top: 10px;
     left: 38%;
     transform: translateX(-50%);
     z-index: 9999;
