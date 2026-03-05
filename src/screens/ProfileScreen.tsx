@@ -67,7 +67,7 @@ const ProfileScreen = () => {
     };
 
     return (
-        <AppLayout>
+        <AppLayout showFooter={true}>
             {/* User Profile Header */}
             <section className="flex flex-col items-center space-y-6 pt-4">
                 <div className="relative">
