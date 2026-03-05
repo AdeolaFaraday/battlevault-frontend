@@ -3,11 +3,13 @@
 import React, { ReactNode } from 'react';
 import Header from '../../ludo/hub/Header';
 import BottomNav from '../bottom-nav';
+import Footer from '../footer';
 
 interface AppLayoutProps {
     children: ReactNode;
     showHeader?: boolean;
     showBottomNav?: boolean;
+    showFooter?: boolean;
     className?: string;
 }
 
@@ -15,6 +17,7 @@ const AppLayout = ({
     children,
     showHeader = true,
     showBottomNav = true,
+    showFooter = false,
     className = ''
 }: AppLayoutProps) => {
     return (
@@ -26,6 +29,7 @@ const AppLayout = ({
                     {children}
                 </main>
             </div>
+            {showFooter && <Footer />}
         </div>
     );
 };
