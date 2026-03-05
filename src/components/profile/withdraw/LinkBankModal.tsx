@@ -174,7 +174,7 @@ const LinkBankModal: React.FC<LinkBankModalProps> = ({ isOpen, onClose, onSucces
                                                     ) : (
                                                         filteredBanks.map((bank) => (
                                                             <button
-                                                                key={bank.code}
+                                                                key={`bank-${bank.code}-${bank.name}`}
                                                                 onClick={() => handleSelectBank(bank)}
                                                                 className="w-full px-4 py-3 text-left hover:bg-white/5 transition-colors flex items-center gap-3 border-b border-white/5 last:border-0"
                                                             >

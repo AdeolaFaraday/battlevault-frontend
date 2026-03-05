@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Bell, Wallet, LogOut, User as UserIcon, Settings, LogIn } from 'lucide-react';
+import { Bell, Wallet, LogOut, User as UserIcon, Settings, LogIn, MessageSquare } from 'lucide-react';
 import LogoIcon from '@/src/components/common/icons/Logo';
 import DropdownMenuItem from '@/src/components/common/dropdown/DropdownMenuItem';
 import { useAppSelector } from '@/src/lib/redux/hooks';
@@ -9,15 +9,34 @@ import { RootState } from '@/src/lib/redux/store';
 import { useLogout } from '@/src/hooks/auth/useLogout';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
+import { useQuery } from '@apollo/client';
+import { GET_WALLET_QUERY } from '@/src/graphql/wallet/queries';
+import { useGetChatList } from '@/src/api/chat/useGetChatList';
+import { useChatUnreadCounts } from '@/src/hooks/chat/useChatUnreadCounts';
 
 const Header = () => {
     const currentUser = useAppSelector((state: RootState) => state.auth.loggedInUserDetails);
-    const { withdrawable, currency } = useAppSelector((state: RootState) => state.wallet);
     const { logout } = useLogout();
     const router = useRouter();
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
     const isAuthenticated = !!currentUser;
+
+    const { data: walletData } = useQuery(GET_WALLET_QUERY, {
+        skip: !isAuthenticated,
+        fetchPolicy: 'cache-and-network'
+    });
+
+    const withdrawable = walletData?.getWallet?.data?.withdrawable ?? 0;
+    const currency = walletData?.getWallet?.data?.currency ?? 'NGN';
+
+    const { chats } = useGetChatList();
+
+    // Real-time unread counts from Firestore
+    const chatIds = chats.map(c => c.id);
+    const rtUnreadCounts = useChatUnreadCounts(chatIds, currentUser?._id);
+
+    const unreadCount = Object.values(rtUnreadCounts).reduce((total, count) => total + count, 0);
 
     const formatCurrency = (amount: number) => {
         const symbol = currency === 'NGN' ? '₦' : currency || '₦';
@@ -56,17 +75,43 @@ const Header = () => {
 
                 {/* Right Section: Stats & Profile */}
                 <div className="flex items-center gap-3 md:gap-6">
-                    {/* Balance - Hidden on small mobile */}
-                    <div className="hidden md:flex items-center gap-2 bg-slate-800/50 px-3 py-1.5 rounded-full border border-white/5">
-                        <Wallet className="w-4 h-4 text-emerald-400" />
-                        <span className="text-emerald-400 font-bold text-sm">{formatCurrency(withdrawable)}</span>
-                    </div>
+                    {isAuthenticated && (
+                        <>
+                            {/* Balance - Hidden on small mobile */}
+                            <div className="hidden md:flex items-center gap-2 bg-slate-800/50 px-3 py-1.5 rounded-full border border-white/5">
+                                <Wallet className="w-4 h-4 text-emerald-400" />
+                                <span className="text-emerald-400 font-bold text-sm">{formatCurrency(withdrawable)}</span>
+                            </div>
 
-                    {/* Notifications */}
-                    <button className="relative w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/5 transition-colors">
-                        <Bell className="w-5 h-5 text-slate-300" />
-                        <span className="absolute top-2 right-2 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-[#1a1d2e]" />
-                    </button>
+                            {/* Messages/Chat */}
+                            <motion.button
+                                whileHover={{ scale: 1.1 }}
+                                whileTap={{ scale: 0.95 }}
+                                onClick={() => router.push('/chat')}
+                                className="relative w-10 h-10 flex items-center justify-center rounded-full bg-white/5 hover:bg-indigo-500/10 transition-colors group"
+                            >
+                                <MessageSquare className="w-5 h-5 text-slate-300 group-hover:text-indigo-400 transition-colors" />
+                                {unreadCount > 0 && (
+                                    <>
+                                        <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-indigo-500 rounded-full border border-[#1a1d2e] z-10" />
+                                        <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-indigo-400 rounded-full animate-ping opacity-75" />
+                                        <div className="absolute top-2.5 right-2.5 w-4 h-4 bg-indigo-500/30 blur-sm -translate-x-1/2 -translate-y-1/2 left-2/3 top-1/3" />
+                                    </>
+                                )}
+                            </motion.button>
+
+                            {/* Notifications */}
+                            <motion.button
+                                whileHover={{ scale: 1.1 }}
+                                whileTap={{ scale: 0.95 }}
+                                className="relative w-10 h-10 flex items-center justify-center rounded-full bg-white/5 hover:bg-red-500/10 transition-colors group"
+                            >
+                                <Bell className="w-5 h-5 text-slate-300 group-hover:text-red-400 transition-colors" />
+                                <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-red-500 rounded-full border border-[#1a1d2e] z-10" />
+                                <div className="absolute top-2.5 right-2.5 w-4 h-4 bg-red-500/20 blur-sm -translate-x-1/2 -translate-y-1/2 left-2/3 top-1/3" />
+                            </motion.button>
+                        </>
+                    )}
 
                     {/* Profile Avatar with Dropdown */}
                     <div className="relative" ref={dropdownRef}>

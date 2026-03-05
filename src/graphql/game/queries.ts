@@ -116,6 +116,7 @@ export const GET_LEADERBOARD = gql`
             currentStreak
             bestStreak
             winPercentage
+            weightedScore
           }
           total
           page

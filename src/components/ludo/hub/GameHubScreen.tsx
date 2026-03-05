@@ -9,6 +9,7 @@ import QuickActions from './QuickActions';
 import Greeting from '../../common/greeting';
 import DailyBlitzSection from './DailyBlitzSection';
 import BottomNav from '../../common/bottom-nav';
+import Footer from '../../common/footer';
 
 const GameHubScreen = () => {
     return (
@@ -55,6 +56,7 @@ const GameHubScreen = () => {
                 </div>
 
             </main>
+            <Footer />
         </div>
     );
 };

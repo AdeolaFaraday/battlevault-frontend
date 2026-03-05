@@ -7,6 +7,7 @@ import useUpdateProfileApi from '@/src/api/profile/useUpdateProfile';
 import useUploadFile from '@/src/api/common/useUploadFile';
 import useMe from '@/src/api/auth/useMe';
 import { mapAuthPayloadToCommon } from '@/src/utils/auth-utils';
+import { compressImage } from '@/src/utils/image-compression';
 
 export type EditProfileFormState = {
 	firstName: string;
@@ -101,12 +102,22 @@ const useEditProfile = () => {
 		}
 	);
 
-	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+	const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0];
 		if (file) {
-			setLocalFile(file);
-			const url = URL.createObjectURL(file);
-			setPreviewUrl(url);
+			try {
+				// Compress image to max 1MB
+				const compressedFile = await compressImage(file, 1);
+
+				setLocalFile(compressedFile);
+				const url = URL.createObjectURL(compressedFile);
+				setPreviewUrl(url);
+			} catch (err) {
+				console.error("Image compression failed, using original file", err);
+				setLocalFile(file);
+				const url = URL.createObjectURL(file);
+				setPreviewUrl(url);
+			}
 		}
 	};
 

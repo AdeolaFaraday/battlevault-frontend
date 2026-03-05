@@ -10,6 +10,7 @@ export interface LeaderboardPlayer {
     currentStreak?: number;
     bestStreak?: number;
     winPercentage?: number;
+    weightedScore?: number;
 }
 
 export interface LeaderboardResult {
