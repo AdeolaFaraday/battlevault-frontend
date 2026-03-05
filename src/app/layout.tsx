@@ -6,7 +6,7 @@ import "./globals.css";
 
 
 const LOGO_URL =
-  "https://firebasestorage.googleapis.com/v0/b/battlevault.firebasestorage.app/o/uploads%2Fcommon%2Fbattlevault-logo-white.png?alt=media&token=112e1614-1aed-461e-9768-113e4680103e";
+  "https://firebasestorage.googleapis.com/v0/b/battlevault.firebasestorage.app/o/uploads%2Fcommon%2Fbattlevault-logo.png?alt=media&token=eae03f62-d470-4d6b-a4d6-a8fb1472d613";
 
 export const metadata: Metadata = {
   title: "BattleVault – Compete. Dominate.",
