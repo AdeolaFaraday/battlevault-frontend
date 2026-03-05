@@ -46,7 +46,7 @@ function makeClient() {
     };
   });
 
-  let unauthorizedCount = 0;
+  // let unauthorizedCount = 0;
   const unauthorizedLink = new ApolloLink((operation, forward) => {
     return forward(operation).map((response) => {
       const data = response.data;
@@ -54,16 +54,23 @@ function makeClient() {
       const unauthorized =
         data &&
         Object.values(data).some(
-          (v) =>
+          (v: { statusCode: number; message: string }) =>
             v?.statusCode === 401 ||
-            v?.message === "Unauthorized"
+            v?.message === "Unauthorized" ||
+            v?.message === "Invalid token"
         );
 
-      if (unauthorized && unauthorizedCount < 2 && typeof window !== "undefined") {
-        unauthorizedCount++;
-        authTokenStorage.clear();
-        // localStorage.removeItem("bv_auth_token");
-        localStorage.removeItem("persist:root");
+      if (unauthorized && typeof window !== "undefined") {
+        const token = authTokenStorage.get();
+        if (token) {
+          // unauthorizedCount++;
+          // Instead of wiping Redux raw, we should ideally trigger a logout.
+          // But for now, just clearing the token is enough to stop invalid requests.
+          // authTokenStorage.clear();
+
+          // Do NOT wipe persist:root manually here as it's unreliable.
+          // The App should handle redirected states via its own logic.
+        }
       }
 
       return response;
