@@ -9,7 +9,7 @@ const LOGO_URL =
   "https://firebasestorage.googleapis.com/v0/b/battlevault.firebasestorage.app/o/uploads%2Fcommon%2Fbattlevault-logo-white.png?alt=media&token=112e1614-1aed-461e-9768-113e4680103e";
 
 export const metadata: Metadata = {
-  title: "BattleVault – Compete. Win. Dominate.",
+  title: "BattleVault – Compete. Dominate.",
   description:
     "BattleVault is the ultimate competitive gaming platform where players battle it out in tournaments, ludo, and more. Enter the vault and claim your victory.",
   icons: {
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
         url: LOGO_URL,
         width: 1200,
         height: 630,
-        alt: "BattleVault – Compete. Win. Dominate.",
+        alt: "BattleVault – Compete. Dominate.",
       },
     ],
     locale: "en_US",
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "BattleVault – Compete. Win. Dominate.",
+    title: "BattleVault – Compete. Dominate.",
     description:
       "BattleVault is the ultimate competitive gaming platform where players battle it out in tournaments, ludo, and more. Enter the vault and claim your victory.",
     images: [LOGO_URL],
