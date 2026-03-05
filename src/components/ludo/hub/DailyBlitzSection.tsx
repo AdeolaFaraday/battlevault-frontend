@@ -8,18 +8,29 @@ import { GET_DAILY_BLITZ } from '../../../graphql/game/queries';
 import DailyBlitzSkeleton from './DailyBlitzSkeleton';
 
 const DailyBlitzSection = () => {
-    const { data, loading, error } = useQuery(GET_DAILY_BLITZ);
+    const { data, loading } = useQuery(GET_DAILY_BLITZ);
 
 
     if (loading) {
         return <DailyBlitzSkeleton />;
     }
 
-    if (error || !data?.getDailyBlitz?.data) {
-        return null; // Or handle error state
-    }
+    // if (error || !data?.getDailyBlitz?.data) {
+    //     return null; // Or handle error state
+    // }
 
-    const blitzData = data.getDailyBlitz.data;
+    const blitzData = data?.getDailyBlitz?.data || {
+        id: null,
+        winsToday: 0,
+        loginRewardClaimed: false,
+        win1RewardClaimed: false,
+        win3RewardClaimed: false,
+        nextReward: {
+            amount: 0,
+            description: "",
+            percentage: 0
+        }
+    };
 
     const missions = [
         {
