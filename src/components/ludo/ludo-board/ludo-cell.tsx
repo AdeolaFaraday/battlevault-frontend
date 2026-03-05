@@ -64,7 +64,7 @@ const LudoCell = memo(({
     return (
         <div
             style={style}
-            className={clsx("ludo-cell", customCellClassName, isStacked && "stacked")}
+            className={clsx("ludo-cell", customCellClassName, isStacked && "stacked", isSelectorOpen && "z-[9999]")}
             onClick={(e) => {
                 // If stacked and clicking the cell (not a token), toggle selector
                 if (isStacked && e.target === e.currentTarget) {

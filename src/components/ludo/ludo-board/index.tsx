@@ -213,7 +213,7 @@ const LudoBoard = ({ id }: { id: string }) => {
                                 movingToken={movingToken}
                             />
                         </span>
-                        <div className="flex w-full overflow-hidden">
+                        <div className="flex w-full">
                             <LudoHomeColumn
                                 color="blue"
                                 customClassName="column-3"
