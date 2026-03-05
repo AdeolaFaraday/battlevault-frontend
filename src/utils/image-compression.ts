@@ -104,9 +104,9 @@ export const compressImage = async (
                 compress().catch(reject);
             };
 
-            img.onerror = (error) => reject(new Error("Failed to load image for compression"));
+            img.onerror = (error) => reject(new Error(`Failed to load image for compression: ${error}`));
         };
 
-        reader.onerror = (error) => reject(new Error("Failed to read file"));
+        reader.onerror = (error) => reject(new Error(`Failed to read file: ${error}`));
     });
 };
