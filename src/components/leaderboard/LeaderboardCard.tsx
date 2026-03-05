@@ -30,8 +30,8 @@ const LeaderboardCard = ({
     const avatarUrl = player.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=random`;
 
     // Format win percentage
-    const winPercentage = player.winPercentage !== undefined
-        ? `${player.winPercentage.toFixed(1)}%`
+    const weightedScore = player.weightedScore !== undefined
+        ? `${player.weightedScore.toFixed(1)}%`
         : '0%';
 
     // Generate subtitle from streak info
@@ -122,9 +122,9 @@ const LeaderboardCard = ({
                 <div className="flex flex-col items-end">
                     <div className="flex items-center gap-1.5 text-white font-black italic">
                         <TrendingUp size={14} className="text-emerald-500" />
-                        {winPercentage}
+                        {weightedScore}
                     </div>
-                    <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Win Rate</span>
+                    <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">BV Score</span>
                 </div>
             </div>
         </motion.div>

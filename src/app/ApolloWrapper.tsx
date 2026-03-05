@@ -55,18 +55,19 @@ function makeClient() {
         data &&
         Object.values(data).some(
           (v: { statusCode: number; message: string }) =>
-            v?.statusCode === 401 ||
-            v?.message === "Unauthorized" ||
-            v?.message === "Invalid token"
+            // v?.statusCode === 401 ||
+            v?.message === "Unauthorized"
         );
 
       if (unauthorized && typeof window !== "undefined") {
         const token = authTokenStorage.get();
+        // console.log("unauthorized", { token, data });
         if (token) {
           // unauthorizedCount++;
           // Instead of wiping Redux raw, we should ideally trigger a logout.
           // But for now, just clearing the token is enough to stop invalid requests.
-          // authTokenStorage.clear();
+          authTokenStorage.clear();
+          localStorage.removeItem('persist:root');
 
           // Do NOT wipe persist:root manually here as it's unreliable.
           // The App should handle redirected states via its own logic.

@@ -34,8 +34,6 @@ const LeaderboardScreen = () => {
 
     const topThree = players.slice(0, 3);
 
-    console.log({ players, topThree, loading, hasMore })
-
     return (
         <AppLayout className="min-w-0">
             {/* Header Section */}
@@ -236,7 +234,7 @@ const PodiumItem = ({ player, rank, height, color, glow, animationDelay }: Podiu
             : displayName;
 
     const avatarUrl = player.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=random`;
-    const winPercentage = player.winPercentage !== undefined ? player.winPercentage.toFixed(1) : '0';
+    const weightedScore = player.weightedScore !== undefined ? player.weightedScore.toFixed(1) : '0';
 
     return (
         <motion.div
@@ -288,8 +286,8 @@ const PodiumItem = ({ player, rank, height, color, glow, animationDelay }: Podiu
                 </div>
 
                 <div className="flex flex-col items-center">
-                    <span className="text-white font-black text-[10px] sm:text-xs italic">{winPercentage}%</span>
-                    <span className="text-[7px] sm:text-[8px] text-slate-500 font-bold uppercase tracking-tighter sm:tracking-widest">Win Rate</span>
+                    <span className="text-white font-black text-[10px] sm:text-xs italic">{weightedScore}</span>
+                    <span className="text-[7px] sm:text-[8px] text-slate-500 font-bold uppercase tracking-tighter sm:tracking-widest">BV Score</span>
                 </div>
             </div>
         </motion.div>
