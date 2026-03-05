@@ -1,10 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ArrowLeft, Send, Image as ImageIcon, MoreVertical, CheckCheck } from 'lucide-react';
-import { useChatMessages } from '@/src/hooks/chat/useChatMessages';
+import { ArrowLeft, Send, Image as ImageIcon, MoreVertical, CheckCheck, AlertCircle, Loader2 } from 'lucide-react';
+import { useChatMessages, ChatMessage } from '@/src/hooks/chat/useChatMessages';
 import { useCreateMessage } from '@/src/api/chat/useCreateMessage';
 import { useMarkChatAsRead } from '@/src/api/chat/useMarkChatAsRead';
 import { ChatThread } from '@/src/api/chat/useGetChatList';
 import { format } from 'date-fns';
+
+interface PendingMessage extends ChatMessage {
+    status: 'sending' | 'sent' | 'error';
+}
 
 interface ActiveConversationProps {
     chatId: string;
@@ -18,6 +22,7 @@ const ActiveConversation = ({ chatId, chats, currentUser, onBack }: ActiveConver
     const { sendMessage, loading: sending } = useCreateMessage();
     const { markAsRead } = useMarkChatAsRead();
     const [inputText, setInputText] = useState('');
+    const [pendingMessages, setPendingMessages] = useState<PendingMessage[]>([]);
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
     // Mark as read when opening
@@ -71,9 +76,33 @@ const ActiveConversation = ({ chatId, chats, currentUser, onBack }: ActiveConver
         if (!inputText.trim() || !recipient.id) return;
 
         const text = inputText.trim();
+        const tempId = `temp-${Date.now()}`;
+        const timestamp = Date.now();
+
+        const optimisticMsg: PendingMessage = {
+            id: tempId,
+            chatId,
+            senderId: currentUser._id,
+            text,
+            timestamp,
+            read: false,
+            status: 'sending'
+        };
+
+        setPendingMessages(prev => [...prev, optimisticMsg]);
         setInputText(''); // optimistic clear
 
-        await sendMessage(recipient.id, text);
+        const response = await sendMessage(recipient.id, text);
+
+        if (response.success) {
+            setPendingMessages(prev =>
+                prev.map(msg => msg.id === tempId ? { ...msg, status: 'sent' } : msg)
+            );
+        } else {
+            setPendingMessages(prev =>
+                prev.map(msg => msg.id === tempId ? { ...msg, status: 'error' } : msg)
+            );
+        }
     };
 
     // Helper for message grouping by date
@@ -138,35 +167,58 @@ const ActiveConversation = ({ chatId, chats, currentUser, onBack }: ActiveConver
                         <p className="text-xs font-bold text-slate-500 uppercase mt-2 tracking-widest">This is the start of your conversation</p>
                     </div>
                 ) : (
-                    messages.map((msg) => {
-                        const isMine = msg.senderId === currentUser._id;
-                        const msgDate = format(new Date(msg.timestamp), 'yyyy-MM-dd');
-                        const showDate = msgDate !== lastDate;
-                        lastDate = msgDate;
+                    (() => {
+                        // Filter pending messages that have now been delivered via Firestore
+                        const filteredPending = pendingMessages.filter(pm =>
+                            !messages.some(m => m.text === pm.text && Math.abs(m.timestamp - pm.timestamp) < 5000)
+                        );
 
-                        return (
-                            <React.Fragment key={msg.id}>
-                                {showDate && renderMessageDate(msg.timestamp)}
-                                <div className={`flex ${isMine ? 'justify-end' : 'justify-start'} mb-4 group`}>
-                                    <div className={`max-w-[75%] rounded-2xl px-4 py-2 relative shadow-lg ${isMine
-                                        ? 'bg-indigo-600 text-white rounded-tr-sm'
-                                        : 'bg-[#1e2235] text-slate-200 rounded-tl-sm border border-white/5'
-                                        }`}>
-                                        <p className="text-sm font-medium whitespace-pre-wrap break-words">{msg.text}</p>
-                                        <div className={`flex items-center gap-1 mt-1 justify-end ${isMine ? 'text-indigo-200' : 'text-slate-500'}`}>
-                                            <span className="text-[10px] font-bold">
-                                                {format(new Date(msg.timestamp), 'HH:mm')}
-                                            </span>
-                                            {isMine && (
-                                                <CheckCheck size={14} className={msg.read ? 'text-blue-300' : 'opacity-70'} />
-                                            )}
+                        const allMessages = [...messages, ...filteredPending].sort((a, b) => a.timestamp - b.timestamp);
+
+                        return allMessages.map((msg) => {
+                            const isMine = msg.senderId === currentUser._id;
+                            const msgDate = format(new Date(msg.timestamp), 'yyyy-MM-dd');
+                            const showDate = msgDate !== lastDate;
+                            lastDate = msgDate;
+
+                            const pendingStatus = (msg as PendingMessage).status;
+
+                            return (
+                                <React.Fragment key={msg.id}>
+                                    {showDate && renderMessageDate(msg.timestamp)}
+                                    <div className={`flex ${isMine ? 'justify-end' : 'justify-start'} mb-4 group`}>
+                                        <div className={`max-w-[75%] rounded-2xl px-4 py-2 relative shadow-lg ${isMine
+                                            ? 'bg-indigo-600 text-white rounded-tr-sm'
+                                            : 'bg-[#1e2235] text-slate-200 rounded-tl-sm border border-white/5'
+                                            }`}>
+                                            <p className="text-sm font-medium whitespace-pre-wrap break-words">{msg.text}</p>
+                                            <div className={`flex items-center gap-1 mt-1 justify-end ${isMine ? 'text-indigo-200' : 'text-slate-500'}`}>
+                                                <span className="text-[10px] font-bold">
+                                                    {format(new Date(msg.timestamp), 'HH:mm')}
+                                                </span>
+                                                {isMine && (
+                                                    <div className="flex items-center gap-1">
+                                                        {pendingStatus === 'sending' ? (
+                                                            <Loader2 size={12} className="animate-spin opacity-70" />
+                                                        ) : pendingStatus === 'error' ? (
+                                                            <div className="flex items-center gap-0.5 text-red-400">
+                                                                <AlertCircle size={12} />
+                                                                <span className="text-[8px] font-black uppercase">Failed</span>
+                                                            </div>
+                                                        ) : (
+                                                            <CheckCheck size={14} className={msg.read ? 'text-blue-300' : 'opacity-70'} />
+                                                        )}
+                                                    </div>
+                                                )}
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </React.Fragment>
-                        );
-                    })
+                                </React.Fragment>
+                            );
+                        });
+                    })()
                 )}
+
                 <div ref={messagesEndRef} />
             </div>
 
