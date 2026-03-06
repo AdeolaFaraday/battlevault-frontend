@@ -48,3 +48,26 @@ export const GET_CHAT_LIST = gql`
     }
   }
 `;
+
+export const GET_USER_UNREAD_MESSAGES_COUNT = gql`
+  query GetUserUnreadMessagesCount {
+    getUserUnreadMessagesCount {
+      statusCode
+      success
+      message
+      data {
+        ... on UnreadMessagesData {
+          unreadCount
+          messages {
+            id
+            chatId
+            senderId
+            text
+            timestamp
+            read
+          }
+        }
+      }
+    }
+  }
+`;
