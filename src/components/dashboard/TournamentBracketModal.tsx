@@ -72,7 +72,7 @@ export default function TournamentBracketModal({
     const bracketData = data?.getTournamentBracket?.data;
     const stages = bracketData?.stages || [];
     const tournamentTitle = bracketData?.tournament?.title || "Tournament Bracket";
-    const tournamentStatus = bracketData?.tournament?.status || "PENDING";
+    const tournamentStatus = bracketData?.tournament?.status || "UPCOMING";
 
     return (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 text-white">
@@ -103,7 +103,7 @@ export default function TournamentBracketModal({
                         </div>
                     </div>
                     <div className="flex items-center gap-4">
-                        {tournamentStatus === 'PENDING' && (
+                        {tournamentStatus === 'UPCOMING' && (
                             <button
                                 onClick={handleStartTournament}
                                 disabled={startingTournament}
