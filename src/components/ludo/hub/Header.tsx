@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Bell, Wallet, LogOut, User as UserIcon, Settings, LogIn, MessageSquare } from 'lucide-react';
+import { Wallet, LogOut, User as UserIcon, Settings, LogIn, MessageSquare } from 'lucide-react';
 import LogoIcon from '@/src/components/common/icons/Logo';
 import DropdownMenuItem from '@/src/components/common/dropdown/DropdownMenuItem';
 import { useAppSelector } from '@/src/lib/redux/hooks';
@@ -13,6 +13,7 @@ import { useQuery } from '@apollo/client';
 import { GET_WALLET_QUERY } from '@/src/graphql/wallet/queries';
 import { useGetChatList } from '@/src/api/chat/useGetChatList';
 import { useChatUnreadCounts } from '@/src/hooks/chat/useChatUnreadCounts';
+import NotificationBell from './NotificationBell';
 
 const Header = () => {
     const currentUser = useAppSelector((state: RootState) => state.auth.loggedInUserDetails);
@@ -32,7 +33,7 @@ const Header = () => {
 
     const { chats } = useGetChatList();
 
-    // Real-time unread counts from Firestore
+    // Real-time unread counts from Firestore for the regular chat icon
     const chatIds = chats.map(c => c.id);
     const rtUnreadCounts = useChatUnreadCounts(chatIds, currentUser?._id);
 
@@ -43,7 +44,7 @@ const Header = () => {
         return `${symbol}${amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
     };
 
-    // Close dropdown when clicking outside
+    // Close dropdowns when clicking outside
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -100,16 +101,11 @@ const Header = () => {
                                 )}
                             </motion.button>
 
-                            {/* Notifications */}
-                            <motion.button
-                                whileHover={{ scale: 1.1 }}
-                                whileTap={{ scale: 0.95 }}
-                                className="relative w-10 h-10 flex items-center justify-center rounded-full bg-white/5 hover:bg-red-500/10 transition-colors group"
-                            >
-                                <Bell className="w-5 h-5 text-slate-300 group-hover:text-red-400 transition-colors" />
-                                <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-red-500 rounded-full border border-[#1a1d2e] z-10" />
-                                <div className="absolute top-2.5 right-2.5 w-4 h-4 bg-red-500/20 blur-sm -translate-x-1/2 -translate-y-1/2 left-2/3 top-1/3" />
-                            </motion.button>
+                            {/* Notifications Bell */}
+                            <NotificationBell
+                                isAuthenticated={isAuthenticated}
+                                currentUserId={currentUser?._id}
+                            />
                         </>
                     )}
 

@@ -190,6 +190,7 @@ export const GET_TOURNAMENT_BRACKET = gql`
           tournament {
             _id
             title
+            status
           }
           stages {
             _id
