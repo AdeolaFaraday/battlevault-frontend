@@ -56,7 +56,7 @@ export const GET_USER_UNREAD_MESSAGES_COUNT = gql`
       success
       message
       data {
-        ... on UnreadMessagesData {
+        ... on UnreadMessagesResponse {
           unreadCount
           messages {
             id
