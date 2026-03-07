@@ -102,7 +102,7 @@ const TermsContent = () => {
             <section>
                 <h2 className="text-xl font-bold text-white mb-3">12. Contact Information</h2>
                 <p>
-                    If you have any questions about these Terms, please contact us at: <a href="mailto:adeolafaraday@gmail.com" className="text-indigo-400 hover:underline">adeolaafaraday@gmail.com</a>.
+                    If you have any questions about these Terms, please contact us at: <a href="mailto:hello@battlevault.app" className="text-indigo-400 hover:underline">hello@battlevault.app</a>.
                 </p>
             </section>
         </div>
