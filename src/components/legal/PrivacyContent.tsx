@@ -95,7 +95,7 @@ const PrivacyContent = () => {
             <section>
                 <h2 className="text-xl font-bold text-white mb-3">10. Contact Us</h2>
                 <p>
-                    If you have any questions about this Privacy Policy or wish to exercise your data rights, please contact our Data Protection Officer at: <a href="mailto:adeolaafaraday@gmail.com" className="text-indigo-400 hover:underline">adeolaafaraday@gmail.com</a>.
+                    If you have any questions about this Privacy Policy or wish to exercise your data rights, please contact our Data Protection Officer at: <a href="mailto:hello@battlevault.app" className="text-indigo-400 hover:underline">hello@battlevault.app</a>.
                 </p>
             </section>
         </div>
