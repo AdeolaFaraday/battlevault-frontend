@@ -20,7 +20,7 @@ import PlayerCard from "../PlayerCard";
 import TokenFlyingAnimation from "./TokenFlyingAnimation";
 import LudoTourGuide from "./LudoTourGuide";
 import { motion } from "framer-motion";
-import ShareButton from "../ShareButton";
+// import ShareButton from "../ShareButton";
 
 const LudoBoard = ({ id }: { id: string }) => {
     const router = useRouter();
@@ -107,11 +107,11 @@ const LudoBoard = ({ id }: { id: string }) => {
             </div>
 
             <div className="flex-1 flex flex-col items-center justify-start mt-5 relative z-10 w-full max-w-[500px] mx-auto pb-4">
-                <GameStats />
-                <ShareButton
+                <GameStats id={id} />
+                {/* <ShareButton
                     gameId={id}
                     className="absolute lg:left-[-55%] bottom-[-2%] -translate-y-1/2 scale-90 sm:scale-100 z-20"
-                />
+                /> */}
 
                 {/* Dynamic Player Cards Positioning */}
                 <div className="w-full flex justify-center mb-4 px-4">
