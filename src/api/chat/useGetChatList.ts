@@ -21,7 +21,7 @@ export interface ChatThread {
 }
 
 export const useGetChatList = () => {
-    const { loggedInUserDetails: currentUser, isUserLoggedIn } = useAppSelector((state: RootState) => state.auth);
+    const { isUserLoggedIn } = useAppSelector((state: RootState) => state.auth);
     const isAuthenticated = isUserLoggedIn === true;
     const { loading, error, data, refetch } = useQuery(GET_CHAT_LIST, {
         fetchPolicy: 'cache-and-network',
