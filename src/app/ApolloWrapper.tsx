@@ -62,6 +62,7 @@ function makeClient() {
       if (unauthorized && typeof window !== "undefined") {
         const token = authTokenStorage.get();
         // console.log("unauthorized", { token, data });
+        window.location.replace("/signin");
         if (token) {
           // unauthorizedCount++;
           // Instead of wiping Redux raw, we should ideally trigger a logout.
