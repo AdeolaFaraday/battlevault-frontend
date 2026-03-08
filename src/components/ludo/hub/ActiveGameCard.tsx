@@ -14,10 +14,12 @@ import { safeFormat } from '../../../utils/date-utils';
 import { LudoPlayer } from '@/src/types/ludo';
 
 const ActiveGameCard = () => {
-    const { data, loading } = useQuery(GET_ACTIVE_GAMES);
     const { loggedInUserDetails: currentUser, isUserLoggedIn } = useAppSelector((state: RootState) => state.auth);
     const router = useRouter();
     const isAuthenticated = isUserLoggedIn === true;
+    const { data, loading } = useQuery(GET_ACTIVE_GAMES, {
+        skip: !isAuthenticated,
+    });
 
     if (loading) {
         return <ActiveGameCardSkeleton />;

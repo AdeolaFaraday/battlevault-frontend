@@ -1,5 +1,7 @@
 import { useQuery } from '@apollo/client';
 import { GET_CHAT_LIST } from '@/src/graphql/chat/queries';
+import { useAppSelector } from '@/src/lib/redux/hooks';
+import { RootState } from '@/src/lib/redux/store';
 
 export interface Participant {
     id: string;
@@ -19,9 +21,12 @@ export interface ChatThread {
 }
 
 export const useGetChatList = () => {
+    const { isUserLoggedIn } = useAppSelector((state: RootState) => state.auth);
+    const isAuthenticated = isUserLoggedIn === true;
     const { loading, error, data, refetch } = useQuery(GET_CHAT_LIST, {
         fetchPolicy: 'cache-and-network',
         pollInterval: 30000, // Poll every 30 seconds to update unread counts and last messages
+        skip: !isAuthenticated,
     });
 
     const isSuccess = data?.getChatList?.success;

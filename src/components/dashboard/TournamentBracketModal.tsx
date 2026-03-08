@@ -185,8 +185,9 @@ export default function TournamentBracketModal({
 
                                                     {/* Players */}
                                                     <div className="p-2 space-y-1">
-                                                        {game.players.map((player: BracketPlayer) => {
+                                                        {game.players.slice(0, 2).map((player: BracketPlayer, idx: number) => {
                                                             const isWinner = game.winner === player.id;
+                                                            const indicatorColor = idx === 0 ? '#ef4444' : '#3b82f6';
                                                             return (
                                                                 <div
                                                                     key={player.id}
@@ -196,6 +197,10 @@ export default function TournamentBracketModal({
                                                                 >
                                                                     <div className="w-10 h-10 rounded-xl bg-black flex items-center justify-center shrink-0 border border-white/10 relative">
                                                                         <span className="text-xs font-black text-white">{player.name.charAt(0).toUpperCase()}</span>
+                                                                        <div
+                                                                            className="absolute -top-1 -left-1 w-3 h-3 rounded-full border-2 border-black"
+                                                                            style={{ backgroundColor: indicatorColor }}
+                                                                        />
                                                                         {isWinner && (
                                                                             <div className="absolute -top-1.5 -right-1.5 bg-white rounded-full p-0.5 ring-2 ring-black">
                                                                                 <FiCheckCircle className="w-4 h-4 text-black" />
@@ -222,12 +227,21 @@ export default function TournamentBracketModal({
                                                         })}
 
                                                         {/* Empty slot */}
-                                                        {game.players.length < 2 && (
-                                                            <div className="flex items-center gap-4 p-4 rounded-2xl border border-dashed border-white/5 opacity-30">
-                                                                <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/5" />
-                                                                <div className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Awaiting Player</div>
-                                                            </div>
-                                                        )}
+                                                        {Array.from({ length: Math.max(0, 2 - game.players.length) }).map((_, idx) => {
+                                                            const actualIdx = game.players.length + idx;
+                                                            const indicatorColor = actualIdx === 0 ? '#ef4444' : '#3b82f6';
+                                                            return (
+                                                                <div key={`empty-${actualIdx}`} className="flex items-center gap-4 p-4 rounded-2xl border border-dashed border-white/5 opacity-30">
+                                                                    <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/5 relative">
+                                                                        <div
+                                                                            className="absolute -top-1 -left-1 w-3 h-3 rounded-full border-2 border-black"
+                                                                            style={{ backgroundColor: indicatorColor }}
+                                                                        />
+                                                                    </div>
+                                                                    <div className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Awaiting Player</div>
+                                                                </div>
+                                                            );
+                                                        })}
                                                     </div>
                                                 </div>
                                             </div>

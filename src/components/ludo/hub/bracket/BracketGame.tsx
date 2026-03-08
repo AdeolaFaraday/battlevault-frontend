@@ -31,8 +31,9 @@ const BracketGame: React.FC<BracketGameProps> = ({ game, className }) => {
                 </div>
 
                 <div className="space-y-1 md:space-y-1.5">
-                    {game.players.map((player, idx) => {
+                    {game.players.slice(0, 2).map((player, idx) => {
                         const isWinner = game.winner === player.id;
+                        const indicatorColor = idx === 0 ? '#ef4444' : '#3b82f6';
                         return (
                             <div
                                 key={player.id || idx}
@@ -44,7 +45,7 @@ const BracketGame: React.FC<BracketGameProps> = ({ game, className }) => {
                                 <div className="flex items-center gap-1.5 md:gap-2 overflow-hidden">
                                     <div
                                         className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full shrink-0"
-                                        style={{ backgroundColor: player.color }}
+                                        style={{ backgroundColor: indicatorColor }}
                                     />
                                     <span className={cn(
                                         "text-[10px] md:text-xs font-semibold truncate max-w-[80px] md:max-w-none",
@@ -62,12 +63,19 @@ const BracketGame: React.FC<BracketGameProps> = ({ game, className }) => {
                         );
                     })}
 
-                    {game.players.length < 2 && (
-                        <div className="flex items-center gap-1.5 md:gap-2 bg-white/5 rounded-md md:rounded-lg px-1.5 md:px-2 py-0.5 md:py-1.5 border border-white/5 opacity-40">
-                            <div className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-slate-600 shrink-0" />
-                            <span className="text-[10px] md:text-xs font-semibold text-slate-400">TBD</span>
-                        </div>
-                    )}
+                    {Array.from({ length: Math.max(0, 2 - game.players.length) }).map((_, idx) => {
+                        const actualIdx = game.players.length + idx;
+                        const indicatorColor = actualIdx === 0 ? '#ef4444' : '#3b82f6';
+                        return (
+                            <div key={`empty-${actualIdx}`} className="flex items-center gap-1.5 md:gap-2 bg-white/5 rounded-md md:rounded-lg px-1.5 md:px-2 py-0.5 md:py-1.5 border border-white/5 opacity-40">
+                                <div
+                                    className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full shrink-0"
+                                    style={{ backgroundColor: indicatorColor }}
+                                />
+                                <span className="text-[10px] md:text-xs font-semibold text-slate-400">TBD</span>
+                            </div>
+                        );
+                    })}
                 </div>
             </div>
         </div>
