@@ -1,8 +1,9 @@
 import React from 'react';
+import ShareButton from './ShareButton';
 
 // GameHeader component removed as requested
 
-export const GameStats = () => {
+export const GameStats = ({ id }: { id: string }) => {
     return (
         <div className="w-full max-w-[500px] flex justify-between items-center px-6 mt-4 mb-2">
             {/* Left: Live Status */}
@@ -17,11 +18,15 @@ export const GameStats = () => {
             {/* Center: The requested Avatar/Time div */}
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-2xl bg-slate-800/80 border border-white/10 backdrop-blur-md shadow-2xl">
                 {/* Avatars tiny */}
-                <div className="flex -space-x-2">
+                {/* <div className="flex -space-x-2">
                     <div className="w-6 h-6 rounded-full bg-indigo-500 border-2 border-slate-900 shadow-sm" />
                     <div className="w-6 h-6 rounded-full bg-emerald-500 border-2 border-slate-900 shadow-sm" />
                 </div>
-                <span className="text-white font-bold text-xs pl-1 font-mono tracking-tight">00:00</span>
+                <span className="text-white font-bold text-xs pl-1 font-mono tracking-tight">00:00</span> */}
+                <ShareButton
+                    gameId={id}
+                    className=""
+                />
             </div>
 
             {/* Right: Prize/Coins */}
