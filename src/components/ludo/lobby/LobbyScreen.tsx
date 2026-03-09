@@ -10,6 +10,7 @@ import { useGameSession } from '@/src/hooks/useGameSession';
 import { useAppSelector } from '@/src/lib/redux/hooks';
 import { RootState } from '@/src/lib/redux/store';
 import GuestNameModal from './GuestNameModal';
+import ShareButton from '../ShareButton';
 
 interface LobbyScreenProps {
     gameId?: string;
@@ -156,7 +157,9 @@ const LobbyScreen = ({ gameId }: LobbyScreenProps) => {
                 </div>
 
                 {/* Action Footer */}
-                <div className="mt-12 md:mt-24 flex justify-center w-full pb-8 md:pb-0">
+                <div className="mt-12 md:mt-24 flex flex-col items-center gap-6 w-full pb-8 md:pb-0">
+                    <ShareButton gameId={gameId || ''} className="w-full max-w-[300px] md:max-w-md" />
+
                     <div className="w-full max-w-[300px] md:max-w-md">
                         <ActionButtons
                             onStart={handleStartGame}
