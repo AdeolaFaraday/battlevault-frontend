@@ -55,8 +55,8 @@ const ShareButton: React.FC<ShareButtonProps> = ({ gameId, className }) => {
             onClick={handleShare}
             className={cn(
                 "group relative flex items-center justify-center rounded-2xl overflow-hidden z-50",
-                "h-10 w-10 sm:h-auto sm:w-auto", // Circular on mobile, auto on desktop
-                "px-0 py-0 sm:px-5 sm:py-2.5", // No padding on mobile icon, standard on desktop
+                "h-auto w-auto",
+                "px-3 py-2 sm:px-5 sm:py-2.5",
                 "bg-gradient-to-r from-indigo-600/90 to-violet-600/90 backdrop-blur-md",
                 "border border-white/20 shadow-lg shadow-indigo-500/20",
                 "text-white font-semibold transition-all duration-300",
@@ -78,7 +78,7 @@ const ShareButton: React.FC<ShareButtonProps> = ({ gameId, className }) => {
                         className="flex items-center gap-1.5"
                     >
                         <Check size={18} className="text-emerald-300" />
-                        <span className="hidden sm:inline text-xs font-bold tracking-wide">Copied!</span>
+                        <span className="text-xs font-bold tracking-wide">Copied!</span>
                     </motion.div>
                 ) : (
                     <motion.div
@@ -89,6 +89,7 @@ const ShareButton: React.FC<ShareButtonProps> = ({ gameId, className }) => {
                         className="flex items-center gap-1.5"
                     >
                         <Share2 size={18} className="group-hover:rotate-12 transition-transform duration-300" />
+                        <span className="inline sm:hidden text-xs font-bold tracking-wide">Live stream</span>
                         <span className="hidden sm:inline text-xs font-bold tracking-wide">Invite others to watch</span>
                     </motion.div>
                 )}
